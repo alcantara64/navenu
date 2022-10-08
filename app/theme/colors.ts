@@ -35,6 +35,19 @@ const palette = {
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
+
+  primaryColor: '#2364AA',
+  secondaryColor: '#81C3D7',
+  fit: '#00BC00',
+  stay: '#007CFF',
+  shop: '#FF2894',
+  drink: '#C849D9',
+  eat: '#FF6800',
+  do: '#FFB600',
+  textColor: '#221D23',
+  errorColor: '#E63B2E',
+  successColor: '#ADC76F',
+  warnColor: '#FF963C'
 }
 
 export const colors = {
