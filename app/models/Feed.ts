@@ -9,7 +9,10 @@ import _ from 'lodash';
   title: types.string,
 })
 
-
+const Error = types.model({
+  message: types.string,
+  isError: types.string,
+})
 export const FeedStore = types
   .model("Feed")
   .props({
@@ -17,6 +20,8 @@ export const FeedStore = types
     pages: types.optional(types.number, 0),
     pageParams: types.maybe(types.string),
     catFilters:types.maybe(types.array(Feed)),
+    error: Error,
+    isLoading: types.boolean,
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
