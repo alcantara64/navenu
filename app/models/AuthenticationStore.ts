@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+
 import { api } from "../services/api"
 
 export const AuthenticationStoreModel = types
@@ -8,6 +9,8 @@ export const AuthenticationStoreModel = types
     authEmail: types.optional(types.string, ""),
     authPassword: types.optional(types.string, ""),
     isLoading: types.optional(types.boolean, false),
+    longitude: types.optional(types.string, ''),
+    latitude: types.optional(types.string, ''),
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -59,6 +62,10 @@ export const AuthenticationStoreModel = types
         this.setAuthToken(result.token);
       }
       this.setLoading(false);
+    },
+    setLongitudeAndLatitude(longitude, latitude){
+      store.longitude = longitude;
+      store. latitude = latitude;
     },
   }))
 

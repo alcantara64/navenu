@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
+import * as Location from 'expo-location';
 import { Button, Icon, LoadingIndicator, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
-import Config from "../config"
-import { useStores } from "../models"
+import { useStores} from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 
@@ -14,6 +14,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
+  const [errorMsg, setErrorMsg] = useState('');
   const {
     authenticationStore: {
       authEmail,
@@ -23,12 +24,32 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       validationErrors,
       login,
       isLoading,
+      setLongitudeAndLatitude
     },
   } = useStores()
 
+
+  useEffect(() => {
+    (async () => {
+      const  { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+      const location = await Location.getLastKnownPositionAsync({});
+      console.log('location ==>', location);
+     if(location){
+      setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude);
+
+     }else{
+      setErrorMsg('We could not fetch your location data');
+     }
+    })();
+  }, []);
+
   useEffect(() => {
     // Here is where you could fetch credientials from keychain or storage
-    // and pre-fill the form fields.
+    // and pre-fill the form fields.\
     setAuthEmail("navenuteam@navenu.com")
     setAuthPassword("Gonavenu")
   }, [])
@@ -36,7 +57,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const errors: typeof validationErrors = isSubmitted ? validationErrors : ({} as any)
 
   async function onLogin() {
-
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
