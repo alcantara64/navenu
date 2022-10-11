@@ -48,3 +48,8 @@ export interface ApiConfig {
    */
   timeout: number
 }
+
+export interface LoginResponse {
+    token:string;
+    userId?: string; 
+}
