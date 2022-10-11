@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { api } from "../services/api"
 
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
@@ -6,6 +7,7 @@ export const AuthenticationStoreModel = types
     authToken: types.maybe(types.string),
     authEmail: types.optional(types.string, ""),
     authPassword: types.optional(types.string, ""),
+    isLoading: types.optional(types.boolean, false),
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -32,6 +34,9 @@ export const AuthenticationStoreModel = types
     setAuthToken(value?: string) {
       store.authToken = value
     },
+    setLoading(value:boolean){
+     store.isLoading = value
+    },
     setAuthEmail(value: string) {
       store.authEmail = value.replace(/ /g, "")
     },
@@ -42,6 +47,18 @@ export const AuthenticationStoreModel = types
       store.authToken = undefined
       store.authEmail = ""
       store.authPassword = ""
+    },
+     async login() {
+      this.setLoading(true)
+      const formData = new FormData()
+      formData.append("email", store.authEmail)
+      formData.append("password", store.authPassword)
+      // @ts-ignore
+      const result =  await api.login(formData);
+      if (result.kind === "ok") {
+        this.setAuthToken(result.token);
+      }
+      this.setLoading(false);
     },
   }))
 

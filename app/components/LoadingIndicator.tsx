@@ -1,8 +1,8 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import Lottie from 'lottie-react-native';
+import { useEffect, useRef } from "react";
 
 export interface LoadingIndicatorProps {
   /**
@@ -11,26 +11,26 @@ export interface LoadingIndicatorProps {
   style?: StyleProp<ViewStyle>
 }
 
-/**
- * Describe your component here
- */
 export const LoadingIndicator = observer(function LoadingIndicator(props: LoadingIndicatorProps) {
   const { style } = props
   const $styles = [$container, style]
 
+  const animationRef = useRef<Lottie | null>(); // The <> is for TypeScript, but can be removed for JavaScript
+
+  useEffect(() => {
+    animationRef.current?.play();
+  }, []);
+
   return (
     <View style={$styles}>
-      <Text style={$text}>Hello</Text>
+     <Lottie ref={(animation) => {
+        animationRef.current = animation;
+      }} source={require('../../assets/lottie/loader.json')} autoPlay loop />
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  justifyContent: "center",
+  width:'100%'
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}

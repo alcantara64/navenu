@@ -14,7 +14,8 @@ import Config from "../../config"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
 import type {
   ApiConfig,
-  ApiFeedResponse, // @demo remove-current-line
+  ApiFeedResponse,
+  LoginResponse, // @demo remove-current-line
 } from "./api.types"
 import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
 
@@ -82,6 +83,22 @@ export class Api {
     }
   }
   // @demo remove-block-end
+
+  async login(payload:{password:string, email:string}):Promise<{ kind: "ok"; token:string } | GeneralApiProblem>{
+    
+    const response: ApiResponse<LoginResponse> = await this.apisauce.post(
+      `/Authentication/key`,
+      payload
+    )
+    console.log('response ==>', response);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data;
+
+   return {kind: 'ok', token: rawData.token}
+  }
 }
 
 // Singleton instance of the API for convenience

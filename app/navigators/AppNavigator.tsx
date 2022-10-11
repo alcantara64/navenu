@@ -70,11 +70,11 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const BottomTab = createBottomTabNavigator<AppStackParamList>();
 
 const AppStack = observer(function AppStack() {
-  // @demo remove-block-start
+
   const {
     authenticationStore: { isAuthenticated},
   } = useStores()
-  // @demo remove-block-end
+
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
