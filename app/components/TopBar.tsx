@@ -1,10 +1,8 @@
 import * as React from "react"
 import { StyleProp, TouchableOpacity, View, ViewStyle, Image, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
 import { useState } from "react"
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native"
 import { CategoryFilterBar } from "./CategoryFilterBar"
 import { useStores } from "../models"

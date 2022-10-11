@@ -24,8 +24,10 @@ import {
   FeedScreen,
   LoginScreen, PreferencesScreen, SearchScreen,
 } from "../screens"
+import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
+import { TapNavigationNavigator } from "./TapNavigationNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -82,9 +84,8 @@ const AppStack = observer(function AppStack() {
       {/* @demo remove-block-start */}
       {isAuthenticated ? (
         <>
-          {/* @demo remove-block-end */}
-          <Stack.Screen name="Welcome" component={FeedScreen} />
-          {/* @demo remove-block-start */}
+          <Stack.Screen name="Welcome" component={BottomNavigationNavigator} />
+   
           <Stack.Screen name="Demo" component={DemoNavigator} />
         </>
       ) : (
@@ -92,9 +93,7 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="Login" component={LoginScreen} />
         </>
       )}
-      {/* @demo remove-block-end */}
-      {/** 🔥 Your screens go here */}
-      <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="Feed" component={BottomNavigationNavigator} />
       <Stack.Screen name="Settings" component={FeedScreen} />
     </Stack.Navigator>
   )
