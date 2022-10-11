@@ -72,29 +72,26 @@ const BottomTab = createBottomTabNavigator<AppStackParamList>();
 const AppStack = observer(function AppStack() {
   // @demo remove-block-start
   const {
-    authenticationStore: { isAuthenticated },
+    authenticationStore: { isAuthenticated},
   } = useStores()
-
   // @demo remove-block-end
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
+      initialRouteName={isAuthenticated ? "Feed" : "Login"}
     >
-      {/* @demo remove-block-start */}
       {isAuthenticated ? (
         <>
-          <Stack.Screen name="Welcome" component={BottomNavigationNavigator} />
+         <Stack.Screen name="Feed" component={BottomNavigationNavigator} />
+         <Stack.Screen name="Settings" component={FeedScreen} />
    
-          <Stack.Screen name="Demo" component={DemoNavigator} />
         </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
         </>
       )}
-      <Stack.Screen name="Feed" component={BottomNavigationNavigator} />
-      <Stack.Screen name="Settings" component={FeedScreen} />
+     
     </Stack.Navigator>
   )
 })

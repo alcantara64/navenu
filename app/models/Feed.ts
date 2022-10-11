@@ -11,17 +11,17 @@ import _ from 'lodash';
 
 const Error = types.model({
   message: types.string,
-  isError: types.string,
+  isError: types.boolean,
 })
 export const FeedStore = types
   .model("Feed")
   .props({
-    feeds: types.array(Feed),
+    feeds: types.optional(types.array(Feed), []),
     pages: types.optional(types.number, 0),
     pageParams: types.maybe(types.string),
     catFilters:types.maybe(types.array(Feed)),
-    error: Error,
-    isLoading: types.boolean,
+    error: types.optional(Error, {message: '', isError: false}),
+    isLoading: types.maybe(types.boolean),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
