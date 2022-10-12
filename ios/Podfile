@@ -10,6 +10,7 @@ install! 'cocoapods', :deterministic_uuids => false
 production = ENV["PRODUCTION"] == "1"
 
 target 'Navenu' do
+  pod 'GoogleSignIn', '~> 6.2.2'
   use_expo_modules!
   post_integrate do |installer|
     begin

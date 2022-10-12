@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "533893697678",
+    "firebase_url": "https://solar-sylph-303300-default-rtdb.firebaseio.com",
+    "project_id": "solar-sylph-303300",
+    "storage_bucket": "solar-sylph-303300.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533893697678:android:e5446fd0a55d176c6979df",
+        "android_client_info": {
+          "package_name": "com.navenu.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533893697678-qsc4h4aqf8jg7kjhoh33qk3geldh10v3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.navenu.app",
+            "certificate_hash": "268d1ecd947379cb0e3cccf6198a84431bfe7831"
+          }
+        },
+        {
+          "client_id": "533893697678-vah611kgqvr3a0iut947s828fbadoudl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj_UE-5Ns3FhiaBqfoZ5EwID1Sdz_qOfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "533893697678-fe5jahtup1ihkvjui7cajqs0lmqnp8s4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.generate.navenu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
