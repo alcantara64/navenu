@@ -18,6 +18,8 @@ import type {
   LoginResponse, // @demo remove-current-line
 } from "./api.types"
 import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
+import {_rootStore } from "../../models"
+import { getSnapshot } from "mobx-state-tree"
 
 /**
  * Configuring the apisauce instance.
@@ -38,16 +40,27 @@ export class Api {
   /**
    * Set up our API instance. Keep this lightweight!
    */
+
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
-    this.config = config
+    this.config = config;
+   const rootStore = _rootStore && getSnapshot(_rootStore); 
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
+        Authorization: `${rootStore?.authenticationStore?.authToken}`
+        
       },
     })
+
+   this.apisauce.addRequestTransform((request) =>{
+    request.headers.lat = rootStore?.authenticationStore?.latitude;
+    request.headers.lng = rootStore?.authenticationStore?.longitude;
+    request.headers.Authorization = rootStore?.authenticationStore?.authToken; 
+   })
   }
+  
 
   // @demo remove-block-start
   /**
@@ -90,7 +103,6 @@ export class Api {
       `/Authentication/key`,
       payload
     )
-    console.log('response ==>', response);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
