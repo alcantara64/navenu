@@ -41,6 +41,7 @@
     "@expo/webpack-config": "^0.17.0",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "@react-native-community/netinfo": "^9.3.4",
+    "@react-native-google-signin/google-signin": "^8.0.0",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/material-top-tabs": "^6.2.4",
     "@react-navigation/native": "~6.0.1",

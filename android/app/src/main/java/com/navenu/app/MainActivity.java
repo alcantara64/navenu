@@ -1,4 +1,4 @@
-package com.navenu;
+package com.navenu.app;
 
 import android.os.Bundle;
 

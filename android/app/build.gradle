@@ -137,7 +137,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.navenu"
+        applicationId "com.navenu.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -267,6 +267,7 @@ dependencies {
 
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -348,6 +349,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
 // This method of including other gradle files is to support symlinks.
 apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute().text.trim(), "../native_modules.gradle");
 applyNativeModulesAppBuildGradle(project);
+apply plugin: 'com.google.gms.google-services'
 
 def isNewArchitectureEnabled() {
     // To opt-in for the New Architecture, you can either:

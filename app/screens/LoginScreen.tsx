@@ -1,11 +1,16 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
+import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
 import * as Location from 'expo-location';
 import { Button, Icon, LoadingIndicator, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
 import { useStores} from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -15,6 +20,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState('');
+  const [userInfo, setUserInfo] = useState<any>(null);
   const {
     authenticationStore: {
       authEmail,
@@ -28,6 +34,13 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     },
   } = useStores()
 
+  useEffect(() => {
+    // todo refactor this
+    GoogleSignin.configure({
+      webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      forceCodeForRefreshToken: true,
+    });
+  }, [])
 
   useEffect(() => {
     (async () => {
@@ -55,6 +68,23 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   }, [])
 
   const errors: typeof validationErrors = isSubmitted ? validationErrors : ({} as any)
+  const googleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      setUserInfo(userInfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
 
   async function onLogin() {
     setIsSubmitted(true)
@@ -136,7 +166,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         onSubmitEditing={onLogin}
         RightAccessory={PasswordRightAccessory}
       />
-
+     {  <GoogleSigninButton  onPress={googleSignIn}/>}
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
@@ -144,6 +174,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         preset="reversed"
         onPress={onLogin}
       />
+      
       {isLoading && <LoadingIndicator />}
     </Screen>
   )
