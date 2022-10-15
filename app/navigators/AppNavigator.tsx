@@ -16,18 +16,23 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { NavenuButton, TopBar, TopBarLogoOnly } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
+  CardviewScreen,
+  CuratorProfileScreen,
+  DropScreen,
   FeedScreen,
-  LoginScreen, PreferencesScreen, SearchScreen,
+  LoginScreen,
+  MapScreen,
+  PreferencesScreen,
+  SearchScreen,
+  VenueDetailScreen,
 } from "../screens"
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
-import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
-import { TapNavigationNavigator } from "./TapNavigationNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -44,14 +49,17 @@ import { TapNavigationNavigator } from "./TapNavigationNavigator"
  */
 export type AppStackParamList = {
   Welcome: undefined
-  Login: undefined // @demo remove-current-line
-  Demo: NavigatorScreenParams<DemoTabParamList> // @demo remove-current-line
+  Login: undefined
   Search: undefined
   Feed: undefined
   Settings: undefined
   PreferencesScreen: undefined
-  // 🔥 Your screens go here
-
+  Home: undefined
+  MapScreen: undefined
+  DropScreen: undefined
+  VenueDetailScreen: undefined
+  CuratorProfileScreen: undefined
+  Cardview: undefined
 }
 
 /**
@@ -67,47 +75,41 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = StackScreen
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<AppStackParamList>()
-const BottomTab = createBottomTabNavigator<AppStackParamList>();
+const BottomTab = createBottomTabNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-
   const {
-    authenticationStore: { isAuthenticated},
+    authenticationStore: { isAuthenticated },
   } = useStores()
 
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={isAuthenticated ? "Feed" : "Login"}
+      initialRouteName={isAuthenticated ? "Home" : "Login"}
     >
       {isAuthenticated ? (
-        <>
-         <Stack.Screen name="Feed" component={BottomNavigationNavigator} />
-         <Stack.Screen name="Settings" component={FeedScreen} />
-   
-        </>
+        <Stack.Screen name="Home" component={BottomNavigationNavigator} />
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
         </>
       )}
-     
     </Stack.Navigator>
   )
 })
 
-
-export const TabStack = observer(function TabStack () {
+export const TabStack = observer(function TabStack() {
   return (
     <BottomTab.Navigator
       initialRouteName="Feed"
       screenOptions={{
-        tabBarActiveTintColor: '#000000',
+        tabBarActiveTintColor: "#000000",
 
         header: ({ navigation }) => <TopBar navigation={navigation} />,
-      }}>
+      }}
+    >
       <BottomTab.Screen
-        name='Search'
+        name="Search"
         component={SearchScreen}
         options={{
           tabBarShowLabel: false,
@@ -126,7 +128,7 @@ export const TabStack = observer(function TabStack () {
         }}
       />
       <BottomTab.Screen
-        name='PreferencesScreen'
+        name="PreferencesScreen"
         component={PreferencesScreen}
         options={{
           tabBarShowLabel: false,
@@ -135,8 +137,8 @@ export const TabStack = observer(function TabStack () {
         }}
       />
     </BottomTab.Navigator>
-  );
-});
+  )
+})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 

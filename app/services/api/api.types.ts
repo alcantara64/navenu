@@ -1,3 +1,5 @@
+import { Feed } from "../../interface/feed"
+
 /**
  * These types indicate the shape of the data you expect to receive from your
  * API endpoint, assuming it's a JSON object like we have.
@@ -52,4 +54,9 @@ export interface ApiConfig {
 export interface LoginResponse {
     token:string;
     userId?: string; 
+}
+
+export interface FeedResponse {
+  data :Array<Feed>;
+  status 
 }
