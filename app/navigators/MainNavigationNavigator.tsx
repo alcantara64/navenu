@@ -22,7 +22,7 @@ export type MainNavigationNavigatorParamList = {
 const Stack = createStackNavigator<MainNavigationNavigatorParamList>()
 export function MainStack() {
   return (
-    <Stack.Navigator screenOptions={{ cardStyle: $cardStyle, headerShown: false }}>
+    <Stack.Navigator initialRouteName="Home"  screenOptions={{ cardStyle: $cardStyle, headerShown: false }}>
       <Stack.Group>
         <Stack.Screen
           name="Home"

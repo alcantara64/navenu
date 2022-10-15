@@ -3,7 +3,6 @@ import {
   PreferencesScreen,
   SavedDropsScreen,
   SavedLocationsScreen,
-  WelcomeScreen
 } from "../screens"
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { SavedArticlesScreen } from "../screens/SavedArticlesScreen";

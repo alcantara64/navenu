@@ -6,20 +6,20 @@
  * documentation for more details.
  */
 import {
-  ApiResponse, // @demo remove-current-line
+  ApiResponse,
   ApisauceInstance,
   create,
 } from "apisauce"
 import Config from "../../config"
-import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
 import type {
   ApiConfig,
   ApiFeedResponse,
-  LoginResponse, // @demo remove-current-line
+  LoginResponse,
 } from "./api.types"
-import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
 import {_rootStore } from "../../models"
 import { getSnapshot } from "mobx-state-tree"
+import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
+import { AxiosRequestConfig } from "axios"
 
 /**
  * Configuring the apisauce instance.
@@ -62,40 +62,6 @@ export class Api {
   }
   
 
-  // @demo remove-block-start
-  /**
-   * Gets a list of recent React Native Radio episodes.
-   */
-  async getEpisodes(): Promise<{ kind: "ok"; episodes: EpisodeSnapshotIn[] } | GeneralApiProblem> {
-    // make the api call
-    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
-      `api.json?rss_url=https%3A%2F%2Ffeeds.simplecast.com%2FhEI_f9Dx`,
-    )
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const rawData = response.data
-
-      // This is where we transform the data into the shape we expect for our MST model.
-      const episodes: EpisodeSnapshotIn[] = rawData.items.map((raw) => ({
-        ...raw,
-      }))
-
-      return { kind: "ok", episodes }
-    } catch (e) {
-      if (__DEV__) {
-        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-      }
-      return { kind: "bad-data" }
-    }
-  }
-  // @demo remove-block-end
 
   async login(payload:{password:string, email:string}):Promise<{ kind: "ok"; token:string } | GeneralApiProblem>{
     
@@ -111,6 +77,22 @@ export class Api {
 
    return {kind: 'ok', token: rawData.token}
   }
+
+  async get(url:string, params?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+   return this.apisauce.get<any>(url, params, axiosConfig);
+  }
+
+  async post(url:string, payload:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+    return this.apisauce.post(url, payload, axiosConfig);
+   }
+  
+   async put(url:string, payload:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+    return this.apisauce.put(url, payload, axiosConfig);
+   }
+
+   async delete(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+    return this.apisauce.delete(url, payload, axiosConfig);
+   }
 }
 
 // Singleton instance of the API for convenience

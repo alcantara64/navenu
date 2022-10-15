@@ -10,6 +10,7 @@ export interface DropCardProps {
    */
   style?: StyleProp<ViewStyle>
   item: any
+  onDPress : (venue:any) => void
 }
 
 /**

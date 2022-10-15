@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
+import {TextInput, TextStyle, ViewStyle } from "react-native"
 import * as Location from 'expo-location';
 import { Button, Icon, LoadingIndicator, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
 import { useStores} from "../models"

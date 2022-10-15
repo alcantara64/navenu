@@ -1,5 +1,6 @@
 import { SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import _ from 'lodash';
+import { FeedService } from "../services/feedsService";
 
 /**
  * Model description here for TypeScript hints.
@@ -7,6 +8,7 @@ import _ from 'lodash';
  const Feed = types.model({
   id: types.string,
   title: types.string,
+  description: types.string,
 })
 
 const Error = types.model({
@@ -30,6 +32,18 @@ export const FeedStore = types
     },
     removeCartFilter(filter){
       self.catFilters = [] || _.without(self.catFilters, filter);
+    },
+    setFeeds(feeds){
+    self.feeds = feeds;
+    },
+    async getFeeds(pageNumber?:number){
+      const  feedsService = new FeedService();
+     const  result = await feedsService.getFeeds(pageNumber);
+     if(result.kind === 'ok'){
+      console.log( 'feeds', result.feeds);
+      this.setFeeds(result.feeds)
+     }
+
     }
   })) 
 
