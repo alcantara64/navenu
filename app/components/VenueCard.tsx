@@ -1,8 +1,8 @@
 import * as React from "react"
-import { ImageBackground, StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { ImageBackground, ImageStyle, StyleProp, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
+import { View, Text } from 'react-native-ui-lib';
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+
 
 export interface VenueCardProps {
   /**
@@ -28,7 +28,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
     //on Press of any selector sending the selector value to
     // setSections function which will expand the Accordion accordingly
   >
-    <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={styles.image}>
+    <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={$image}>
       <View style={$overlay}></View>
       <View style={$cardtext}>
         <Text
@@ -36,14 +36,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
           {item.category}
         </Text>
         <Text
-          style={{
-            marginBottom: 0,
-            color: '#FFFFFF',
-            textTransform: 'uppercase',
-            fontWeight: 'bold',
-
-            fontSize: 18,
-          }}>
+          style={$belowText}>
           {item.name}
         </Text>
         <Text
@@ -86,3 +79,20 @@ const $overlay: ViewStyle = {
   backgroundColor: 'black',
   opacity: 0.5,
 };
+
+const $image: ImageStyle = {
+  flex: 1,
+  width: '100%',
+  height: 125,
+  marginBottom: 5,
+  justifyContent: 'center',
+};
+const $belowText: TextStyle = {
+  
+    marginBottom: 0,
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+
+    fontSize: 18,
+}

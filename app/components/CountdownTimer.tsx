@@ -1,36 +1,38 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import CountDown from 'react-native-countdown-component';
+
 
 export interface CountdownTimerProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  time: string;
 }
 
 /**
  * Describe your component here
  */
 export const CountdownTimer = observer(function CountdownTimer(props: CountdownTimerProps) {
-  const { style } = props
-  const $styles = [$container, style]
-
+  const {time} = props
+ 
+  const date = new Date(time);
+  const seconds = date.getTime() / 1000; //1440516958
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
-    </View>
-  )
+    <CountDown
+      size={9}
+      until={seconds}
+      digitStyle={{ backgroundColor: '#1CC625' }}
+      digitTxtStyle={{ color: '#000000' }}
+      timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
+      separatorStyle={{ color: '#FFFFFF' }}
+      timeToShow={['D', 'H', 'M', 'S']}
+      timeLabels={{ m: null, s: null }}
+      showSeparator
+    />
+  );
 })
 
-const $container: ViewStyle = {
-  justifyContent: "center",
-}
-
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}

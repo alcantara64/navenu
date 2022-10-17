@@ -6,9 +6,20 @@ import { FeedService } from "../services/feedsService";
  * Model description here for TypeScript hints.
  */
  const Feed = types.model({
-  id: types.string,
-  title: types.string,
-  description: types.string,
+  id: types.identifier,
+  title: types.maybe(types.string),
+  description: types.maybe(types.string),
+  type: types.maybe(types.string),
+  image: types.maybe(types.string),
+  phone: types.maybe(types.string),
+  name: types.maybe(types.string),
+  parent_category: types.maybe(types.string),
+  category: types.maybe(types.string),
+  distance: types.maybe(types.string),
+  intro: types.maybe(types.string),
+  owner: types.maybe(types.string),
+  lat: types.maybe(types.number),
+  lng: types.maybe(types.number),
 })
 
 const Error = types.model({
@@ -34,7 +45,7 @@ export const FeedStore = types
       self.catFilters = [] || _.without(self.catFilters, filter);
     },
     setFeeds(feeds){
-    self.feeds = feeds;
+    // self.feeds = feeds;
     },
     async getFeeds(pageNumber?:number){
       const  feedsService = new FeedService();

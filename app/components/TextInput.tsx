@@ -1,11 +1,11 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle, TextInput as RNTextInput  } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Colors } from "react-native-ui-lib"
 import {MIcon as Icon} from './MIcon'
+import { AppButton } from "./AppButton"
+import { Colors } from "../theme"
 
-export interface TextInputProps {
+export interface TextInputProps  {
   /**
    * An optional style override useful for padding & margin.
    */
@@ -20,7 +20,7 @@ export interface TextInputProps {
  * Describe your component here
  */
 export const TextInput = observer(function TextInput(props: TextInputProps) {
-  const {  width, leftIconName, rightIcon  } = props
+  const {  width, leftIconName, rightIcon, handlePasswordVisibility,   ...otherProps  } = props
  
 
   return (
@@ -32,28 +32,24 @@ export const TextInput = observer(function TextInput(props: TextInputProps) {
           name={leftIconName}
           size={22}
           color={Colors.mediumGray}
-          style={{ marginRight: 10 }}
+          style={$iconStyle}
         />
       ) : null}
       <RNTextInput
-        style={{
-          flex: 1,
-          width: '100%',
-          fontSize: 18,
-          color: Colors.black
-        }}
+        style={$textInputStyle}
         placeholderTextColor={Colors.mediumGray}
         {...otherProps}
       />
       {rightIcon ? (
-        <Button onPress={handlePasswordVisibility}>
+        <AppButton onPress={handlePasswordVisibility}>
           <Icon
             name={rightIcon}
             size={22}
             color={Colors.mediumGray}
-            style={{ marginRight: 10 }}
+            
+            style={$iconStyle}
           />
-        </Button>
+        </AppButton>
       ) : null}
     </View>
   );
@@ -70,8 +66,12 @@ const $container: ViewStyle = {
   borderColor: Colors.mediumGray
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
+const $iconStyle:ViewStyle = {
+  marginRight: 10
+}
+const $textInputStyle: TextStyle ={
+  flex: 1,
+  width: '100%',
+  fontSize: 18,
+  color: Colors.black
 }

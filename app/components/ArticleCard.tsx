@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import { observer } from "mobx-react-lite"
  // todo replace hardcorded variables
-// import { colors, typography } from "../theme"
+
 import { Text } from "./Text"
 import { useState } from "react"
 
@@ -18,9 +18,6 @@ export interface ArticleCardProps {
   item: any
 }
 
-/**
- * Describe your component here
- */
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
   const [articleVisible, setArticleVisible] = useState(true)
   const toggleContent = () => {

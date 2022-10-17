@@ -20,7 +20,7 @@ export const FormErrorMessage = observer(function FormErrorMessage(props: FormEr
     return null
   }
 
-  return <Text style={$errorText}>Hello</Text>
+  return <Text style={$errorText}>{error}</Text>
 })
 
 const $errorText: TextStyle = {

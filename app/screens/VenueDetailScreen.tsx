@@ -3,7 +3,8 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text } from "../components"
+import { Gallery, NearByVenues, Screen, VenueDetailCard } from "../components"
+import { View } from "react-native-ui-lib"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -22,9 +23,17 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+  // if (error) return <ErrorMessage message={error.message}></ErrorMessage>;
+  // if (isLoading) return <LoadingIndicator />;
   return (
     <Screen style={$root} preset="scroll">
-      <Text text="venueDetail" />
+        <View style={$container}>
+      
+        <VenueDetailCard venue={data}></VenueDetailCard>
+        {data.images.length > 0 && <Gallery items={data.images} />}
+        <NearByVenues venues={data.nearby} />
+  
+    </View>
     </Screen>
   )
 })
@@ -32,3 +41,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
 const $root: ViewStyle = {
   flex: 1,
 }
+const $container:ViewStyle =  {
+  flex: 1,
+  backgroundColor: '#FFFFFF',
+};
