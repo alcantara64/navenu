@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import {TextInput, TextStyle, ViewStyle } from "react-native"
 import * as Location from 'expo-location';
-import { Button, Icon, LoadingIndicator, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
+import { Button, FormErrorMessage, Icon, LoadingIndicator, Logo, Screen, Text, TextFieldAccessoryProps, View } from "../components"
 import { useStores} from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -11,6 +11,11 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { Colors, KeyboardAwareScrollView } from "react-native-ui-lib";
+import { Images } from "../theme/images";
+import { Formik } from 'formik';
+import { loginValidationSchema } from "../utils/validations";
+
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -67,7 +72,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setAuthPassword("Gonavenu")
   }, [])
 
-  const errors: typeof validationErrors = isSubmitted ? validationErrors : ({} as any)
   const googleSignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -86,8 +90,11 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   };
 
-  async function onLogin() {
+  async function onLogin(values:{email:string, password:string}) {
+    const { email, password } = values;
     setIsSubmitted(true)
+    setAuthEmail(email);
+    setAuthPassword(password);
     setAttemptsCount(attemptsCount + 1)
 
     if (Object.values(validationErrors).some((v) => !!v)) return
@@ -131,41 +138,60 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
+      <View isSafe style={$container}>
+      <KeyboardAwareScrollView enableOnAndroid={true}>
+      <View style={$logoContainer}>
+          <Logo uri={Images.logo} />
+        </View>
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
-      <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="email"
-        autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="loginScreen.emailFieldLabel"
-        placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={errors?.authEmail}
-        status={errors?.authEmail ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-
-      <TextField
-        ref={authPasswordInput}
-        value={authPassword}
-        onChangeText={setAuthPassword}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="password"
-        autoCorrect={false}
-        secureTextEntry={isAuthPasswordHidden}
-        labelTx="loginScreen.passwordFieldLabel"
-        placeholderTx="loginScreen.passwordFieldPlaceholder"
-        helper={errors?.authPassword}
-        status={errors?.authPassword ? "error" : undefined}
-        onSubmitEditing={onLogin}
-        RightAccessory={PasswordRightAccessory}
-      />
+      <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validationSchema={loginValidationSchema}
+          onSubmit={(values) => onLogin(values)}>
+          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+            <>
+              {/* Input fields */}
+              <TextInput
+                name="email"
+                leftIconName="email"
+                placeholder="Enter email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoFocus={true}
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+              />
+              <FormErrorMessage error={errors.email} visible={touched.email} />
+              <TextInput
+                name="password"
+                leftIconName="key-variant"
+                placeholder="Enter password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={passwordVisibility}
+                textContentType="password"
+                rightIcon={rightIcon}
+                handlePasswordVisibility={handlePasswordVisibility}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+              />
+              <FormErrorMessage error={errors.password} visible={touched.password} />
+              {/* Display Screen Error Mesages */}
+              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              {/* Login button */}
+              <Button style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Login</Text>
+              </Button>
+            </>
+          )}
+        </Formik>
      {  <GoogleSigninButton  onPress={googleSignIn}/>}
       <Button
         testID="login-button"
@@ -176,6 +202,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       />
       
       {isLoading && <LoadingIndicator />}
+      </KeyboardAwareScrollView>
+      </View>
     </Screen>
   )
 })
@@ -184,26 +212,42 @@ const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.huge,
   paddingHorizontal: spacing.large,
 }
-
-const $signIn: TextStyle = {
-  marginBottom: spacing.small,
+const $container: ViewStyle = {
+  flex: 1,
+  flexDirection: 'column',
+  backgroundColor: Colors.white, // from config
 }
 
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.large,
+const $logoContainer:ViewStyle =  {
+  alignItems: 'center',
+};
+
+
+const $button: ViewStyle = {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: Colors.orange,
+    padding: 10,
+    borderRadius: 8,
+};
+
+const $buttonText: TextStyle = {
+  fontSize: 20,
+  color: Colors.white,
+  fontWeight: '700',
 }
 
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.medium,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.large,
+const $borderlessButtonContainer: TextStyle = {
+  marginTop: 16,
+  color: Colors.white,
+  alignItems: 'center',
+  justifyContent: 'center',
 }
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.extraSmall,
 }
 
-// @demo remove-file
+
