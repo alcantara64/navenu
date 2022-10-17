@@ -61,6 +61,7 @@
     "expo-modules-core": "~0.11.3",
     "expo-splash-screen": "~0.16.1",
     "expo-status-bar": "~1.4.0",
+    "formik": "^2.2.9",
     "i18n-js": "3.9.2",
     "lodash": "^4.17.21",
     "lottie-ios": "3.4.0",
@@ -83,7 +84,8 @@
     "react-query": "^3.39.2",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
-    "reactotron-react-native": "5.0.3"
+    "reactotron-react-native": "5.0.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",

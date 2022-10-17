@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
 
-export interface TopBarLogoOnlyProps {
+export interface ArticleSearchProps {
   /**
    * An optional style override useful for padding & margin.
    */
@@ -14,7 +14,7 @@ export interface TopBarLogoOnlyProps {
 /**
  * Describe your component here
  */
-export const TopBarLogoOnly = observer(function TopBarLogoOnly(props: TopBarLogoOnlyProps) {
+export const ArticleSearch = observer(function ArticleSearch(props: ArticleSearchProps) {
   const { style } = props
   const $styles = [$container, style]
 

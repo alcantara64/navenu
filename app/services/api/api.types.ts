@@ -60,3 +60,8 @@ export interface FeedResponse {
   data :Array<Feed>;
   status 
 }
+
+export interface UserResponse {
+  data :Array<Feed>;
+  status 
+}
