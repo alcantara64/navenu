@@ -1,8 +1,7 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, TextStyle, ViewStyle, Image, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
-import { Text } from "./Text"
 
 export interface TitleLogoProps {
   /**
@@ -17,20 +16,12 @@ export interface TitleLogoProps {
 export const TitleLogo = observer(function TitleLogo(props: TitleLogoProps) {
   const { style } = props
   const $styles = [$container, style]
+  console.log($styles);
 
-  return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
-    </View>
-  )
+  return <Image source={require('../../assets/navenu-logo.png')} style={$container} />;
 })
 
-const $container: ViewStyle = {
-  justifyContent: "center",
-}
-
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
+const $container: ImageStyle = {
+  width: 106,
+  height: 13,
 }

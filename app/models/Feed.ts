@@ -31,10 +31,11 @@ export const FeedStore = types
   .props({
     feeds: types.optional(types.array(Feed), []),
     pages: types.optional(types.number, 0),
-    pageParams: types.maybe(types.string),
+    pageParams: types.maybe(types.number),
     catFilters:types.maybe(types.array(Feed)),
     error: types.optional(Error, {message: '', isError: false}),
     isLoading: types.maybe(types.boolean),
+    isFetchingNextPage: types.maybe(types.boolean),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
@@ -45,7 +46,7 @@ export const FeedStore = types
       self.catFilters = [] || _.without(self.catFilters, filter);
     },
     setFeeds(feeds){
-    // self.feeds = feeds;
+     self.feeds = feeds;
     },
     async getFeeds(pageNumber?:number){
       const  feedsService = new FeedService();
@@ -55,7 +56,25 @@ export const FeedStore = types
       this.setFeeds(result.feeds)
      }
 
-    }
+    },
+    async refetch(){
+      this.getFeeds(self.pageParams)
+    },
+
+    async fetchNextPage(){
+      const nextPageNumber =self.pageParams + 1; 
+      this.setIsFetchingNextPage(true)
+      await this.getFeeds(nextPageNumber)
+      this.setCurrentPageNumber(nextPageNumber);
+      this.setIsFetchingNextPage(false)
+      
+    },
+     setCurrentPageNumber(pageNumber:number){
+     self.pageParams = pageNumber;
+    },
+    setIsFetchingNextPage(value:boolean){
+    self.isFetchingNextPage = value;
+    },
   })) 
 
 export interface FeedSnapshotOut extends SnapshotOut<typeof FeedStore> {}

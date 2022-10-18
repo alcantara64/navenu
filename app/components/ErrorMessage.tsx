@@ -16,22 +16,20 @@ export interface ErrorMessageProps {
  * Describe your component here
  */
 export const ErrorMessage = observer(function ErrorMessage(props: ErrorMessageProps) {
-  const { style } = props
+  const { style, message } = props
   const $styles = [$container, style]
 
   return (
     <View style={$styles}>
-      <Text style={$text}>Hello</Text>
+      <Text>{message}</Text>
     </View>
   )
 })
 
 const $container: ViewStyle = {
+  flex: 1,
   justifyContent: "center",
+  alignItems: "center",
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}
+

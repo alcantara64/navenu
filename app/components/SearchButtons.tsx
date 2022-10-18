@@ -1,8 +1,13 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import { useCallback } from "react"
+import {
+  View,
+  SegmentedControl,
+} from 'react-native-ui-lib';
+import { DropLocationSearch } from "./DropLocationSearch"
+import { ArticleSearch } from "./ArticleSearch"
 
 export interface SearchButtonsProps {
   /**
@@ -13,24 +18,53 @@ export interface SearchButtonsProps {
 
 /**
  * Describe your component here
+ * 
  */
+ const segments = {
+  first: [{ label: 'Articles' }, { label: 'Venues' }, { label: 'Drops' }],
+};
 export const SearchButtons = observer(function SearchButtons(props: SearchButtonsProps) {
   const { style } = props
   const $styles = [$container, style]
 
+  const [value, setValue] = React.useState('Articles');
+
+  const onChangeIndex = useCallback((index) => {
+    switch (index) {
+      case 0:
+        setValue('Articles');
+        break;
+      case 1:
+        setValue('Venues');
+        break;
+      case 2:
+        setValue('Drops');
+        break;
+    }
+  }, []);
+
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
+    <View flex bottom padding-page>
+      <View flex centerV>
+        <View center>
+          <SegmentedControl
+            onChangeIndex={onChangeIndex}
+            containerStyle={$styles}
+            segments={segments.first}
+          />
+
+          {value === 'Drops' && <DropLocationSearch />}
+          {value === 'Venues' && <DropLocationSearch />}
+          {value === 'Articles' && <ArticleSearch />}
+        </View>
+      </View>
     </View>
-  )
+  );
 })
 
 const $container: ViewStyle = {
-  justifyContent: "center",
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  padding: 10,
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}

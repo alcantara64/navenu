@@ -25,10 +25,10 @@ export const CountdownTimer = observer(function CountdownTimer(props: CountdownT
     <CountDown
       size={9}
       until={seconds}
-      digitStyle={{ backgroundColor: '#1CC625' }}
-      digitTxtStyle={{ color: '#000000' }}
-      timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-      separatorStyle={{ color: '#FFFFFF' }}
+      digitStyle={$digitStyle}
+      digitTxtStyle={$digitTextStyle}
+      timeLabelStyle={$timeLabelStyle}
+      separatorStyle={$separatorStyle}
       timeToShow={['D', 'H', 'M', 'S']}
       timeLabels={{ m: null, s: null }}
       showSeparator
@@ -36,3 +36,7 @@ export const CountdownTimer = observer(function CountdownTimer(props: CountdownT
   );
 })
 
+const $digitStyle:ViewStyle = { backgroundColor: '#1CC625' }
+const $digitTextStyle:TextStyle = { color: '#000000' }
+const $timeLabelStyle:TextStyle = { color: 'red', fontWeight: 'bold' }
+const $separatorStyle:TextStyle = { color: '#FFFFFF' }
