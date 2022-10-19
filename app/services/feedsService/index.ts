@@ -18,7 +18,7 @@ export class FeedService {
       const rawData = response.data;
       console.log('feedsResponse',rawData);
       
-  
+  console.log('feeds', rawData.data.length);
      return {kind: 'ok', feeds: rawData.data}
 
   }

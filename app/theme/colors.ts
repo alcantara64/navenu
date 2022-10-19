@@ -95,3 +95,24 @@ export const colors = {
    */
   errorBackground: palette.angry100,
 }
+
+export const Colors = {
+  fit: '#00BC00',
+  stay: '#007CFF',
+  shop: '#FF2894',
+  drink: '#C849D9',
+  eat: '#FF6800',
+  do: '#FFB600',
+  orange: '#f57c00',
+  blue: '#039be5',
+  black: '#222222',
+  white: '#ffffff',
+  mediumGray: '#6e6869',
+  red: '#fc5c65',
+  ltblue: '#B8D8D8',
+  torquoise: '#749E9F',
+  bluegrey: '#4F6367',
+  gray: '#4F6367',
+  offwhite: '#EEF5DB',
+  offred: '#FE5F55',
+};

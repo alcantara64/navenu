@@ -3,7 +3,7 @@ import { StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 
 import { Text } from "./Text"
-import { Colors } from "react-native-ui-lib"
+import { Colors } from "../theme"
 
 export interface FormErrorMessageProps {
   style?: StyleProp<ViewStyle>
@@ -20,7 +20,7 @@ export const FormErrorMessage = observer(function FormErrorMessage(props: FormEr
     return null
   }
 
-  return <Text style={$errorText}>Hello</Text>
+  return <Text style={$errorText}>{error}</Text>
 })
 
 const $errorText: TextStyle = {

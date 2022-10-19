@@ -1,31 +1,35 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import {TextInput, TextStyle, ViewStyle } from "react-native"
+import { TextStyle, ViewStyle } from "react-native"
 import * as Location from 'expo-location';
-import { Button, FormErrorMessage, Icon, LoadingIndicator, Logo, Screen, Text, TextFieldAccessoryProps, View } from "../components"
+import { AppButton, FormErrorMessage, Icon, TextInput, LoadingIndicator, Logo, Screen, Text, TextFieldAccessoryProps, View } from "../components"
 import { useStores} from "../models"
 import { AppStackScreenProps } from "../navigators"
-import { colors, spacing } from "../theme"
+import { Colors, colors } from "../theme"
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { Colors, KeyboardAwareScrollView } from "react-native-ui-lib";
+import { KeyboardAwareScrollView } from "react-native-ui-lib";
 import { Images } from "../theme/images";
 import { Formik } from 'formik';
 import { loginValidationSchema } from "../utils/validations";
+import { useTogglePasswordVisibility } from "../hooks";
+import { useNavigation } from "@react-navigation/native";
 
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
+  const navigation = useNavigation();
   const authPasswordInput = useRef<TextInput>()
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState('');
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [errorState, setErrorState] = useState('');
   const {
     authenticationStore: {
       authEmail,
@@ -38,13 +42,14 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       setLongitudeAndLatitude
     },
   } = useStores()
+  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility();
 
   useEffect(() => {
     // todo refactor this
-    GoogleSignin.configure({
-      webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      forceCodeForRefreshToken: true,
-    });
+    // GoogleSignin.configure({
+    //   webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    //   forceCodeForRefreshToken: true,
+    // });
   }, [])
 
   useEffect(() => {
@@ -147,8 +152,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
       <Formik
           initialValues={{
-            email: '',
-            password: '',
+            email: 'navenuteam@navenu.com',
+            password: 'Gonavenu',
           }}
           validationSchema={loginValidationSchema}
           onSubmit={(values) => onLogin(values)}>
@@ -186,20 +191,32 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
               {/* Display Screen Error Mesages */}
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
               {/* Login button */}
-              <Button style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Login</Text>
-              </Button>
+              <AppButton style={$button} onPress={handleSubmit}>
+                <Text style={$buttonText}>Login</Text>
+              </AppButton>
             </>
           )}
         </Formik>
-     {  <GoogleSigninButton  onPress={googleSignIn}/>}
-      <Button
+     {  <GoogleSigninButton size={1} style={$googleButton}  onPress={googleSignIn}/>}
+     <AppButton
+          style={$borderlessButtonContainer}
+          borderless
+          title={'Create a new account?'}
+          onPress={() => navigation.navigate('Signup')}
+        />
+        <AppButton
+          style={$borderlessButtonContainer}
+          borderless
+          title={'Forgot Password'}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        />
+      {/* <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
         style={$tapButton}
         preset="reversed"
         onPress={onLogin}
-      />
+      /> */}
       
       {isLoading && <LoadingIndicator />}
       </KeyboardAwareScrollView>
@@ -209,13 +226,13 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 })
 
 const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.huge,
-  paddingHorizontal: spacing.large,
+
 }
 const $container: ViewStyle = {
   flex: 1,
   flexDirection: 'column',
   backgroundColor: Colors.white, // from config
+  padding: 24
 }
 
 const $logoContainer:ViewStyle =  {
@@ -245,9 +262,11 @@ const $borderlessButtonContainer: TextStyle = {
   alignItems: 'center',
   justifyContent: 'center',
 }
+const $googleButton: ViewStyle = {
+  width: '100%',
+  alignSelf: 'center',
 
-const $tapButton: ViewStyle = {
-  marginTop: spacing.extraSmall,
 }
+
 
 

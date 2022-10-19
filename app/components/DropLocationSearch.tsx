@@ -1,8 +1,9 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import _ from 'lodash';
+import { CategoryFilterBar } from "./CategoryFilterBar"
+import { useState } from "react"
 
 export interface DropLocationSearchProps {
   /**
@@ -14,23 +15,54 @@ export interface DropLocationSearchProps {
 /**
  * Describe your component here
  */
-export const DropLocationSearch = observer(function DropLocationSearch(props: DropLocationSearchProps) {
-  const { style } = props
-  const $styles = [$container, style]
+export const DropLocationSearch = observer(function DropLocationSearch() {
+  
+
+  const [DoStateButton, setDoStateButton] = useState(false);
+  const [EatStateButton, setEatStateButton] = useState(false);
+  const [DrinkStateButton, setDrinkStateButton] = useState(false);
+  const [ShopStateButton, setShopStateButton] = useState(false);
+  const [StayStateButton, setStayStateButton] = useState(false);
+  const [FitStateButton, setFitStateButton] = useState(false);
+  const [searchFilter, setSearchFilter] = useState([]);
+  // const [tagSelected, setTagSelected] = useState([{ name: 'Stag night' }, { name: 'Afterhours' }]);
+  const addCat = (cat) => {
+    setSearchFilter([...searchFilter, cat]);
+  };
+
+  const removeCat = (cat) => {
+    const newCatFilter = _.without(searchFilter, cat);
+    // const newCatFilter = catFilters.filter((x) => x !== cat);
+
+    setSearchFilter(newCatFilter);
+  };
 
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
+    <View>
+      <CategoryFilterBar
+        addCat={addCat}
+        removeCat={removeCat}
+        DoStateButton={DoStateButton}
+        EatStateButton={EatStateButton}
+        DrinkStateButton={DrinkStateButton}
+        ShopStateButton={ShopStateButton}
+        StayStateButton={StayStateButton}
+        FitStateButton={FitStateButton}
+        setDoStateButton={setDoStateButton}
+        setEatStateButton={setEatStateButton}
+        setDrinkStateButton={setDrinkStateButton}
+        setShopStateButton={setShopStateButton}
+        setStayStateButton={setStayStateButton}
+        setFitStateButton={setFitStateButton}
+        catFilters={searchFilter}
+      />
+      {/* <AutoTags
+        suggestions={suggestions}
+        tagsSelected={tagSelected}
+        handleAddition={handleAddition}
+        handleDelete={handleDelete}
+        placeholder="Search Filter"
+      /> */}
     </View>
   )
 })
-
-const $container: ViewStyle = {
-  justifyContent: "center",
-}
-
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}

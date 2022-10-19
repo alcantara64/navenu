@@ -1,8 +1,17 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import {
+  ImageBackground,
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
+import { CountdownTimer } from "./CountdownTimer"
 
 export interface DropCardProps {
   /**
@@ -10,29 +19,65 @@ export interface DropCardProps {
    */
   style?: StyleProp<ViewStyle>
   item: any
-  onDPress : (venue:any) => void
+  onPress: (venue: any) => void
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { style } = props
-  const $styles = [$container, style]
+  const { onPress, item } = props
+
 
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
-    </View>
+    <TouchableOpacity
+      key={item.id}
+      onPress={() => onPress(item)}
+      activeOpacity={0.1}
+      //on Press of any selector sending the selector value to
+      // setSections function which will expand the Accordion accordingly
+    >
+      <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={$image}>
+        <View style={$cardText}>
+          <Text style={$aboveText}>{item.owner}</Text>
+          <Text
+            style={$belowText}
+          >
+            {item.name}
+          </Text>
+
+          <CountdownTimer time={item.expiration} />
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
   )
 })
 
-const $container: ViewStyle = {
-  justifyContent: "center",
+
+const $cardText: TextStyle = {
+  alignItems: "baseline",
+  marginHorizontal: 6,
+}
+const $aboveText: TextStyle = {
+  marginBottom: 0,
+  color: "#FFFFFF",
+
+  fontSize: 12,
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
+const $belowText: TextStyle = {
+    marginBottom: 0,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+
+    fontSize: 18,
+  
+}
+
+const $image: ImageStyle = {
+  flex: 1,
+  width: "100%",
+  height: 125,
+  marginBottom: 5,
+  justifyContent: "center",
 }

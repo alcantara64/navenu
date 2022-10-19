@@ -1,36 +1,31 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { ViewStyle, Image, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import { View } from "react-native-ui-lib"
 
-export interface TopBarLogoOnlyProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
-  style?: StyleProp<ViewStyle>
-}
 
-/**
- * Describe your component here
- */
-export const TopBarLogoOnly = observer(function TopBarLogoOnly(props: TopBarLogoOnlyProps) {
-  const { style } = props
-  const $styles = [$container, style]
+
+
+export const TopBarLogoOnly = observer(function TopBarLogoOnly() {
+
 
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
+    <View style={$container}>
+      <View flex center>
+        <Image source={require("../../assets/icon-navenu.png")} style={$logo} />
+      </View>
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  justifyContent: "center",
+  height: 65,
+  flexDirection: "row",
+  justifyContent: "space-between",
+
+  width: "100%",
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
+const $logo: ImageStyle = {
+  marginTop: 19,
 }

@@ -4,32 +4,33 @@ import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
 
-export interface ErrorMessageProps {
+export interface VenueDetailCardProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  message:string
 }
 
 /**
  * Describe your component here
  */
-export const ErrorMessage = observer(function ErrorMessage(props: ErrorMessageProps) {
-  const { style, message } = props
+export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
+  const { style } = props
   const $styles = [$container, style]
 
   return (
     <View style={$styles}>
-      <Text>{message}</Text>
+      <Text style={$text}>Hello</Text>
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  flex: 1,
   justifyContent: "center",
-  alignItems: "center",
 }
 
-
+const $text: TextStyle = {
+  fontFamily: typography.primary.normal,
+  fontSize: 14,
+  color: colors.palette.primary500,
+}
