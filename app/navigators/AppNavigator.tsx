@@ -81,6 +81,7 @@ const AppStack = observer(function AppStack() {
   const {
     authenticationStore: { isAuthenticated, logout },
   } = useStores()
+
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}

@@ -1,7 +1,7 @@
 import * as React from "react"
-import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
+
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -33,10 +33,4 @@ export const MapButton = observer(function MapButton(props: MapButtonProps) {
 const $container: ViewStyle = {
   width: 50,
   height: 50,
-}
-
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
 }
