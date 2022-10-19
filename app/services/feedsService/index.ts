@@ -16,9 +16,6 @@ export class FeedService {
         if (problem) return problem
       }
       const rawData = response.data;
-      console.log('feedsResponse',rawData);
-      
-  console.log('feeds', rawData.data.length);
      return {kind: 'ok', feeds: rawData.data}
 
   }
