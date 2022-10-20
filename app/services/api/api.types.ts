@@ -1,6 +1,6 @@
 import { IDrop } from "../../interface/drops"
 import { IFeed } from "../../interface/feed"
-
+import { IVenues } from "../../interface/venues"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
@@ -108,4 +108,9 @@ export interface IDropsResponse {
 export interface UserResponse {
   data: Array<any>
   status
+}
+export interface IVenueResponse {
+  data: Array<IVenues>
+  status: boolean
+  message: string
 }
