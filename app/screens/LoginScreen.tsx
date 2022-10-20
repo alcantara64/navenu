@@ -46,10 +46,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   useEffect(() => {
     // todo refactor this
-    GoogleSignin.configure({
-      webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      forceCodeForRefreshToken: true,
-    });
+    // GoogleSignin.configure({
+    //   webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    //   forceCodeForRefreshToken: true,
+    // });
   }, [])
 
   useEffect(() => {

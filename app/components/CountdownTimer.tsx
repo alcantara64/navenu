@@ -18,9 +18,10 @@ export interface CountdownTimerProps {
  */
 export const CountdownTimer = observer(function CountdownTimer(props: CountdownTimerProps) {
   const {time} = props
- 
+  
   const date = new Date(time);
   const seconds = date.getTime() / 1000; //1440516958
+  
   return (
     <CountDown
       size={9}

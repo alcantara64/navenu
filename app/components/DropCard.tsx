@@ -26,18 +26,17 @@ export interface DropCardProps {
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { onPress, item } = props
-
-
+  const { onPress, item, style } = props
   return (
     <TouchableOpacity
       key={item.id}
       onPress={() => onPress(item)}
       activeOpacity={0.1}
+     
       //on Press of any selector sending the selector value to
       // setSections function which will expand the Accordion accordingly
     >
-      <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={$image}>
+      <ImageBackground  source={{ uri: item.image }} imageStyle={$imageBackground} resizeMode="cover" style={$image}>
         <View style={$cardText}>
           <Text style={$aboveText}>{item.owner}</Text>
           <Text
@@ -46,7 +45,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
             {item.name}
           </Text>
 
-          <CountdownTimer time={item.expiration} />
+          { <CountdownTimer time={item.expiration} /> }
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -81,3 +80,6 @@ const $image: ImageStyle = {
   marginBottom: 5,
   justifyContent: "center",
 }
+const $imageBackground: ImageStyle ={
+  borderRadius: 6
+} 

@@ -9,7 +9,7 @@ import { useStores } from "../models"
 import { useNavigation } from "@react-navigation/native"
 import { useRefreshByUser } from "../hooks/useRefreshByUser"
 
-export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps, "Cardview">> = observer(function CardviewScreen() {
+export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<'Cardview'>, undefined>> = observer(function CardviewScreen() {
   // Pull in one of our MST stores
   const navigation = useNavigation();
    const { feedsStore } = useStores();

@@ -56,7 +56,7 @@ export type AppStackParamList = {
   PreferencesScreen: undefined
   Home: undefined
   MapScreen: undefined
-  DropScreen: undefined
+  DropScreen: {venue}
   VenueDetailScreen: undefined
   CuratorProfileScreen: undefined
   Cardview: undefined
