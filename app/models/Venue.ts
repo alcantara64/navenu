@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { VenuesService } from "../services/VenuesService";
 
 /**
- * Model description here for TypeScript hints.
+ * @TODO complete with additional fields please refer to interface IVenues this all just seems very redundant 
  */
  const venue = types.model({
   id: types.identifier,
