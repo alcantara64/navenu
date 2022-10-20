@@ -30,8 +30,8 @@ rating: string |  null
     nearby:Array<INearby>
     images:Array<IGallery>
     menu:Array<IMenu>
-    curators:Array<Object>
-    articles:Array<Object>
+    curators:Array<ICurators>
+    articles:Array<IArticles>
     drops:Array<IDropCard>
 }
 
@@ -45,7 +45,21 @@ interface INearby extends IVenues{
     lng:number
     image: string
 }
-
+interface ICurators extends IVenues{
+    id:number
+    name: string
+    image: string
+}
+interface IArticles extends IVenues{
+    type:'Article'
+    id:number
+    name: string
+    owner:string
+    intro:string
+    description:string
+    category:any
+    image: string
+}
 interface IGallery extends IVenues{
     id:number
     image:string
