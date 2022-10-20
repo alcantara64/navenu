@@ -27,9 +27,63 @@ rating: string |  null
     country:string
     postal_code: string
     tags: Array<string>
-    nearby:Array<Object>
-    images:Array<Object>
-    menu:Array<Object>
+    nearby:Array<INearby>
+    images:Array<IGallery>
+    menu:Array<IMenu>
     curators:Array<Object>
     articles:Array<Object>
+    drops:Array<IDropCard>
+}
+
+interface INearby extends IVenues{
+    type:"location"
+    id:number
+    name: string
+    lat:number
+    distance:string | null
+    category:any
+    lng:number
+    image: string
+}
+
+interface IGallery extends IVenues{
+    id:number
+    image:string
+}
+
+interface IDropCard extends IVenues{
+    type:"drop"
+    id:number
+    name: string
+    lat:number
+    distance:string | null
+    category:any
+    lng:number
+    image: string
+    expiration:Date
+    claimcode:string
+    venue_id:number
+    intro:string
+    venue:string
+    venue_image:string
+}
+
+interface IMenu extends IVenues{
+    id:number
+    categories:Array<IMenuCategories>
+
+}
+
+interface IMenuCategories extends IMenu{
+    id:number
+    name:string
+    items:Array<IItems>
+}
+
+interface IItems extends IMenuCategories{
+    id:number
+    name:string
+    description: string
+    image:string
+    price: number
 }
