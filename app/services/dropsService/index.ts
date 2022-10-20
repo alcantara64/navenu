@@ -8,25 +8,25 @@ export class DropService {
     this.httpClient = new Api()
   }
 
-  async claimDrop(venueId: string) {
+  async claimDrop(dropId: string) {
     const response: ApiResponse<{ status: boolean; message: string; data: string }> =
-      await this.httpClient.get(`/Drop/claims/${venueId}`)
+      await this.httpClient.get(`/Drops/claim/${dropId}`)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
     const rawData = response.data
-    return { kind: "ok", claim: rawData }
+    return { kind: "ok", claimcode: rawData }
   }
 
   async getDropDetail(dropId: string) {
     const response: ApiResponse<IDropResponse> =
-      await this.httpClient.get(`/Drop/${dropId}`)
+      await this.httpClient.get(`/Drops/${dropId}`)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
     const rawData = response.data
-    return { kind: "ok", claim: rawData }
+    return { kind: "ok", data: rawData }
   }
 }

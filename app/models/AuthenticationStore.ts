@@ -65,7 +65,7 @@ export const AuthenticationStoreModel = types
     },
     setLongitudeAndLatitude(longitude, latitude){
       store.longitude = longitude;
-      store. latitude = latitude;
+      store.latitude = latitude;
     },
   }))
 
