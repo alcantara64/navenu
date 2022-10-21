@@ -2,7 +2,7 @@ import { ApiResponse } from "apisauce";
 import { Api, FeedResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem";
 
-export class FeedService {
+export class UserService {
   private httpClient: Api
   constructor() {
     this.httpClient = new Api()
@@ -17,7 +17,7 @@ export class FeedService {
       const rawData = response.data;
       
   
-     return {kind: 'ok', feeds: rawData.data}
+     return {kind: 'ok', data: rawData.data}
 
   }
 }

@@ -1,5 +1,5 @@
 import { ApiResponse } from "apisauce"
-import { Api, IDropResponse } from "../api"
+import { Api, IVenueResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem"
 
 export class VenuesService {
@@ -10,8 +10,8 @@ export class VenuesService {
 
 
 
-  async getVenueDetail(id: string) {
-    const response: ApiResponse<IDropResponse> =
+  async getVenueDetail(id:number) {
+    const response: ApiResponse<IVenueResponse> =
       await this.httpClient.get(`/Venues/${id}`)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
