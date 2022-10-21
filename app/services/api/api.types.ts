@@ -106,8 +106,9 @@ export interface IDropsResponse {
   message: string
 }
 export interface UserResponse {
-  data: Array<any>
-  status
+  data: Array<IUser>
+  status:boolean
+  message:string
 }
 export interface IVenueResponse {
   data: Array<IVenues>
