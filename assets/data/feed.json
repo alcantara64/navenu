@@ -266,6 +266,7 @@
             "description": "Enjoy half a dozen oysters on us when you purchase 2 glasses of champagne! Now that's definitely a reason to press the button!",
             "venue_image": "media/venues/10cc14fe79bee9d3d499d8a3a4468486.jpg",
             "venue": "Bob Bob Ricard",
+            "owner":"@CATOTACO",
             "category": "DRINK",
             "distance": null,
             "tags": [

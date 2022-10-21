@@ -1,8 +1,9 @@
 import * as React from "react"
 import { StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
+import { Colors, colors, typography } from "../theme"
 import CountDown from 'react-native-countdown-component';
+import { formatDate, isValidDate } from "../utils/formatDate";
 
 
 export interface CountdownTimerProps {
@@ -11,15 +12,20 @@ export interface CountdownTimerProps {
    */
   style?: StyleProp<ViewStyle>
   time: string;
+  showSeparator?: boolean 
 }
 
 /**
  * Describe your component here
  */
 export const CountdownTimer = observer(function CountdownTimer(props: CountdownTimerProps) {
-  const {time} = props
+  const {time, showSeparator} = props
   
-  const date = new Date(time);
+  if(!isValidDate(time)) return null
+
+ const formattedDate =  formatDate(time)
+  const date = new Date(formattedDate);
+  
   const seconds = date.getTime() / 1000; //1440516958
   
   return (
@@ -32,12 +38,13 @@ export const CountdownTimer = observer(function CountdownTimer(props: CountdownT
       separatorStyle={$separatorStyle}
       timeToShow={['D', 'H', 'M', 'S']}
       timeLabels={{ m: null, s: null }}
-      showSeparator
+      showSeparator={showSeparator}
+    
     />
   );
 })
 
-const $digitStyle:ViewStyle = { backgroundColor: '#1CC625' }
-const $digitTextStyle:TextStyle = { color: '#000000' }
+const $digitStyle:ViewStyle = { backgroundColor: Colors.orange }
+const $digitTextStyle:TextStyle = { color: '#FFFF', fontWeight: 'bold', fontSize:16 }
 const $timeLabelStyle:TextStyle = { color: 'red', fontWeight: 'bold' }
 const $separatorStyle:TextStyle = { color: '#FFFFFF' }

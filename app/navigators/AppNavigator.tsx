@@ -8,8 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {
   DarkTheme,
   DefaultTheme,
-  NavigationContainer,
-  NavigatorScreenParams, // @demo remove-current-line
+  NavigationContainer, // @demo remove-current-line
 } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -21,15 +20,9 @@ import { NavenuButton, TopBar, TopBarLogoOnly } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
-  CardviewScreen,
-  CuratorProfileScreen,
-  DropScreen,
-  FeedScreen,
   LoginScreen,
-  MapScreen,
   PreferencesScreen,
   SearchScreen,
-  VenueDetailScreen,
 } from "../screens"
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
@@ -56,7 +49,7 @@ export type AppStackParamList = {
   PreferencesScreen: undefined
   Home: undefined
   MapScreen: undefined
-  DropScreen: {venue}
+  DropScreen: {venue: any}
   VenueDetailScreen: undefined
   CuratorProfileScreen: undefined
   Cardview: undefined
@@ -80,8 +73,7 @@ const BottomTab = createBottomTabNavigator<AppStackParamList>()
 const AppStack = observer(function AppStack() {
   const {
     authenticationStore: { isAuthenticated, logout },
-  } = useStores()
-
+  } = useStores();
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}

@@ -15,14 +15,14 @@ import { FeedService } from "../services/feedsService";
   name: types.maybe(types.string),
   parent_category: types.maybe(types.string),
   category: types.maybe(types.string),
-  distance: types.maybe(types.string),
+  distance: types.optional(types.number, 0),
   intro: types.maybe(types.string),
   owner: types.maybe(types.string),
-  lat: types.maybe(types.number),
-  lng: types.maybe(types.number),
+  lat: types.maybe(types.string),
+  lng: types.maybe(types.string),
 })
 
-const Error = types.model({
+export const ErrorModel = types.model({
   message: types.string,
   isError: types.boolean,
 })
@@ -33,7 +33,7 @@ export const FeedStore = types
     pages: types.optional(types.number, 0),
     pageParams: types.maybe(types.number),
     catFilters:types.maybe(types.array(Feed)),
-    error: types.optional(Error, {message: '', isError: false}),
+    error: types.optional(ErrorModel, {message: '', isError: false}),
     isLoading: types.maybe(types.boolean),
     isFetchingNextPage: types.maybe(types.boolean),
   })
@@ -48,13 +48,25 @@ export const FeedStore = types
     setFeeds(feeds){
      self.feeds = feeds;
     },
+    setFeedsError(error:any){
+      self.error = error;
+    },
+    setIsLoading(status:boolean){
+     self.isLoading = status
+    },
     async getFeeds(pageNumber?:number){
+      this.setIsLoading(true)
+      this.setFeedsError({isError:false, message: ''})
       const  feedsService = new FeedService();
      const  result = await feedsService.getFeeds(pageNumber);
      if(result.kind === 'ok'){
-      console.log( 'feeds', result.feeds);
+
       this.setFeeds(result.feeds)
+     }else{
+      console.log('error', result)
+      this.setFeedsError({isError:true, message:'error getting feeds'})
      }
+     this.setIsLoading(false)
 
     },
     async refetch(){

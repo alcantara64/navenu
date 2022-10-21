@@ -10,7 +10,7 @@ export interface VenueCardProps {
    */
   style?: StyleProp<ViewStyle>
   onPress: (item:any) => void
-  item : any;
+  item : {image:string, category:string, name:string, distance: number};
 }
 
 /**
@@ -28,7 +28,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
     //on Press of any selector sending the selector value to
     // setSections function which will expand the Accordion accordingly
   >
-    <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={$image}>
+    <ImageBackground source={{ uri: item.image }}   imageStyle={$imageBackground} resizeMode="cover" style={$image}>
       <View style={$overlay}></View>
       <View style={$cardtext}>
         <Text
@@ -95,4 +95,7 @@ const $belowText: TextStyle = {
     fontWeight: 'bold',
 
     fontSize: 18,
+}
+const $imageBackground: ImageStyle = {
+  borderRadius: 6,
 }

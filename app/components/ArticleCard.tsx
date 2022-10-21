@@ -33,7 +33,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
       // on Press of any selector sending the selector value to
       // setSections function which will expand the Accordion accordingly
     >
-      <ImageBackground source={{ uri: item.image }} resizeMode="cover" style={$image}>
+      <ImageBackground source={{ uri: item.image }}  resizeMode="cover" style={$image}>
         <View style={$overlay}></View>
         <View style={$cardtext}>
           <Text style={$editorialText}>Editorial</Text>
@@ -69,7 +69,7 @@ const $cardtext: ViewStyle = {
 const $image: ViewStyle = {
   flex: 1,
   width: "100%",
-  height: "100%",
+  height: 125,
   marginBottom: 5,
   justifyContent: "center",
 }
