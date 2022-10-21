@@ -1,6 +1,7 @@
 import { IDrop } from "../../interface/drops"
 import { IFeed } from "../../interface/feed"
 import { IVenues } from "../../interface/venues"
+import { IUser} from "../../interface/user"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
