@@ -115,4 +115,5 @@ export const Colors = {
   gray: '#4F6367',
   offwhite: '#EEF5DB',
   offred: '#FE5F55',
+  ash: '#333333',
 };

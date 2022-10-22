@@ -32,8 +32,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [errorState, setErrorState] = useState('');
   const {
     authenticationStore: {
-      authEmail,
-      authPassword,
+    
       setAuthEmail,
       setAuthPassword,
       validationErrors,
@@ -46,10 +45,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   useEffect(() => {
     // todo refactor this
-    GoogleSignin.configure({
-      webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      forceCodeForRefreshToken: true,
-    });
+    // GoogleSignin.configure({
+    //   webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    //   forceCodeForRefreshToken: true,
+    // });
   }, [])
 
   useEffect(() => {
@@ -148,7 +147,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       <View style={$logoContainer}>
           <Logo uri={Images.logo} />
         </View>
-      {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
+      {/* {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
 
       <Formik
           initialValues={{
@@ -188,7 +187,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                 onBlur={handleBlur('password')}
               />
               <FormErrorMessage error={errors.password} visible={touched.password} />
-              {/* Display Screen Error Mesages */}
+          
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
               {/* Login button */}
               <AppButton style={$button} onPress={handleSubmit}>

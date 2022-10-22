@@ -1,5 +1,5 @@
 export interface IFeed {
-  type: "Article" | "location" | "drop"
+  type: FEED_TYPE
   id: number
   name: string
   lat: number
@@ -16,4 +16,10 @@ export interface IFeed {
   venue: string //Below are for drops only
   venue_id: number
   expiration: Date
+}
+
+export enum FEED_TYPE{
+  article =  "Article",
+  location =  "location",
+  drop =  "drop",
 }

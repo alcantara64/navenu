@@ -10,13 +10,13 @@ export class FeedService {
 
  async getFeeds( pageNumber=1, cartString?:string,) {
    const queryString = `${pageNumber}?${cartString}`;
-    const response:ApiResponse<FeedResponse> =   await this.httpClient.get(`/feed/`);
+    const response:ApiResponse<FeedResponse> =   await this.httpClient.get(`/feed`);
     if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) return problem
       }
-      const rawData = response.data;
-     return {kind: 'ok', feeds: rawData.data}
+      const rawData = response.data.data;
+     return {kind: 'ok', feeds: rawData}
 
   }
 }

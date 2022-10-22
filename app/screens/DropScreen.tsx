@@ -1,9 +1,10 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text } from "../components"
+import { DropDropDetailCard, ErrorMessage, LoadingIndicator, Screen, Text } from "../components"
+import { useStores } from "../models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -16,15 +17,26 @@ import { Screen, Text } from "../components"
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
-export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = observer(function DropScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = observer(function DropScreen({route, navigation}) {
+ 
+   const { dropStore } = useStores();
+   const {isLoading, error, currentDrop, getDropDetail} = dropStore;
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+   useEffect(() =>{
+    getDropDetail(route.params.venue.id)
+    
+   }, [])
+   console.log('currentDrop ==>', currentDrop);
+   if(error.isError || (!currentDrop && !isLoading)){
+    return <ErrorMessage message={error.message} />
+   }
+   if(isLoading){
+    return <LoadingIndicator></LoadingIndicator>
+   }
   return (
-    <Screen style={$root} preset="scroll">
-      <Text text="drop" />
+    <Screen  style={$root} preset="scroll">
+
+      <DropDropDetailCard drop={currentDrop} navigation={navigation}></DropDropDetailCard>
     </Screen>
   )
 })

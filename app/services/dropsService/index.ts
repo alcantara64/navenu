@@ -26,7 +26,7 @@ export class DropService {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
-    const rawData = response.data
+    const rawData = response.data.data
     return { kind: "ok", data: rawData }
   }
 }
