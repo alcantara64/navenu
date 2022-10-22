@@ -222,9 +222,6 @@ const $dropContent: ViewStyle = {
   backgroundColor: "#F2F2F2",
   borderTopLeftRadius: 15,
 }
-const $flatListRow: ViewStyle = {
-  flex: 1,
-}
 
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,

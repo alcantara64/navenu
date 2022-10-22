@@ -1,29 +1,29 @@
-import { Feed } from "../../interface/feed"
-
-
-
+import { IDrop } from "../../interface/drops"
+import { IFeed } from "../../interface/feed"
+import { IVenues } from "../../interface/venues"
+import { IUser} from "../../interface/user"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
-    type: 'Article' | 'location' | 'drop'
+    type: "Article" | "location" | "drop"
     id: number
     name: string
-    lat:number
-            lng:number
-            image:string
-            phone: number
-            parent_category:string
-            category:string
-            distance: number  //Below are for articles and drops
-            intro:string
-            description:string
-            owner:string
-            tags:string
-            venue:string   //Below are for drops only
-            venue_id:number
-            expiration:Date
+    lat: number
+    lng: number
+    image: string
+    phone: number
+    parent_category: string
+    category: string
+    distance: number //Below are for articles and drops
+    intro: string
+    description: string
+    owner: string
+    tags: string
+    venue: string //Below are for drops only
+    venue_id: number
+    expiration: Date
   }
-message:string
+  message: string
 }
 
 /**
@@ -42,8 +42,8 @@ export interface ApiConfig {
 }
 
 export interface LoginResponse {
-    token:string;
-    userId?: string; 
+  token: string
+  userId?: string
 }
 
 /*
@@ -93,6 +93,26 @@ type:drop
             lng:
 */
 export interface FeedResponse {
-  data :Array<Feed>;
-  status 
+  data: Array<IFeed>
+  status
+}
+export interface IDropResponse {
+  data: IDrop
+  status: boolean
+  message: string
+}
+export interface IDropsResponse {
+  data: Array<IDrop>
+  status: boolean
+  message: string
+}
+export interface UserResponse {
+  data: Array<IUser>
+  status:boolean
+  message:string
+}
+export interface IVenueResponse {
+  data: Array<IVenues>
+  status: boolean
+  message: string
 }

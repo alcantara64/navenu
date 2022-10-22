@@ -58,6 +58,7 @@ export class Api {
     request.headers.lat = rootStore?.authenticationStore?.latitude;
     request.headers.lng = rootStore?.authenticationStore?.longitude;
     request.headers.Authorization = rootStore?.authenticationStore?.authToken; 
+    console.log('req', request);
    })
   }
   

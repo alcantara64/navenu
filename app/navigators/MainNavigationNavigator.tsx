@@ -55,6 +55,3 @@ export function MainStack() {
 const $cardStyle: ViewStyle = {
   backgroundColor: "transparent",
 }
-export const MainNavigationNavigator = () => {
-  return <>{MainStack()}</>
-}
