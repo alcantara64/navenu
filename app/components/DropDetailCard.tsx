@@ -8,7 +8,7 @@ import { DropCard } from "./DropCard"
 import { useState } from "react"
 import Carousel from "react-native-reanimated-carousel"
 import { IDrop } from "../interface/drops"
-import { VenueCard } from "."
+import { CountdownTimer, VenueCard } from "."
 
 export interface DropDropDetailCardProps {
   /**
@@ -17,6 +17,7 @@ export interface DropDropDetailCardProps {
   style?: StyleProp<ViewStyle>
   drop: IDrop
   navigation: any
+  onClaimCode: () => void
 }
 
 /**
@@ -25,10 +26,9 @@ export interface DropDropDetailCardProps {
 export const DropDropDetailCard = observer(function DropDropDetailCard(
   props: DropDropDetailCardProps,
 ) {
-  const { style, drop, navigation } = props
+  const { style, drop, navigation, onClaimCode } = props
   const $styles = [$container, style]
-  const [bookmark, setBookmark] = useState(false);
-  
+  const [bookmark, setBookmark] = useState(false)
 
   const goBack = () => {
     navigation.goBack()
@@ -36,9 +36,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
   const saveDrop = () => {
     setBookmark(!bookmark)
   }
-  const onMenuPress = () => {
-
-  }
+  const onMenuPress = () => {}
 
   // const renderItem = ({ item, index, separators }) =>(
   //   <TouchableHighlight key={item.id}>
@@ -89,20 +87,40 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             </View>
           )}
           <View flex row marginB-10 marginT-10 spread br10>
-            <Button
-              size="large"
-              label="CLAIM CODE"
-              color="white"
-              borderRadius={10}
-              backgroundColor={Colors.orange}
-            />
-            <Button
-              size="large"
-              label="AF56HUP2"
-              color="white"
-              borderRadius={10}
-              backgroundColor={Colors.ash}
-            />
+            {drop.claimed && (
+              <>
+                <Button
+                  size="large"
+                  label="CODE CLAIMED!"
+                  color="white"
+                  borderRadius={10}
+                  backgroundColor={Colors.orange}
+                />
+                <Button
+                  size="large"
+                  label={drop.code}
+                  color="white"
+                  borderRadius={10}
+                  backgroundColor={Colors.ash}
+                />
+              </>
+            )}
+            {!drop.claimed && (
+              <>
+                <View marginL-4 row style={$countDownContainer}>
+                  <Text style={$countdownText}>ENDS IN</Text>
+                  <CountdownTimer time={drop.expiration} />
+                </View>
+                <Button
+                  size="large"
+                  label={"CLAIM CODE!"}
+                  color="white"
+                  borderRadius={10}
+                  onPress={onClaimCode}
+                  backgroundColor={Colors.ash}
+                />
+              </>
+            )}
           </View>
           <View row>
             <Carousel<{ color: string }>
@@ -119,7 +137,15 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View>
-           <VenueCard item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0}} onPress={onMenuPress}/>
+            <VenueCard
+              item={{
+                name: drop.venue,
+                category: drop.category,
+                image: drop.venue_image,
+                distance: drop.distance || 0,
+              }}
+              onPress={onMenuPress}
+            />
           </View>
 
           <View row marginT-20 marginB-10>
@@ -196,12 +222,23 @@ const $dropContent: ViewStyle = {
   backgroundColor: "#F2F2F2",
   borderTopLeftRadius: 15,
 }
-const $flatListRow: ViewStyle = {
-  flex: 1,
-}
 
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,
   borderColor: Colors.black,
   margin: 5,
+}
+const $countDownContainer: ViewStyle = {
+  backgroundColor: Colors.orange,
+  width: "50%",
+  borderRadius: 5,
+  padding: 5,
+}
+const $countdownText: TextStyle = {
+  marginBottom: 0,
+  color: "#FFFFFF",
+  fontWeight: "bold",
+  marginRight: 4,
+  padding: 9,
+  fontSize: 15,
 }
