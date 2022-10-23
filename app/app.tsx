@@ -9,10 +9,11 @@
  * The app navigation resides in ./app/navigators, so head over there
  * if you're interested in adding screens and navigators.
  */
+ import notifee, { EventType } from '@notifee/react-native';
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React from "react"
+import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -21,6 +22,8 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
+import { CloudMessaging } from './services/cloudMessagingService';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
@@ -46,8 +49,38 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
+ notifee.onBackgroundEvent(async ({ type, detail }) => {
+  const { notification, pressAction } = detail;
+  if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
+       // what to do here 
+
+    // Remove the notification
+    await notifee.cancelNotification(notification.id);
+  }
+});
+const queryClient = new QueryClient()
 function App(props: AppProps) {
   const { hideSplashScreen } = props
+
+  useEffect(() => {
+    return notifee.onForegroundEvent(({ type, detail }) => {
+      switch (type) {
+        case EventType.DISMISSED:
+          console.log('User dismissed notification', detail.notification);
+          break;
+        case EventType.PRESS:
+          console.log('User pressed notification', detail.notification);
+          break;
+      }
+    });
+  }, []);
+
+
+   useEffect(() =>{
+   const cloudMessagingService = new CloudMessaging();
+   cloudMessagingService.sendFakePushNotification();
+
+   }, []);
   const {
     initialNavigationState,
     onNavigationStateChange,
@@ -66,6 +99,7 @@ function App(props: AppProps) {
     setTimeout(hideSplashScreen, 500)
   })
 
+
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.
@@ -76,6 +110,7 @@ function App(props: AppProps) {
 
   // otherwise, we're ready to render the app
   return (
+    <QueryClientProvider client={queryClient}>
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <ErrorBoundary catchErrors={Config.catchErrors}>
         <AppNavigator
@@ -84,6 +119,7 @@ function App(props: AppProps) {
         />
       </ErrorBoundary>
     </SafeAreaProvider>
+    </QueryClientProvider>
   )
 }
 

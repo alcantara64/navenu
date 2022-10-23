@@ -1,39 +1,22 @@
-import axios from 'axios';
-import {useInfiniteQuery} from 'react-query';
+import { useInfiniteQuery } from "react-query"
+import { Api } from "../services/api"
 
-const getFeeds = async ({pageParam = 0, queryKey}: any) => {
+const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
+  const api = new Api()
+
+  let queryParams = pageParam
   if (queryKey[1].catFilters !== undefined) {
-    const catstr = queryKey[1].catFilters.join(',');
-    if (catstr !== '') {
-      const {data: page} = await axios.get(
-        `https://api.navenu.com/api/feed/${pageParam}?cats=${catstr}`,
-      );
-      return {page, pageParam};
-    }
+    const catstr = queryKey[1].catFilters.join(",")
+    queryParams = `cats=${catstr}`
   }
-  const {data: page} = await axios.get('https://api.navenu.com/api/feed/');
-  return {page, pageParam};
-};
+  const response = await api.get(`/feed/${queryParams}`)
+  return response.data.data
+}
 
 export const useFeeds = (catFilters: any) => {
-  return useInfiniteQuery(['feed', catFilters], getFeeds, {
-    select: data => {
-      //   console.log(data);
-      const allPagesArray: Array<any> = [];
-      data?.pages
-        ? data.pages.forEach(contactsArray =>
-            allPagesArray.push(contactsArray.page),
-          )
-        : null;
-      const flatFeed = allPagesArray.flat();
-      return {
-        pages: data.pages,
-        pageParams: data.pageParams,
-        feed: flatFeed,
-      };
-    },
-    getNextPageParam: lastPage => lastPage.pageParam + 1,
-    onError: error => console.log(error),
+  return useInfiniteQuery(["feed", catFilters], getFeeds, {
+    getNextPageParam: (lastPage) => lastPage.pageParam + 1,
+    onError: (error) => console.log(error),
     staleTime: 1000 * 60 * 60,
-  });
-};
+  })
+}
