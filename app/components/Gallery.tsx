@@ -3,12 +3,16 @@ import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
+import { IGallery } from "../interface/venues"
+import Carousel from "react-native-reanimated-carousel"
 
 export interface GalleryProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  items: IGallery
+
 }
 
 /**
@@ -19,9 +23,13 @@ export const Gallery = observer(function Gallery(props: GalleryProps) {
   const $styles = [$container, style]
 
   return (
-    <View style={$styles}>
-      <Text style={$text}>Hello</Text>
-    </View>
+    <Carousel<{ color: string }>
+    width={40}
+    data={[{ color: "red" }, { color: "purple" }, { color: "yellow" }]}
+    renderItem={({ color }) => {
+      return <View style={{ backgroundColor: color, flex: 1 }} />
+    }}
+  />
   )
 })
 

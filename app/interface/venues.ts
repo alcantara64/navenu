@@ -1,6 +1,6 @@
 import { IDrop } from "./drops"
 
-export interface IVenues {
+export interface IVenue {
   id: number
   name: string
   lat: number
@@ -37,7 +37,7 @@ export interface IVenues {
   drops: Array<IDrop>
 }
 
-interface INearby extends IVenues {
+interface INearby {
   type: "location"
   id: number
   name: string
@@ -47,12 +47,12 @@ interface INearby extends IVenues {
   lng: number
   image: string
 }
-interface ICurators extends IVenues {
+interface ICurators {
   id: number
   name: string
   image: string
 }
-interface IArticles extends IVenues {
+interface IArticles  {
   type: "Article"
   id: number
   name: string
@@ -67,18 +67,18 @@ export interface IGallery {
   image: string
 }
 
-interface IMenu extends IVenues {
+interface IMenu  {
   id: number
   categories: Array<IMenuCategories>
 }
 
-interface IMenuCategories extends IMenu {
+interface IMenuCategories {
   id: number
   name: string
   items: Array<IItems>
 }
 
-interface IItems extends IMenuCategories {
+interface IItems{
   id: number
   name: string
   description: string

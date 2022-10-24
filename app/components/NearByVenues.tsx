@@ -3,12 +3,14 @@ import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
+import { IVenue } from "../interface/venues"
 
 export interface NearByVenuesProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  venues: IVenue
 }
 
 /**
