@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IuseRefreshByUser {
-  refetch: () => Promise<void>;
+  refetch: () => any;
 }
 export const useRefreshByUser = ({refetch}: IuseRefreshByUser) => {
   const [isRefetchingByUser, setIsRefetchingByUser] = React.useState(false);

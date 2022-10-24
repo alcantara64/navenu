@@ -72,7 +72,7 @@ const BottomTab = createBottomTabNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated, logout },
+    authenticationStore: { isAuthenticated },
   } = useStores();
   return (
     <Stack.Navigator
