@@ -32,8 +32,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
         <View style={$container}>
       
         <VenueDetailCard venue={data}></VenueDetailCard>
-        {data.images.length > 0 && <Gallery items={data.images} />}
-        <NearByVenues venues={data.nearby} />
+        {data?.images?.length > 0 && <Gallery items={data.images} />}
+        {/* <NearByVenues venues={data.nearby} /> */}
   
     </View>
     </Screen>
@@ -45,5 +45,5 @@ const $root: ViewStyle = {
 }
 const $container:ViewStyle =  {
   flex: 1,
-  backgroundColor: '#FFFFFF',
+  backgroundColor: "#F2F2F2",
 };
