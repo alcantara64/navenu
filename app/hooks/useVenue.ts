@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {useQuery} from 'react-query';
 import { Api } from '../services/api';
 
@@ -11,5 +10,5 @@ const getVenueById = async (venueId: string) => {
 };
 
 export const useVenue = (venueId: string) => {
-  return useQuery(['venue', venueId], () => getVenueById('3777'));
+  return useQuery(['venue', venueId], () => getVenueById(venueId));
 };
