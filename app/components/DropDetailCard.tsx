@@ -36,7 +36,11 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
   const saveDrop = () => {
     setBookmark(!bookmark)
   }
-  const onMenuPress = () => {}
+  const onVenuePress = (venue) => {
+ navigation.navigate('VenueDetailScreen', {
+  venue
+ })
+  } 
 
   // const renderItem = ({ item, index, separators }) =>(
   //   <TouchableHighlight key={item.id}>
@@ -137,15 +141,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View>
-            <VenueCard
-              item={{
-                name: drop.venue,
-                category: drop.category,
-                image: drop.venue_image,
-                distance: drop.distance || 0,
-              }}
-              onPress={onMenuPress}
-            />
+           <VenueCard item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0}} onPress={onVenuePress}/>
           </View>
 
           <View row marginT-20 marginB-10>

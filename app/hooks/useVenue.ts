@@ -1,13 +1,15 @@
 import axios from 'axios';
 import {useQuery} from 'react-query';
+import { Api } from '../services/api';
 
 const getVenueById = async (venueId: string) => {
-  const {data} = await axios.get(
-    `https://api.navenu.com/index.php/venues/${venueId}`,
+  const api = new Api()
+  const {data} = await api.get(
+    `venues/${venueId}`,
   );
-  return data;
+  return data.data;
 };
 
 export const useVenue = (venueId: string) => {
-  return useQuery(['venue', venueId], () => getVenueById(venueId));
+  return useQuery(['venue', venueId], () => getVenueById('3777'));
 };

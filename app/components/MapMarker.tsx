@@ -3,34 +3,25 @@ import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
-import { IGallery } from "../interface/venues"
-import Carousel from "react-native-reanimated-carousel"
 
-export interface GalleryProps {
+export interface MapMarkerProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  items: IGallery
-
 }
 
 /**
  * Describe your component here
  */
-export const Gallery = observer(function Gallery(props: GalleryProps) {
+export const MapMarker = observer(function MapMarker(props: MapMarkerProps) {
   const { style } = props
   const $styles = [$container, style]
 
   return (
-    <Carousel<{ color: string }>
-    width={40}
-    style={$styles}
-    data={[{ color: "red" }, { color: "purple" }, { color: "yellow" }]}
-    renderItem={({ color }) => {
-      return <View style={{ backgroundColor: color, height: 80, }} />
-    }}
-  />
+    <View style={$styles}>
+      <Text style={$text}>Hello</Text>
+    </View>
   )
 })
 

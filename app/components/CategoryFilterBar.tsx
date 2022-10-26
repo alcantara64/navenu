@@ -2,7 +2,7 @@ import * as React from "react"
 import { StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
-import Do from "../../assets/icons/explore/iconDo.svg"
+import  Do from "../../assets/icons/explore/iconDo.svg"
 import Eat from "../../assets/icons/explore/iconEat.svg"
 import Drink from "../../assets/icons/explore/iconDrink.svg"
 import Shop from "../../assets/icons/explore/iconShop.svg"
@@ -64,7 +64,6 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
 
   return (
     <View style={$container}>
-      <View />
       <TouchableOpacity
         style={catFilters.includes("DO") ? $Dobutton : $button}
         onPress={() => {
@@ -72,6 +71,7 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
           !DoStateButton ? addCat("DO") : removeCat("DO")
         }}
       >
+        
         {DoStateButton ? <DoOn /> : <Do />}
         <Text style={$label}>DO</Text>
       </TouchableOpacity>
@@ -125,7 +125,6 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
         {FitStateButton ? <FitOn /> : <Fit />}
         <Text style={$label}>FIT</Text>
       </TouchableOpacity>
-      <View />
     </View>
   )
 })

@@ -18,16 +18,16 @@ export interface IUser{
    user_preferences:Array<user_preferences>
    savedDeals:Array<savedDeals>
    savedLocations:Array<savedLocations>
-   userLists:Array<Object>
+   userLists:Array<Record<string, unknown>>
 }
 
 interface user_preferences extends IUser{
-    DO: Array<String>
-    EAT:Array<String>
-    DRINK:Array<String>
-    STAY:Array<String>
-    SHOP:Array<String>
-    FIT: Array<String>
+    DO: Array<string>
+    EAT:Array<string>
+    DRINK:Array<string>
+    STAY:Array<string>
+    SHOP:Array<string>
+    FIT: Array<string>
 }
 interface savedDeals  extends IUser{
     type:"drop"
@@ -61,4 +61,19 @@ interface savedLocations  extends IUser{
 interface user_lists   extends IUser{
 
 
+}
+export interface ICurator {
+    ID: string,
+    social_id: null | string,
+    user_nicename: string,
+    user_email: string,
+    display_name: string,
+    last_name: string,
+    description: string,
+    name: string,
+    profession: string,
+    avatar: string,
+    short_description: string,
+    gender: string,
+    home_town: string,
 }

@@ -21,9 +21,9 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
   const { venue } = props
 
   const size = 100;
-  switch (venue.venue.type) {
+  switch (venue.type) {
     case 'location':
-      switch (venue.venue.category) {
+      switch (venue.category) {
         case 'DO':
           var icon = Images.DO;
           break;
@@ -46,24 +46,24 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
       
       return (
         <Marker
-          key={venue.venue.id}
+          key={venue.id}
           coordinate={{
-            latitude: parseFloat(venue.venue.lat),
-            longitude: parseFloat(venue.venue.lng),
+            latitude: parseFloat(venue.lat),
+            longitude: parseFloat(venue.lng),
           }}
           image={icon}>
           <Callout>
             <View>
-              <Image source={{ url: venue.venue.image }} />
-              <Text>{venue.venue.name}</Text>
+              <Image source={{ url: venue.image }} />
+              <Text>{venue.name}</Text>
             </View>
           </Callout>
         </Marker>
       );
       case 'drop':
-        switch (venue.venue.parent_category) {
+        switch (venue.parent_category) {
           case 'DO':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                 var icon = Images.DO5;
                 break;
@@ -82,11 +82,11 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 //   style={{ width: 255, height: 255 }}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}>
                 <Image
                   source={icon}
@@ -100,19 +100,19 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
                 <Callout>
                   <View>
                     <Image
-                      source={{ url: venue.venue.image }}
+                      source={{ url: venue.image }}
                       style={{
                         width: PixelRatio.getPixelSizeForLayoutSize(size),
                         height: PixelRatio.getPixelSizeForLayoutSize(size),
                       }}
                     />
-                    <Text>{venue.venue.name}</Text>
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>
             );
           case 'EAT':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                 var icon = Images.EAT5;
                 break;
@@ -131,22 +131,22 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}
                 image={icon}>
                 <Callout>
                   <View>
-                    <Image source={{ url: venue.venue.image }} />
-                    <Text>{venue.venue.name}</Text>
+                    <Image source={{ url: venue.image }} />
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>
             );
           case 'DRINK':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                  icon = Images.DRINK5;
                 break;
@@ -166,22 +166,22 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
   
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}
                 image={icon}>
                 <Callout>
                   <View>
-                    <Image source={{ url: venue.venue.image }} />
-                    <Text>{venue.venue.name}</Text>
+                    <Image source={{ url: venue.image }} />
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>
             );
           case 'STAY':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                 var icon = Images.STAY5;
                 break;
@@ -200,22 +200,22 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}
                 image={icon}>
                 <Callout>
                   <View>
-                    <Image source={{ url: venue.venue.image }} />
-                    <Text>{venue.venue.name}</Text>
+                    <Image source={{ url: venue.image }} />
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>
             );
           case 'FIT':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                 var icon = Images.FIT5;
                 break;
@@ -234,22 +234,22 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}
                 image={icon}>
                 <Callout>
                   <View>
-                    <Image source={{ url: venue.venue.image }} />
-                    <Text>{venue.venue.name}</Text>
+                    <Image source={{ url: venue.image }} />
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>
             );
           case 'SHOP':
-            switch (Number(venue.venue.percentage_elapsed)) {
+            switch (Number(venue.percentage_elapsed)) {
               case 5:
                  icon = Images.SHOP5;
                 break;
@@ -268,16 +268,16 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
-                key={venue.venue.id}
+                key={venue.id}
                 coordinate={{
-                  latitude: parseFloat(venue.venue.lat),
-                  longitude: parseFloat(venue.venue.lng),
+                  latitude: parseFloat(venue.lat),
+                  longitude: parseFloat(venue.lng),
                 }}
                 image={icon}>
                 <Callout>
                   <View>
-                    <Image source={{ url: venue.venue.image }} />
-                    <Text>{venue.venue.name}</Text>
+                    <Image source={{ url: venue.image }} />
+                    <Text>{venue.name}</Text>
                   </View>
                 </Callout>
               </Marker>

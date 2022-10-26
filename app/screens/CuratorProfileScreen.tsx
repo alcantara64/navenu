@@ -4,6 +4,7 @@ import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { Screen, Text } from "../components"
+import { CuratorCard } from "../components/CuratorCard"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -24,7 +25,7 @@ export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "Cur
   // const navigation = useNavigation()
   return (
     <Screen style={$root} preset="scroll">
-      <Text text="curatorProfile" />
+      <CuratorCard venue={data}></CuratorCard>
     </Screen>
   )
 })
