@@ -11,5 +11,5 @@ const getVenueById = async (venueId: string) => {
 };
 
 export const useVenue = (venueId: string) => {
-  return useQuery(['venue', venueId], () => getVenueById(venueId));
+  return useQuery(['venue', venueId], () => getVenueById('3777'));
 };

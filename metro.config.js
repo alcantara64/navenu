@@ -37,6 +37,9 @@ if (isExpo) {
     return makeMetroConfig({
       projectRoot: __dirname,
       // watchFolders: [`${__dirname}/../..`], // for monorepos
+      transformer: {      
+        babelTransformerPath: require.resolve("react-native-svg-transformer")    
+    },
       resolver: {
         /**
          * This custom resolver is for if you're using symlinks.
@@ -44,7 +47,8 @@ if (isExpo) {
          * You can disable it if you're not using pnpm or a monorepo or symlinks.
          */
         resolveRequest: MetroSymlinksResolver(),
-        assetExts: [...defaultConfig.resolver.assetExts, "bin"],
+        assetExts: [...defaultConfig.resolver.assetExts.filter(ext => ext !== "svg"), "bin"],
+        sourceExts: [...defaultConfig.resolver.sourceExts, "svg"]  
       },
     })
   })()

@@ -1,7 +1,14 @@
 import * as React from "react"
-import { ImageBackground, StyleProp, TextStyle, ViewStyle, Image, ImageStyle } from "react-native"
+import {
+  ImageBackground,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  ImageStyle,
+  Linking,
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { TouchableOpacity, Text, View } from "react-native-ui-lib"
+import { TouchableOpacity, Text, View, Avatar } from "react-native-ui-lib"
 import {
   FontAwesome5,
   MaterialIcons,
@@ -12,6 +19,9 @@ import {
 import { IVenue } from "../interface/venues"
 import { useNavigation } from "@react-navigation/native"
 import { Colors } from "../theme"
+import { getInitials } from "../utils/transform"
+import { openLinkInBrowser } from "../utils/openLinkInBrowser"
+import { DropCard } from "./DropCard"
 
 export interface VenueDetailCardProps {
   /**
@@ -29,6 +39,12 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const navigation = useNavigation()
   const goBack = () => {
     navigation.goBack()
+  }
+  const onCallPhone = () => {
+    Linking.openURL(`tel:${venue.phone}`)
+  }
+  const onLinkPress = () => {
+    openLinkInBrowser(venue.website)
   }
   const $lineDivider = [$horizontalLine, $bigDivider]
   return (
@@ -70,14 +86,15 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
           <View marginT-5 padding-15>
             <Text text60>HEADLINE</Text>
             <Text marginT-15>{venue.long_description}</Text>
-
-            <Text style={$linkUrl} marginT-15>
-              VISIT SITE
-            </Text>
+            <TouchableOpacity onPress={onLinkPress}>
+              <Text style={$linkUrl} marginT-15>
+                VISIT SITE
+              </Text>
+            </TouchableOpacity>
           </View>
           <View row style={$lineDivider}></View>
-          <View style={$boxWrapper} row>
-            <TouchableOpacity>
+          <View style={$boxWrapper} row marginT-10>
+            <TouchableOpacity onPress={onCallPhone}>
               <View padding-20 style={$boxContainer}>
                 <Ionicons name="call-outline" size={24} color="white" />
               </View>
@@ -104,7 +121,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MENU
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <View padding-20 style={$boxContainer}>
                 <AntDesign name="calendar" size={24} color="white" />
               </View>
@@ -112,7 +129,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 {" "}
                 BOOK
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity>
               <View padding-20 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
@@ -131,33 +148,58 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
           </View>
-          <View marginT-20 row>
-            <View row flex-4>
-              <View style={{ ...$imageContainer }}>
-                <Image style={$roundedImage} source={{ uri: venue.image }} />
+          {venue.curators && venue.curators.length && (
+            <View marginT-20 row>
+              <View row flex-2>
+                {venue.curators.slice(0, 3).map((curator, index) => {
+                  const $dynamicStyle: any = {
+                    borderColor: Colors.orange,
+                  }
+                  if (index === 1) {
+                    $dynamicStyle.borderColor = Colors.stay
+                    $dynamicStyle.left = "-45%"
+                  }
+                  if (index === 2) {
+                    $dynamicStyle.borderColor = Colors.stay
+                    $dynamicStyle.left = "-90%"
+                  }
+
+                  return (
+                    <Avatar
+                      size={60}
+                      key={curator.id}
+                      containerStyle={{ ...$imageContainer, ...$dynamicStyle }}
+                      label={getInitials(curator.name)}
+                      labelColor={Colors.white}
+                      backgroundColor={$dynamicStyle.borderColor}
+                      imageStyle={$roundedImage}
+                      source={{ uri: curator.image }}
+                    />
+                  )
+                })}
               </View>
-              <View style={{ ...$imageContainer, left: -40 }}>
-                <Image style={$roundedImage} source={{ uri: venue.image }} />
-              </View>
-              <View style={{ ...$imageContainer, left: -80 }}>
-                <Image style={$roundedImage} source={{ uri: venue.image }} />
+              <View flex-4 center row>
+                {venue.curators.slice(3).length > 0 && (
+                  <Text style={$curatorTextColor} text20BL>
+                    {" "}
+                    + {venue.curators.slice(3).length}
+                  </Text>
+                )}
+                <View marginL-10>
+                  <Text>CURATORS</Text>
+                  <Text>MENTIONED</Text>
+                  <Text>THIS VENUE</Text>
+                </View>
               </View>
             </View>
-            <View flex-4 center row>
-              <Text text20 > + 13</Text>
-              <View marginL-5>
-                <Text>CURATORS</Text>
-                <Text>MENTIONED</Text>
-                <Text>THIS VENUE</Text>
-              </View>
+          )}
+          <View  marginV-15> 
+            <Text text70 >DROPS</Text>
+
+            <View marginT-15>
+           {venue.drops && venue.drops.length > 0 && venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
             </View>
           </View>
-          {/* <View> no drops from endpoint
-            <Text>Drops</Text>
-            <View>
-
-            </View>
-          </View> */}
         </View>
       </View>
     </>
@@ -242,8 +284,9 @@ const $roundedImage: ImageStyle = {
   borderRadius: 35,
 }
 const $imageContainer: ViewStyle = {
-  borderRadius: 40,
   borderWidth: 1,
   borderColor: Colors.orange,
-  position: "relative",
+}
+const $curatorTextColor: TextStyle = {
+  color: Colors.orange,
 }

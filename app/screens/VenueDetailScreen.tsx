@@ -33,7 +33,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
       
         <VenueDetailCard venue={data}></VenueDetailCard>
         {data?.images?.length > 0 && <Gallery items={data.images} />}
-        {/* <NearByVenues venues={data.nearby} /> */}
+        <NearByVenues venues={data.nearby} />
   
     </View>
     </Screen>
