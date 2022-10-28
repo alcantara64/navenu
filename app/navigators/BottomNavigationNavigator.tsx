@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { TopBarLogoOnly } from "../components/TopBarLogoOnly"
 import { MainStack } from "./MainNavigationNavigator"
 import { ProfileButton } from "../components/ProfileButton";
+import { TopBar } from "../components/TopBar";
 
 export type BottomNavigationNavigatorParamList = {
   Demo: undefined,
@@ -25,15 +26,15 @@ export type BottomNavigationNavigatorParamList = {
 const BottomTab = createBottomTabNavigator<BottomNavigationNavigatorParamList>()
 export const BottomNavigationNavigator = () => {
   return (
-    <BottomTab.Navigator initialRouteName= "Feed" screenOptions={ { tabBarActiveTintColor: '#000000',}}>
+    <BottomTab.Navigator initialRouteName= "Feed" screenOptions={ { tabBarActiveTintColor: '#000000'}}>
       <BottomTab.Screen
         name="Feed"
         component={MainStack}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({color, size}) => <Foundation name="home" size={size} color={color} /> ,
-          headerShown: false,
-          //   header: false, //() => <TopBar />
+          headerShown: true,
+          header: ({navigation}) => <TopBar  navigation={navigation}/>
         }}
       />
         <BottomTab.Screen

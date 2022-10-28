@@ -19,7 +19,7 @@ export interface IFeed {
 }
 
 export enum FEED_TYPE{
-  article =  "Article",
+  article =  "article",
   location =  "location",
   drop =  "drop",
 }
