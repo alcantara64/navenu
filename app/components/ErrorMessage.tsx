@@ -1,8 +1,7 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import { View, Text } from "react-native-ui-lib"
 
 export interface ErrorMessageProps {
   /**
@@ -21,7 +20,7 @@ export const ErrorMessage = observer(function ErrorMessage(props: ErrorMessagePr
 
   return (
     <View style={$styles}>
-      <Text>{message}</Text>
+      <Text text70red>{message}</Text>
     </View>
   )
 })

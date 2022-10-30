@@ -9,6 +9,7 @@ import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
 import { FEED_TYPE } from "../interface/feed"
+import { filterFeeds } from "../utils/transform"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {
@@ -32,38 +33,26 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         venue,
       })
     }
+    const filteredList = filterFeeds(data?.pages.flat(), selectedFilterTypes, catFilters);
     const renderItem = ({ item }) => {
-      //todo filter by catfilter, doesnt understand how it works
-      if (item.type === "location" && selectedFilterTypes.length < 1) {
+      if (item.type === "location") {
       
         return <VenueCard item={item} onPress={onVPress} />
-      } else {
-        if (item.type === FEED_TYPE.location && selectedFilterTypes.includes(item.type)) {
-          return <VenueCard item={item} onPress={onVPress} />
-        }
-      }
-      if (item.type === FEED_TYPE.article && selectedFilterTypes.length < 1) {
+      } 
+      if (item.type === FEED_TYPE.article) {
         return <ArticleCard item={item} />
-      } else {
-        if (item.type === FEED_TYPE.article && selectedFilterTypes.includes(item.type)) {
-          return <ArticleCard item={item} />
-        }
-      }
-      if (item.type === FEED_TYPE.drop  && selectedFilterTypes.length < 1) {
+      } 
+      if (item.type === FEED_TYPE.drop ) {
        
         return <DropCard item={item} onPress={onDPress} />
-      } else {
-        if (item.type === FEED_TYPE.drop && selectedFilterTypes.includes(item.type)) {
-          return <DropCard item={item} onPress={onDPress} />
-        }
-      }
+      } 
     }
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
     return (
       // <Screen style={$root} preset="scroll">
       <FlatList
-        data={data?.pages.flat()}
+        data={[...filteredList]}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         progressViewOffset={18}
@@ -72,6 +61,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         refreshControl={
           <RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />
         }
+        extraData={JSON.stringify(catFilters.concat(selectedFilterTypes))}
       />
       // </Screen>
     )
