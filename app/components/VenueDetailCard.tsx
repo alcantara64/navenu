@@ -193,13 +193,13 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </View>
             </View>
           )}
-          <View  marginV-15> 
+         {venue.drops && venue.drops.length > 0 && <View  marginV-15> 
             <Text text70 >DROPS</Text>
 
             <View marginT-15>
-           {venue.drops && venue.drops.length > 0 && venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
+           { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
             </View>
-          </View>
+          </View>}
         </View>
       </View>
     </>

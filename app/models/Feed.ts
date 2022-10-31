@@ -1,6 +1,7 @@
 import { SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import _ from 'lodash';
 import { FeedService } from "../services/feedsService";
+import { FEED_TYPE } from "../interface/feed";
 
 /**
  * Model description here for TypeScript hints.
@@ -32,18 +33,21 @@ export const FeedStore = types
     feeds: types.optional(types.array(Feed), []),
     pages: types.optional(types.number, 0),
     pageParams: types.maybe(types.number),
-    catFilters:types.maybe(types.array(Feed)),
+    catFilters:types.optional(types.array(types.string), []),
     error: types.optional(ErrorModel, {message: '', isError: false}),
     isLoading: types.maybe(types.boolean),
-    isFetchingNextPage: types.maybe(types.boolean),
+    isFetchingNextPage:types.maybe(types.boolean),
+    selectedFilterTypes:types.optional(types.array(types.string), [])
+
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
     addCartFilter(value){
-     self.catFilters = [] || value
+     self.catFilters.push(value)
+  
     },
     removeCartFilter(filter){
-      self.catFilters = [] || _.without(self.catFilters, filter);
+      self.catFilters =  _.without(self.catFilters, filter);
     },
     setFeeds(feeds){
      self.feeds = feeds;
@@ -87,6 +91,12 @@ export const FeedStore = types
     setIsFetchingNextPage(value:boolean){
     self.isFetchingNextPage = value;
     },
+    addFilterType(filter:FEED_TYPE){
+      self.selectedFilterTypes.push(filter)
+    },
+    removeFilterType(filter:FEED_TYPE){
+      self.selectedFilterTypes = _.without(self.selectedFilterTypes, filter);
+    }
   })) 
 
 export interface FeedSnapshotOut extends SnapshotOut<typeof FeedStore> {}

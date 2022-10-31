@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { ScrollView, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import  Do from "../../assets/icons/explore/iconDo.svg"
@@ -14,6 +14,7 @@ import DrinkOn from "../../assets/icons/explore/iconDrinkActive.svg"
 import ShopOn from "../../assets/icons/explore/iconShopActive.svg"
 import StayOn from "../../assets/icons/explore/iconStayActive.svg"
 import FitOn from "../../assets/icons/explore/iconFitActive.svg"
+import { Colors } from "../theme"
 
 export interface CategoryFilterBarProps {
   /**
@@ -63,7 +64,8 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
   } = props
 
   return (
-    <View style={$container}>
+    <ScrollView horizontal >
+    <View row style={$container}>
       <TouchableOpacity
         style={catFilters.includes("DO") ? $Dobutton : $button}
         onPress={() => {
@@ -126,77 +128,84 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
         <Text style={$label}>FIT</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
   )
 })
 
 const $container: ViewStyle = {
-  height: 60,
-  flexDirection: "row",
-  justifyContent: "space-between",
+  //flexDirection: "row",
+  justifyContent: 'space-evenly',
   alignItems: "center",
+  overflow: 'scroll'
 }
 const $button: ViewStyle = {
-  width: 50,
-  height: 50,
   justifyContent: "center",
   alignItems: "center",
   borderRadius: 5,
+  marginRight:5,
+  padding:13,
+  backgroundColor: Colors.ash,
+  opacity: 0.5
 }
 const $Staybutton: ViewStyle = {
-  width: 50,
-  borderRadius: 5,
-  height: 50,
+  borderRadius: 10,
+
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#007CFF",
   elevation: 1,
+  marginRight:5,
+  padding:13,
 }
 const $Fitbutton: ViewStyle = {
-  width: 50,
-  height: 50,
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#00BC00",
   elevation: 1,
-  borderRadius: 5,
+  borderRadius: 10,
+  marginRight:5,
+  padding:13,
 }
 const $Shopbutton: ViewStyle = {
-  width: 50,
-  height: 50,
-  borderRadius: 5,
+  borderRadius: 10,
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FF2894",
   elevation: 1,
+  marginRight:5,
+  padding:13,
 }
 const $Drinkbutton: ViewStyle = {
-  width: 50,
-  height: 50,
-  borderRadius: 5,
+  borderRadius: 10,
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#C849D9",
   elevation: 1,
+  marginRight:5,
+  padding:13,
 }
 const $Eatbutton: ViewStyle = {
-  width: 50,
-  height: 50,
-  borderRadius: 5,
+  borderRadius: 10,
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FF6800",
   elevation: 1,
+  marginRight:5,
+  padding:13,
+  
 }
 const $Dobutton: ViewStyle = {
-  width: 50,
-  borderRadius: 5,
-  height: 50,
+  borderRadius: 10,
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FFB600",
   elevation: 1,
+  marginRight:5,
+  padding:13,
 }
 const $label: TextStyle = {
   fontSize: 8,
   fontWeight: "bold",
+  color:Colors.white,
+  padding:5,
 }

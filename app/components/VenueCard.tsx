@@ -2,6 +2,7 @@ import * as React from "react"
 import { ImageBackground, ImageStyle, StyleProp, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
 import { View, Text } from 'react-native-ui-lib';
 import { observer } from "mobx-react-lite"
+import FastImage from 'react-native-fast-image'
 
 
 export interface VenueCardProps {
@@ -28,7 +29,11 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
     //on Press of any selector sending the selector value to
     // setSections function which will expand the Accordion accordingly
   >
-    <ImageBackground source={{ uri: item.image }}   imageStyle={$imageBackground} resizeMode="cover" style={$image}>
+    <FastImage source={{ uri: item.image,
+    priority: FastImage.priority.high,
+    
+     
+    }}    imageStyle={$imageBackground} resizeMode="cover" style={$image}>
       <View style={$overlay}></View>
       <View style={$cardtext}>
         <Text
@@ -44,7 +49,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
           {item.distance} km away
         </Text>
       </View>
-    </ImageBackground>
+    </FastImage>
   </TouchableOpacity>
   )
 })

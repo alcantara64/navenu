@@ -9,6 +9,7 @@ import MapView from "react-native-maps"
 import { useState } from "react"
 import { SlimVenueCard } from "./SlimVenueCard"
 import { ISuckMapMarker } from "./ISuckMapMarker"
+import _ from  'lodash';
 
 export interface NearByVenuesProps {
   /**
@@ -81,7 +82,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         />
       </View>
       <MapView
-        style={{ alignSelf: 'stretch', flex: 1, minHeight: 350 }}
+        style={{ flex: 1, minHeight: 350 }}
         initialRegion={{
           latitude: 51.4936171,
           longitude: -0.1675824,
