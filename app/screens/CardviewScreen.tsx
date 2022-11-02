@@ -10,6 +10,7 @@ import { useFeeds } from "../hooks"
 import { useStores } from "../models"
 import { FEED_TYPE } from "../interface/feed"
 import { filterFeeds } from "../utils/transform"
+import { View } from "react-native-ui-lib"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {
@@ -50,7 +51,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
     return (
-      // <Screen style={$root} preset="scroll">
+       <View margin-8>
       <FlatList
         data={[...filteredList]}
         renderItem={renderItem}
@@ -63,6 +64,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         }
         extraData={JSON.stringify(catFilters.concat(selectedFilterTypes))}
       />
-      // </Screen>
+     </View>
     )
   })
