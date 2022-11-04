@@ -16,10 +16,18 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
   observer(function CardviewScreen({ navigation }) {
     // Pull in one of our MST stores
     const { feedsStore } = useStores()
-    const { catFilters, selectedFilterTypes, savedFeeds, toggleSaveFeed } = feedsStore
+    const {
+      catFilters,
+      selectedFilterTypes,
+      savedFeeds,
+      toggleSaveFeed,
+      toggleHeaderState,
+      showHeaderFilter,
+    } = feedsStore
 
-    const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } = useFeeds(catFilters)
-    const { isRefetchingByUser, refetchByUser } = useRefreshByUser({ refetch });
+    const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
+      useFeeds(catFilters)
+    const { isRefetchingByUser, refetchByUser } = useRefreshByUser({ refetch })
     const onVPress = (venue) => {
       navigation.navigate("VenueDetailScreen", {
         venue,
@@ -31,38 +39,56 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       })
     }
     const getMoreDate = () => {
-
-     hasNextPage &&  fetchNextPage()
+      hasNextPage && fetchNextPage()
     }
+    const hidTopBar = () => {
+      showHeaderFilter && toggleHeaderState()
+    }
+
     const renderItem = ({ item }) => {
       if (item.type === "location") {
-      
-        return <VenueCard item={item} onPress={onVPress} />
-      } 
+        return (
+          <VenueCard
+            savedFeeds={savedFeeds}
+            isFeed
+            onBookMark={toggleSaveFeed}
+            item={item}
+            onPress={onVPress}
+          />
+        )
+      }
       if (item.type === FEED_TYPE.article) {
         return <ArticleCard item={item} />
-      } 
-      if (item.type === FEED_TYPE.drop ) {
-       
-        return <DropCard savedFeeds={savedFeeds}  onBookMark={toggleSaveFeed} item={item} onPress={onDPress} />
-      } 
+      }
+      if (item.type === FEED_TYPE.drop) {
+        return (
+          <DropCard
+            savedFeeds={savedFeeds}
+            isFeed
+            onBookMark={toggleSaveFeed}
+            item={item}
+            onPress={onDPress}
+          />
+        )
+      }
     }
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
     return (
-       <View margin-8>
-      <FlatList
-        data={data.pages.flat()}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        progressViewOffset={18}
-        onEndReached={getMoreDate}
-        ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
-        refreshControl={
-          <RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />
-        }
-        extraData={JSON.stringify(catFilters.concat(selectedFilterTypes))}
-      />
-     </View>
+      <View margin-8>
+        <FlatList
+          onScroll={hidTopBar}
+          data={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters)}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          progressViewOffset={18}
+          onEndReached={getMoreDate}
+          ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
+          refreshControl={
+            <RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />
+          }
+          extraData={JSON.stringify(catFilters.concat(selectedFilterTypes))}
+        />
+      </View>
     )
   })

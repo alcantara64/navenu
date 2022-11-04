@@ -75,7 +75,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   
 
   return (
-    <View marginT-25 marginB-15 marginL-4 marginR-4>
+    <View marginT-25 marginB-15 marginL-4 marginR-5>
       <View style={$styles}>
         <TouchableOpacity onPress={navigateToMap}>
           <FontAwesome5 name="map-marker-alt" size={27} color="#000000" />
@@ -88,12 +88,13 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       {showHeaderFilter && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
-          <View marginT-5 row spread>
+          <View marginT-5 row>
             <TouchableOpacity onPress={toggleDrop} flex-1>
               <ImageBackground
                 source={require("../../assets/images/drops-background.jpg")}
                 style={[$filterType, selectedFilterTypes.includes(FEED_TYPE.drop) && $activeFilter]}
                 imageStyle={$filterTypeImageStyle}
+                resizeMode="cover"
               >
                 <Text white text70 left style={$CardTitles}>
                   DROPS
@@ -180,10 +181,10 @@ const $filterType: ImageStyle = {
   paddingTop: 20,
   paddingLeft: 10,
   paddingBottom: 10,
-  marginRight: 12,
+  marginRight: 16,
   marginBottom: 5,
   flexGrow: 1,
-  width: 120,
+  width: 110,
 }
 const $filterTypeImageStyle: ImageStyle = {
   borderRadius: 5,

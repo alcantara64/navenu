@@ -23,15 +23,16 @@ export interface DropCardProps {
   style?: StyleProp<ViewStyle>
   item: any
   onPress: (venue: any) => void
-  onBookMark: (feed: any) => void
+  onBookMark?: (feed: any) => void
   savedFeeds: Array<IFeed>
+  isFeed?: boolean,
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { onPress, item, style, onBookMark, savedFeeds } = props
+  const { onPress, item, style, onBookMark, savedFeeds, isFeed } = props
 
   const getStyleByCategory = (category) => {
     return { backgroundColor: categoryColorType[category] || Colors.orange }
@@ -56,7 +57,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
                 {item.name}
               </Text>
             </View>
-            <View flex-1 right>
+            {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
                 <FontAwesome5
                   solid={savedFeeds?.some((feed) => feed.id === item.id)}
@@ -65,7 +66,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
                   color="#FFFFFF"
                 />
               </TouchableOpacity>
-            </View>
+            </View>}
           </View>
           {item.expiration && (
             <View

@@ -11,7 +11,9 @@ import { View, Text } from "react-native-ui-lib"
 import { observer } from "mobx-react-lite"
 import FastImage from "react-native-fast-image"
 import { verticalScale } from "../utils/metrics"
-import { typography } from "../theme"
+import { Colors, typography } from "../theme"
+import { IFeed } from "../interface/feed"
+import { FontAwesome5 } from "@expo/vector-icons"
 
 export interface VenueCardProps {
   /**
@@ -19,14 +21,21 @@ export interface VenueCardProps {
    */
   style?: StyleProp<ViewStyle>
   onPress: (item: any) => void
-  item: { image: string; category: string; name: string; distance: number }
+  item: { image: string; category: string; name: string; distance: number, id: number, address: string },
+  isFeed?: boolean
+  onBookMark?: (feed: any) => void
+  savedFeeds: Array<IFeed>
 }
 
 /**
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { onPress, item } = props
+  const { onPress, item, isFeed =true, onBookMark, savedFeeds } = props
+
+  const saveDrop = () => {
+    onBookMark(item)
+  }
 
   return (
     <TouchableOpacity
@@ -42,11 +51,23 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
         resizeMode="cover"
         style={$image}
       >
-        <View style={$overlay}></View>
-        <View style={$cardtext}>
-          <Text style={$topText}>{item.category}</Text>
-          <Text style={$belowText}>{item.name}</Text>
-          <Text style={$bottomText}>{item.distance} km away</Text>
+        <View row style={$itemContainer}>
+        <View flex-7 marginT-5 style={$cardtext}>
+          <Text style={$topText}>{item.name}</Text>
+          <Text style={$belowText}>{item.category}</Text>
+          <Text style={$address}>{item.address}</Text>
+          <Text bottom style={$bottomText}>@ {item.name}</Text>
+        </View>
+        {isFeed && <View flex-1 right>
+              <TouchableOpacity onPress={saveDrop}>
+                <FontAwesome5
+                  solid={savedFeeds?.some((feed) => feed.id === item.id)}
+                  name="bookmark"
+                  size={20}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+            </View>}
         </View>
       </FastImage>
     </TouchableOpacity>
@@ -55,37 +76,38 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
 
 const $cardtext: ViewStyle = {
   alignItems: "baseline",
-  marginHorizontal: 9,
+}
+const $address: TextStyle = {
+  fontFamily: 'Inter-Regular',
+  color: Colors.white,
+  fontSize: 10,
+  textTransform: 'capitalize',
+  marginBottom: 10,
+  fontStyle: 'normal'
+}
+const $itemContainer:ViewStyle ={ 
+  marginHorizontal: 6,
 }
 const $topText: TextStyle = {
   marginBottom: 0,
   color: "#FFFFFF",
-  fontWeight: "bold",
   textTransform: "uppercase",
-  fontSize: 12,
-  fontFamily: typography.primary.normal
+  fontSize: 10,
+  lineHeight: 9,
+  fontFamily: typography.primary.normal,
+
 }
 
 const $bottomText: TextStyle = {
   marginTop: 0,
   color: "#FFFFFF",
-
   fontSize: 11,
-}
-const $overlay: ViewStyle = {
-  position: "absolute",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  backgroundColor: "black",
-  opacity: 0.5,
 }
 
 const $image: ImageStyle = {
   flex: 1,
   width: "100%",
-  height: verticalScale(125),
+  minHeight: verticalScale(110),
   marginBottom: 5,
   justifyContent: "center",
   borderRadius:6,

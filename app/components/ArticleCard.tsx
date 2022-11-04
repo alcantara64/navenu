@@ -1,10 +1,10 @@
 import * as React from "react"
 import {
   ImageBackground,
+  ImageStyle,
   StyleProp,
   TextStyle,
   TouchableOpacity,
-  View,
   ViewStyle,
 } from "react-native"
 import { observer } from "mobx-react-lite"
@@ -12,6 +12,7 @@ import { observer } from "mobx-react-lite"
 
 import { Text } from "./Text"
 import { useState } from "react"
+import { View } from "react-native-ui-lib"
 
 export interface ArticleCardProps {
   style?: StyleProp<ViewStyle>
@@ -33,18 +34,20 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
       // on Press of any selector sending the selector value to
       // setSections function which will expand the Accordion accordingly
     >
-      <ImageBackground source={{ uri: item.image }}  resizeMode="cover" style={$image}>
+      <ImageBackground source={{ uri: item.image }} imageStyle={$backgroundImage}  resizeMode="cover" style={$image}>
         <View style={$overlay}></View>
-        <View style={$cardtext}>
-          <Text style={$editorialText}>Editorial</Text>
-          <Text style={$nameText}>{item.name}</Text>
+        <View margin-4 style={$cardtext}>
+          <Text style={$editorialText}>{item.intro}</Text>
+          <Text style={$nameText}>{item.category}</Text>
           <Text style={$bottomTex}>{articleVisible ? null : item.description}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
   )
 })
-
+const $backgroundImage:ImageStyle ={
+  borderRadius: 6,
+}
 const $overlay: ViewStyle = {
   position: "absolute",
   top: 0,
@@ -69,9 +72,10 @@ const $cardtext: ViewStyle = {
 const $image: ViewStyle = {
   flex: 1,
   width: "100%",
-  height: 125,
+  height: 110,
   marginBottom: 5,
   justifyContent: "center",
+  borderRadius: 6,
 }
 const $bottomTex: TextStyle = {
   marginTop: 0,
