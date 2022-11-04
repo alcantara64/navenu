@@ -6,7 +6,6 @@ import {
   Image,
   ImageStyle,
   ImageBackground,
-  ScrollView,
   TextStyle,
 } from "react-native"
 import { observer } from "mobx-react-lite"
@@ -22,7 +21,7 @@ import { horizontalScale } from "../utils/metrics"
 
 export interface TopBarProps {
   style?: StyleProp<ViewStyle>
-  navigation: any
+  navigation: any,
 }
 
 export const TopBar = observer(function TopBar(props: TopBarProps) {
@@ -34,6 +33,8 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       selectedFilterTypes,
       addFilterType,
       removeFilterType,
+      toggleHeaderState,
+      showHeaderFilter,
     },
   } = useStores()
   const [DoStateButton, setDoStateButton] = useState(false)
@@ -51,8 +52,9 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
 
   const showFilter = () => {
     setFilterVisible(!filtervisible)
+    toggleHeaderState();
   }
-  const { style } = props
+  const { style, } = props
   const $styles = [$container, style]
   const navigateToMap = () => {
     // navigation.navigate('MapScreen')
@@ -70,6 +72,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
     const isToggle = selectedFilterTypes.includes(FEED_TYPE.article)
     isToggle ? removeFilterType(FEED_TYPE.article) : addFilterType(FEED_TYPE.article)
   }
+  
 
   return (
     <View marginT-25 marginB-15 marginL-4 marginR-4>
@@ -82,7 +85,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
           <FontAwesome5 name="filter" size={27} color="#000000" />
         </TouchableOpacity>
       </View>
-      {filtervisible && (
+      {showHeaderFilter && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
           <View marginT-5 row spread>

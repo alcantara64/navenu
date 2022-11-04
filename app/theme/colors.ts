@@ -117,3 +117,12 @@ export const Colors = {
   offred: '#FE5F55',
   ash: '#333333',
 };
+
+export const categoryColorType = {
+  STAY: '#007CFF',
+  EAT: '#FF6800',
+  SHOP: '#FF2894',
+  DRINK: '#C849D9',
+  DO: '#FFB600',
+  FIT: '#00BC00',
+}

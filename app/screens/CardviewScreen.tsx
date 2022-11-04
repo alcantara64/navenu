@@ -16,14 +16,10 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
   observer(function CardviewScreen({ navigation }) {
     // Pull in one of our MST stores
     const { feedsStore } = useStores()
-    const { catFilters, selectedFilterTypes } = feedsStore
+    const { catFilters, selectedFilterTypes, savedFeeds, toggleSaveFeed } = feedsStore
 
-    const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch } = useFeeds({})
+    const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } = useFeeds(catFilters)
     const { isRefetchingByUser, refetchByUser } = useRefreshByUser({ refetch });
-    const [filterChangeCount, setFilterChange ] = useState(0);
-    useEffect(() => {
-      setFilterChange(filterChangeCount + 1)
-    }, [JSON.stringify(selectedFilterTypes), JSON.stringify(catFilters)])
     const onVPress = (venue) => {
       navigation.navigate("VenueDetailScreen", {
         venue,
@@ -34,7 +30,10 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         venue,
       })
     }
-    const filteredList = filterFeeds(data?.pages.flat(), selectedFilterTypes, catFilters);
+    const getMoreDate = () => {
+
+     hasNextPage &&  fetchNextPage()
+    }
     const renderItem = ({ item }) => {
       if (item.type === "location") {
       
@@ -45,7 +44,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       } 
       if (item.type === FEED_TYPE.drop ) {
        
-        return <DropCard item={item} onPress={onDPress} />
+        return <DropCard savedFeeds={savedFeeds}  onBookMark={toggleSaveFeed} item={item} onPress={onDPress} />
       } 
     }
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
@@ -53,11 +52,11 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     return (
        <View margin-8>
       <FlatList
-        data={[...filteredList]}
+        data={data.pages.flat()}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         progressViewOffset={18}
-        onEndReached={fetchNextPage}
+        onEndReached={getMoreDate}
         ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
         refreshControl={
           <RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />

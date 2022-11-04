@@ -13,7 +13,6 @@ import {
 import Config from "../../config"
 import type {
   ApiConfig,
-  ApiFeedResponse,
   LoginResponse,
 } from "./api.types"
 import {_rootStore } from "../../models"

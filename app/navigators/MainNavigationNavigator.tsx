@@ -9,6 +9,7 @@ import {
 } from "../screens"
 import { TopBar } from "../components"
 import { ViewStyle } from "react-native"
+import { useStores } from "../models"
 
 export type MainNavigationNavigatorParamList = {
   Demo: undefined
@@ -21,18 +22,20 @@ export type MainNavigationNavigatorParamList = {
 
 const Stack = createStackNavigator<MainNavigationNavigatorParamList>()
 export function MainStack() {
+  const {feedsStore} = useStores();
+
   return (
     <Stack.Navigator initialRouteName="Home"  screenOptions={{ cardStyle: $cardStyle, headerShown: false }}>
       <Stack.Group>
         <Stack.Screen
           name="Home"
           component={CardviewScreen}
-          options={{ header: () => <TopBar navigation={""} /> }}
+          options={{ header: ({navigation}) => <TopBar navigation={navigation} /> }}
         />
         <Stack.Screen
           name="MapScreen"
           component={MapScreen}
-          options={{ header: () => <TopBar navigation={""} /> }}
+          options={{ header: ({navigation}) => <TopBar navigation={navigation}/> }}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: "modal" }}>
