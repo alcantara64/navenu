@@ -38,12 +38,12 @@ const palette = {
 
   primaryColor: '#2364AA',
   secondaryColor: '#81C3D7',
-  fit: '#00BC00',
+  fit: '#00BC07',
   stay: '#007CFF',
   shop: '#FF2894',
   drink: '#C849D9',
   eat: '#FF6800',
-  do: '#FFB600',
+  do: '#FFB607',
   textColor: '#221D23',
   errorColor: '#E63B2E',
   successColor: '#ADC76F',
@@ -97,12 +97,12 @@ export const colors = {
 }
 
 export const Colors = {
-  fit: '#00BC00',
+  fit: '#00BC07',
   stay: '#007CFF',
   shop: '#FF2894',
   drink: '#C849D9',
   eat: '#FF6800',
-  do: '#FFB600',
+  do: '#FFB607',
   orange: '#f57c00',
   blue: '#039be5',
   black: '#222222',
@@ -123,6 +123,6 @@ export const categoryColorType = {
   EAT: '#FF6800',
   SHOP: '#FF2894',
   DRINK: '#C849D9',
-  DO: '#FFB600',
-  FIT: '#00BC00',
+  DO: '#FFB607',
+  FIT: '#00BC07',
 }
