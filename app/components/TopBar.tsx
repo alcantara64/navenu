@@ -75,7 +75,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   
 
   return (
-    <View marginT-25 marginB-15 marginL-4 marginR-5>
+    <View marginT-45 marginB-15 marginL-4 marginR-5>
       <View style={$styles}>
         <TouchableOpacity onPress={navigateToMap}>
           <FontAwesome5 name="map-marker-alt" size={27} color="#000000" />
@@ -101,7 +101,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleVenue} left>
+            <TouchableOpacity style={$middleImage} onPress={toggleVenue} >
               <ImageBackground
                 source={require("../../assets/images/venue.png")}
                 style={[
@@ -115,7 +115,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleEditorial}>
+            <TouchableOpacity onPress={toggleEditorial} marginR-5>
               <ImageBackground
                 source={require("../../assets/images/editorial.jpg")}
                 style={[
@@ -123,8 +123,9 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                   selectedFilterTypes.includes(FEED_TYPE.article) && $activeFilter,
                 ]}
                 imageStyle={$filterTypeImageStyle}
+                resizeMode={'cover'}
               >
-                <Text white left style={$CardTitles}>
+                <Text  white center style={$CardTitles}>
                   EDITORIAL
                 </Text>
               </ImageBackground>
@@ -199,4 +200,8 @@ const $CardTitles: TextStyle = {
   fontSize: spacing.medium,
   color: Colors.white,
   fontWeight: "900",
+}
+const $middleImage:ImageStyle ={
+   marginLeft: '1%',
+   marginRight: '1%',
 }

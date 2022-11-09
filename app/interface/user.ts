@@ -1,3 +1,6 @@
+import { IDrop } from "./drops"
+import { IVenue } from "./venues"
+
 //According to assets\data\user_response.json 
 export interface IUser{
    ID:number
@@ -76,4 +79,7 @@ export interface ICurator {
     short_description: string,
     gender: string,
     home_town: string,
+}
+export interface IUserList {
+    userlist: Record<string, IDrop | IVenue >
 }

@@ -37,11 +37,10 @@ export const Modal = observer(function Modal(props: ModalProps) {
 
 
 const $modalContainer:ViewStyle = {
-  // width: '100%',
+   width: '100%',
   backgroundColor: 'rgba(0, 0, 0, 0.8)',
   position: 'relative',
   borderWidth:1,
-  borderColor: 'red'
 } 
 
 

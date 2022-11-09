@@ -1,7 +1,7 @@
 import { IDrop } from "../../interface/drops"
 import { IFeed } from "../../interface/feed"
 import { IVenues } from "../../interface/venues"
-import { IUser} from "../../interface/user"
+import { IUser, IUserList} from "../../interface/user"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
@@ -115,4 +115,8 @@ export interface IVenueResponse {
   data: Array<IVenues>
   status: boolean
   message: string
+}
+export interface IUserListResponse {
+  data: IUserList,
+  status: number,
 }

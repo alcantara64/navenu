@@ -1,5 +1,5 @@
 import { ApiResponse } from "apisauce";
-import { Api, FeedResponse } from "../api"
+import { Api, FeedResponse, IUserListResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem";
 
 export class UserService {
@@ -19,5 +19,15 @@ export class UserService {
   
      return {kind: 'ok', data: rawData.data}
 
+  }
+
+  async getUserList(){
+    const response:ApiResponse<IUserListResponse> =   await this.httpClient.get('/UserLists/');
+    if(!response.ok){
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data;
+    return {kind: 'ok', data: rawData.data}
   }
 }
