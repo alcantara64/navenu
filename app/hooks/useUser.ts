@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import { Api } from "../services/api"
 import { UserService } from "../services/userService"
 
@@ -26,4 +26,13 @@ export const useUserList = () => {
   return useQuery(["userList"], getUserList, {
     enabled: false,
   })
+}
+export const createUserListName = async (listName) => {
+  const api = new UserService()
+  const response = await api.createListName({ listname: listName })
+  if (response.kind !== "ok") {
+    throw new Error(response.message || "an error occurred")
+  } else {
+    return response.data
+  }
 }

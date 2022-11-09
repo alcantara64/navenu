@@ -120,3 +120,10 @@ export interface IUserListResponse {
   data: IUserList,
   status: number,
 }
+export interface ICreateUserListResponse {
+  data: {
+    user_list_id: string,
+    listname: string,
+  },
+  status: number,
+}

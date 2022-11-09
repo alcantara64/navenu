@@ -1,9 +1,16 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { FlatList, RefreshControl, TextStyle, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { ArticleCard, ErrorMessage, LoadingIndicator, Modal, TextInput, VenueCard } from "../components"
+import {
+  ArticleCard,
+  ErrorMessage,
+  LoadingIndicator,
+  Modal,
+  TextInput,
+  VenueCard,
+} from "../components"
 import { DropCard } from "../components/DropCard"
 import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
@@ -12,7 +19,8 @@ import { FEED_TYPE } from "../interface/feed"
 import { filterFeeds } from "../utils/transform"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
-import { useUserList } from "../hooks/useUser"
+import { createUserListName, useUserList } from "../hooks/useUser"
+import { useMutation } from "react-query"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {
@@ -30,11 +38,12 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
       useFeeds(catFilters)
     const { isRefetchingByUser, refetchByUser } = useRefreshByUser({ refetch })
-    const userList = useUserList();
-    const [showListModal, setShowListModal] = useState(false);
-
-
-
+    const userList = useUserList()
+    const [showListModal, setShowListModal] = useState(false)
+    const [listName, setListName] = useState("")
+    const createListNameMutation = useMutation({
+      mutationFn: createUserListName
+    })
 
     const onVPress = (venue) => {
       navigation.navigate("VenueDetailScreen", {
@@ -52,9 +61,13 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const hidTopBar = () => {
       showHeaderFilter && toggleHeaderState()
     }
-    const onBookMark = (item) =>{
-      userList.refetch();
+    const onBookMark = (item) => {
+      userList.refetch()
       setShowListModal(true)
+    }
+    const addListName = () => {
+      createListNameMutation.mutate(listName );
+      userList.refetch()
     }
 
     const renderItem = ({ item }) => {
@@ -88,26 +101,40 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     if (isLoading) return <LoadingIndicator />
     return (
       <View margin-8>
-        {showListModal && <Modal show={showListModal} body={
-          <View center flex style={$centeredView}>
-            <View style={$modalView}>
-             <TouchableOpacity>
-            <View row>
-            {Object.keys(userList.data).map((key, index) =>(
-          <Text key={index} left style={$listText}> {key} </Text>
-          
-          ))}
-          
-          </View>
-          </TouchableOpacity> 
-          {userList.isLoading && <LoadingIndicator />}
-          {userList.error && <Text>an error occurred try again later</Text>}
-          <View style={{width:'100%'}}>
-            <TextInput leftIconName={null} rightIcon={null} handlePasswordVisibility={false}/>
-          </View>
-          </View>
-          </View>
-        }></Modal>}
+        {showListModal && (
+          <Modal
+            show={showListModal}
+            body={
+              <View center flex style={$centeredView}>
+                <View style={$modalView}>
+                  <TouchableOpacity>
+                    <View row>
+                      {userList?.data?.userlist &&
+                        Object.keys(userList.data.userlist).map((key, index) => (
+                          <Text key={index} left style={$listText}>
+                            {" "}
+                            {key}{" "}
+                          </Text>
+                        ))}
+                    </View>
+                  </TouchableOpacity>
+                  {userList.isLoading && <LoadingIndicator />}
+                  {userList.error && <Text>an error occurred try again later</Text>}
+                  <View style={{ width: "100%" }}>
+                    <TextInput
+                      onChangeText={(text) => {
+                        setListName(text)
+                      }}
+                      leftIconName={null}
+                      rightIcon={"add-to-list"}
+                      handlePasswordVisibility={addListName}
+                    />
+                  </View>
+                </View>
+              </View>
+            }
+          ></Modal>
+        )}
         <FlatList
           onScroll={hidTopBar}
           data={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters)}
@@ -128,17 +155,16 @@ const $centeredView: ViewStyle = {
   flex: 1,
   backgroundColor: "rgba(0, 0, 0, 0.9)",
 }
-const $listText:TextStyle = {
+const $listText: TextStyle = {
   color: Colors.mediumGray,
   fontFamily: typography.primary.medium,
 }
 const $modalView: ViewStyle = {
-
   backgroundColor: "white",
   borderTopLeftRadius: 8,
   borderTopRightRadius: 8,
   padding: 15,
-  alignItems: 'flex-start',
+  alignItems: "flex-start",
   shadowColor: "#000",
   shadowOffset: {
     width: 0,
@@ -147,6 +173,6 @@ const $modalView: ViewStyle = {
   shadowRadius: 8,
   elevation: 5,
   // borderTopWidth: 10,
-  width:"80%",
+  width: "80%",
   borderRadius: 8,
 }
