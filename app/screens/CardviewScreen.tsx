@@ -56,7 +56,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       userList.refetch();
       setShowListModal(true)
     }
-    console.log('fetchData ==>', userList.data)
 
     const renderItem = ({ item }) => {
       if (item.type === "location") {
@@ -94,7 +93,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             <View style={$modalView}>
              <TouchableOpacity>
             <View row>
-            {Object.keys(userList.data.userlist).map((key, index) =>(
+            {Object.keys(userList.data).map((key, index) =>(
           <Text key={index} left style={$listText}> {key} </Text>
           
           ))}
