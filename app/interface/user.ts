@@ -1,7 +1,6 @@
 import { IDrop } from "./drops"
-import { IVenue } from "./venues"
+import { IArticle, IVenue } from "./venues"
 
-//According to assets\data\user_response.json 
 export interface IUser{
    ID:number
    social_id:number | null
@@ -18,13 +17,13 @@ export interface IUser{
    gender:string 
    home_town:string 
    avatar:string
-   user_preferences:Array<user_preferences>
-   savedDeals:Array<savedDeals>
-   savedLocations:Array<savedLocations>
-   userLists:Array<Record<string, unknown>>
+//    user_preferences:Array<user_preferences>
+//    savedDeals:Array<savedDeals>
+//    savedLocations:Array<savedLocations>
+//    userLists:Array<Record<string, unknown>>
 }
 
-interface user_preferences extends IUser{
+export interface IUserPreference {
     DO: Array<string>
     EAT:Array<string>
     DRINK:Array<string>
@@ -32,7 +31,7 @@ interface user_preferences extends IUser{
     SHOP:Array<string>
     FIT: Array<string>
 }
-interface savedDeals  extends IUser{
+export interface ISavedDeal{
     type:"drop"
     id:number
     name: string
@@ -49,7 +48,7 @@ interface savedDeals  extends IUser{
     venue_image:string
 }
 
-interface savedLocations  extends IUser{
+export interface ISavedLocation{
     type:"location"
     id:number
     name: string
@@ -60,11 +59,6 @@ interface savedLocations  extends IUser{
     image: string
 }
 
-//@TODO Emmanuel I dont know the best way to lay this out please refer to assets\data\user_response.json:120 for data structure
-interface user_lists   extends IUser{
-
-
-}
 export interface ICurator {
     ID: string,
     social_id: null | string,
@@ -81,5 +75,5 @@ export interface ICurator {
     home_town: string,
 }
 export interface IUserList {
-    userlist: Record<string, IDrop | IVenue >
+    userlist: Record<string, IDrop | IVenue| IArticle >
 }

@@ -73,7 +73,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               marginL-4
               paddingL-4
               marginT-15
-              marginB-5
+              marginB-8
               row
               style={[$countDownContainer, getStyleByCategory(item.category)]}
             >
@@ -81,6 +81,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               <CountdownTimer time={item.expiration} />
             </View>
           )}
+         {item.isExpired && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText}> EXPIRED</Text></View>)}
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -109,7 +110,6 @@ const $belowText: TextStyle = {
 const $image: ImageStyle = {
   flex: 1,
   width: "100%",
-  height: 100,
   marginBottom: 5,
   justifyContent: "center",
 }
@@ -117,10 +117,20 @@ const $imageBackground: ImageStyle = {
   borderRadius: 6,
 }
 const $countDownContainer: ViewStyle = {
-  backgroundColor: Colors.orange,
   borderRadius: 5,
   padding: 2,
   display: "flex",
-  justifyContent: "flex-start",
-  maxWidth: "45%",
+  alignSelf: "flex-start",
+}
+const $expiredDroContainer: ViewStyle = {
+  backgroundColor: Colors.ash,
+  alignSelf: "flex-start",
+  borderRadius: 5,
+}
+
+const $expiredText: TextStyle = {
+  fontFamily: "bourtonbasedrop",
+  color: Colors.white,
+  padding: 2,
+  letterSpacing: 1.3,
 }

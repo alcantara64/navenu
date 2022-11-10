@@ -19,8 +19,11 @@ import { FEED_TYPE } from "../interface/feed"
 import { filterFeeds } from "../utils/transform"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
-import { createUserListName, useUserList } from "../hooks/useUser"
+import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
 import { useMutation } from "react-query"
+import { useSwipe } from "../hooks/useSwipe"
+import { IArticle, IVenue } from "../interface/venues"
+import { IDrop } from "../interface/drops"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {
@@ -41,9 +44,28 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const userList = useUserList()
     const [showListModal, setShowListModal] = useState(false)
     const [listName, setListName] = useState("")
+    const [selectedFeedItem, setSelectedFeedItem] = useState<IVenue | IDrop | IArticle>(null)
     const createListNameMutation = useMutation({
-      mutationFn: createUserListName
+      mutationFn: createUserListName,
     })
+    const addItemToListMutation = useMutation({
+      mutationFn: addItemToUserList
+    })
+    const { onTouchStart, onTouchEnd } = useSwipe(
+      undefined,
+      undefined,
+      onSwipeUp,
+      onSwipeDown,
+      6,
+    )
+
+   
+    function onSwipeUp() {
+      setTopBarStatus(true)
+    }
+    function onSwipeDown() {
+      setTopBarStatus(false)
+    }
 
     const onVPress = (venue) => {
       navigation.navigate("VenueDetailScreen", {
@@ -58,16 +80,28 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const getMoreDate = () => {
       hasNextPage && fetchNextPage()
     }
-    const hidTopBar = () => {
-      showHeaderFilter && toggleHeaderState()
+    const setTopBarStatus = (value:boolean) => {
+      if(value && showHeaderFilter) return
+      if(!value && showHeaderFilter){
+        toggleHeaderState()
+      }
+      if(value && !showHeaderFilter){
+        toggleHeaderState()
+      }
+
     }
     const onBookMark = (item) => {
       userList.refetch()
+      setSelectedFeedItem(item);
       setShowListModal(true)
     }
     const addListName = () => {
-      createListNameMutation.mutate(listName );
+      createListNameMutation.mutate(listName)
       userList.refetch()
+    }
+    const onAddItemToUserList = (listItem) =>{
+      addItemToListMutation.mutate({user_list_id: listItem?.user_list_id, type: selectedFeedItem?.type, id: selectedFeedItem?.id});
+      setShowListModal(false);
     }
 
     const renderItem = ({ item }) => {
@@ -107,17 +141,18 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             body={
               <View center flex style={$centeredView}>
                 <View style={$modalView}>
-                  <TouchableOpacity>
                     <View row>
                       {userList?.data?.userlist &&
-                        Object.keys(userList.data.userlist).map((key, index) => (
-                          <Text key={index} left style={$listText}>
+                        Object.entries(userList.data.userlist).map((key, index) => (
+                          <TouchableOpacity key={index} onPress={() => {onAddItemToUserList(key[1])}}>
+                          <Text  left style={$listText}>
                             {" "}
-                            {key}{" "}
+                            {key[0]}{" "}
                           </Text>
+                          </TouchableOpacity>
                         ))}
                     </View>
-                  </TouchableOpacity>
+                  
                   {userList.isLoading && <LoadingIndicator />}
                   {userList.error && <Text>an error occurred try again later</Text>}
                   <View style={{ width: "100%" }}>
@@ -136,7 +171,8 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
           ></Modal>
         )}
         <FlatList
-          onScroll={hidTopBar}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
           data={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters)}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}

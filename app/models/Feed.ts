@@ -100,7 +100,6 @@ export const FeedStore = types
       self.selectedFilterTypes = _.without(self.selectedFilterTypes, filter);
     },
     toggleHeaderState(){
-      console.log('self.showHeaderFilter', self.showHeaderFilter);
      self.showHeaderFilter = !self.showHeaderFilter;
     },
   toggleSaveFeed(item:any){

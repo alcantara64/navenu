@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useMutation, useQuery } from "react-query"
-import { Api } from "../services/api"
+import { AddListItemPayload, Api } from "../services/api"
 import { UserService } from "../services/userService"
 
 const getUserById = async (userId: string) => {
@@ -30,6 +30,15 @@ export const useUserList = () => {
 export const createUserListName = async (listName) => {
   const api = new UserService()
   const response = await api.createListName({ listname: listName })
+  if (response.kind !== "ok") {
+    throw new Error(response.message || "an error occurred")
+  } else {
+    return response.data
+  }
+}
+export const addItemToUserList = async (newList: AddListItemPayload) => {
+  const api = new UserService()
+  const response = await api.addItemToList(newList)
   if (response.kind !== "ok") {
     throw new Error(response.message || "an error occurred")
   } else {

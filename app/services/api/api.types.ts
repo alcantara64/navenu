@@ -1,7 +1,7 @@
 import { IDrop } from "../../interface/drops"
-import { IFeed } from "../../interface/feed"
+import { FEED_TYPE, IFeed } from "../../interface/feed"
 import { IVenues } from "../../interface/venues"
-import { IUser, IUserList} from "../../interface/user"
+import { ISavedDeal, ISavedDeals, ISavedLocation, ISavedLocations, IUser, IUserList, IUserPreference, IUserPreferences} from "../../interface/user"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
@@ -107,7 +107,13 @@ export interface IDropsResponse {
   message: string
 }
 export interface UserResponse {
-  data: Array<IUser>
+  data:{
+    user: IUser, 
+    user_preferences: IUserPreference,
+    savedDeals: Array<ISavedDeal>,
+    savedLocations: Array<ISavedLocation>,
+    userLists: IUserList,
+  }
   status:boolean
   message:string
 }
@@ -127,3 +133,4 @@ export interface ICreateUserListResponse {
   },
   status: number,
 }
+ export type AddListItemPayload = {user_list_id: string, type:FEED_TYPE, id:number }

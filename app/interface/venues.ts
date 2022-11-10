@@ -33,7 +33,7 @@ export interface IVenue {
   images: Array<IGallery>
   menu: Array<IMenu>
   curators: Array<ICurators>
-  articles: Array<IArticles>
+  articles: Array<IArticle>
   drops: Array<IDrop>
 }
 
@@ -52,7 +52,7 @@ interface ICurators {
   name: string
   image: string
 }
-interface IArticles  {
+export interface IArticle  {
   type: "Article"
   id: number
   name: string
