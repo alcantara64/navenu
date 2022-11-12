@@ -37,7 +37,9 @@ export const FeedStore = types
     error: types.optional(ErrorModel, {message: '', isError: false}),
     isLoading: types.maybe(types.boolean),
     isFetchingNextPage:types.maybe(types.boolean),
-    selectedFilterTypes:types.optional(types.array(types.string), [])
+    selectedFilterTypes:types.optional(types.array(types.string), []),
+    showHeaderFilter: types.maybe(types.boolean),
+    savedFeeds: types.optional(types.array(Feed), []),
 
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -96,7 +98,19 @@ export const FeedStore = types
     },
     removeFilterType(filter:FEED_TYPE){
       self.selectedFilterTypes = _.without(self.selectedFilterTypes, filter);
-    }
+    },
+    toggleHeaderState(){
+     self.showHeaderFilter = !self.showHeaderFilter;
+    },
+  toggleSaveFeed(item:any){
+  const isFeedAvailable = self.savedFeeds.find((feed) => feed.id === item.id);
+  if(isFeedAvailable){
+   self.savedFeeds =  self.savedFeeds.filter((feed) => feed.id !== item.id );
+  }else{
+    self.savedFeeds = [...self.savedFeeds, item]
+  }
+
+  }
   })) 
 
 export interface FeedSnapshotOut extends SnapshotOut<typeof FeedStore> {}

@@ -20,11 +20,11 @@ export interface CountdownTimerProps {
  */
 export const CountdownTimer = observer(function CountdownTimer(props: CountdownTimerProps) {
   const {time, showSeparator} = props
-  
-  if(!isValidDate(time)) return null
 
- const formattedDate =  formatDate(time)
-  const date = new Date(formattedDate);
+ // if(!isValidDate(time)) return null
+
+//  const formattedDate =  formatDate(time)
+  const date = new Date();
   
   const seconds = date.getTime() / 1000; //1440516958
   
@@ -44,7 +44,7 @@ export const CountdownTimer = observer(function CountdownTimer(props: CountdownT
   );
 })
 
-const $digitStyle:ViewStyle = { backgroundColor: Colors.orange }
+const $digitStyle:ViewStyle = { backgroundColor: 'transparent' }
 const $digitTextStyle:TextStyle = { color: '#FFFF', fontWeight: 'bold', fontSize:16 }
 const $timeLabelStyle:TextStyle = { color: 'red', fontWeight: 'bold' }
 const $separatorStyle:TextStyle = { color: '#FFFFFF' }

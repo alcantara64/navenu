@@ -13,7 +13,6 @@ import {
 import Config from "../../config"
 import type {
   ApiConfig,
-  ApiFeedResponse,
   LoginResponse,
 } from "./api.types"
 import {_rootStore } from "../../models"
@@ -83,11 +82,11 @@ export class Api {
    return this.apisauce.get<any>(url, params, axiosConfig);
   }
 
-  async post(url:string, payload:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+  async post(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
     return this.apisauce.post(url, payload, axiosConfig);
    }
   
-   async put(url:string, payload:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+   async put(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
     return this.apisauce.put(url, payload, axiosConfig);
    }
 

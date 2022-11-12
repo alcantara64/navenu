@@ -15,7 +15,15 @@ const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
 
 export const useFeeds = (catFilters: any) => {
   return useInfiniteQuery(["feed", catFilters], getFeeds, {
-    getNextPageParam: (lastPage) => lastPage.pageParam + 1,
+    getNextPageParam: (lastPage) => {
+      if(lastPage.pageParam){
+        return lastPage?.pageParam + 1
+      }else{
+      return undefined
+      }
+
+   
+    },
     onError: (error) => console.log(error),
     staleTime: 1000 * 60 * 60,
   })

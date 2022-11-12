@@ -15,6 +15,7 @@ import ShopOn from "../../assets/icons/explore/iconShopActive.svg"
 import StayOn from "../../assets/icons/explore/iconStayActive.svg"
 import FitOn from "../../assets/icons/explore/iconFitActive.svg"
 import { Colors } from "../theme"
+import { horizontalScale, moderateScale, verticalScale } from "../utils/metrics"
 
 export interface CategoryFilterBarProps {
   /**
@@ -64,7 +65,7 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
   } = props
 
   return (
-    <ScrollView horizontal >
+    // <ScrollView horizontal >
     <View row style={$container}>
       <TouchableOpacity
         style={catFilters.includes("DO") ? $Dobutton : $button}
@@ -128,22 +129,22 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
         <Text style={$label}>FIT</Text>
       </TouchableOpacity>
     </View>
-    </ScrollView>
+    // </ScrollView>
   )
 })
 
 const $container: ViewStyle = {
-  //flexDirection: "row",
+  flexDirection: "row",
   justifyContent: 'space-evenly',
   alignItems: "center",
-  overflow: 'scroll'
+  overflow: 'scroll',
 }
 const $button: ViewStyle = {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: 5,
   marginRight:5,
-  padding:13,
+  padding:moderateScale(10),
   backgroundColor: Colors.ash,
   opacity: 0.5
 }
@@ -155,53 +156,56 @@ const $Staybutton: ViewStyle = {
   backgroundColor: "#007CFF",
   elevation: 1,
   marginRight:5,
-  padding:13,
+  padding:moderateScale(10),
 }
 const $Fitbutton: ViewStyle = {
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#00BC00",
   elevation: 1,
-  borderRadius: 10,
-  marginRight:5,
-  padding:13,
+  borderRadius: moderateScale(10),
+  marginRight:2,
+  padding:10,
 }
 const $Shopbutton: ViewStyle = {
-  borderRadius: 10,
+  borderRadius: moderateScale(10),
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FF2894",
   elevation: 1,
-  marginRight:5,
-  padding:13,
+  marginRight:horizontalScale(5),
+  padding:10,
 }
 const $Drinkbutton: ViewStyle = {
-  borderRadius: 10,
+  borderRadius: moderateScale(10),
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#C849D9",
   elevation: 1,
   marginRight:5,
-  padding:13,
+  padding:10,
 }
 const $Eatbutton: ViewStyle = {
-  borderRadius: 10,
+  borderRadius: moderateScale(10),
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FF6800",
   elevation: 1,
   marginRight:5,
-  padding:13,
+  padding:10,
   
 }
 const $Dobutton: ViewStyle = {
-  borderRadius: 10,
+  borderRadius: moderateScale(10),
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#FFB600",
   elevation: 1,
   marginRight:5,
-  padding:13,
+  paddingBottom:verticalScale(8),
+  paddingTop:verticalScale(8),
+  paddingLeft:horizontalScale(8),
+  paddingRight:horizontalScale(8),
 }
 const $label: TextStyle = {
   fontSize: 8,

@@ -18,7 +18,7 @@ export const formatDate = (date: string, dateFormat?: string, options?: Options)
     ...options,
     locale,
   }
-  return format(parseISO(date), dateFormat ?? "MMM dd, yyyy", dateOptions)
+  return format(new Date(date), dateFormat ?? "MM-dd-yyyy", dateOptions)
 }
 
 export const  isValidDate = (date:string) =>{

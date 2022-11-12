@@ -11,6 +11,7 @@ import { useStores } from "../models"
 import { mapStyle } from "../theme"
 import { Images } from "../theme/images"
 import { ISuckMapMarker } from "../components/ISuckMapMarker"
+import { useFeeds } from "../hooks"
 
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
@@ -18,8 +19,8 @@ import { ISuckMapMarker } from "../components/ISuckMapMarker"
 export const MapScreen: FC<StackScreenProps<AppStackScreenProps, "Map">> = observer(function MapScreen() {
 
     
-   const { feedsStore } = useStores();
-   const {isLoading, error, feeds} = feedsStore;
+   const { feedsStore: {catFilters} } = useStores();
+   const {isLoading, error, data} = useFeeds(catFilters);
   const [errorMsg, setErrorMsg] = useState('');
   const [location, setLocation] = useState({});
   const [mapRegion, setMapRegion] = useState(null);
@@ -45,7 +46,7 @@ export const MapScreen: FC<StackScreenProps<AppStackScreenProps, "Map">> = obser
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
-  if (error) return <ErrorMessage message={error.message}></ErrorMessage>;
+  if (error) return <ErrorMessage message={" an error occurred"}></ErrorMessage>;
   if (location) {
     return (
       <MapView
@@ -67,7 +68,7 @@ export const MapScreen: FC<StackScreenProps<AppStackScreenProps, "Map">> = obser
           title="Navenu Member"
           description="This is where you are"
           key="user1"></Marker>
-        {feeds.map((venue, index) => (
+        {data.pages.flat().map((venue, index) => (
           <ISuckMapMarker key={index} venue={venue} />
         ))}
       </MapView>

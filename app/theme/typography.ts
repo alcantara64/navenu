@@ -49,6 +49,11 @@ const fonts = {
     // Android only font.
     normal: "monospace",
   },
+  bourtonbase: {
+    normal: "bourtonbase",
+    medium: "bourtonbasedrop",
+
+  } 
 }
 
 export const typography = {
@@ -59,7 +64,7 @@ export const typography = {
   /**
    * The primary font. Used in most places.
    */
-  primary: fonts.spaceGrotesk,
+  primary: fonts.bourtonbase,
   /**
    * An alternate font used for perhaps titles and stuff.
    */

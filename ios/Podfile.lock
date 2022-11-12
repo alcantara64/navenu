@@ -364,7 +364,7 @@ PODS:
     - React-Core
   - react-native-netinfo (9.3.4):
     - React-Core
-  - react-native-pager-view (6.0.1):
+  - react-native-pager-view (6.0.2):
     - React-Core
   - react-native-safe-area-context (4.3.4):
     - RCT-Folly
@@ -806,7 +806,7 @@ SPEC CHECKSUMS:
   React-logger: 15c734997c06fe9c9b88e528fb7757601e7a56df
   react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa
   react-native-netinfo: 6ac9bcc7c88dc51717bda3484eb99093acb755e0
-  react-native-pager-view: 3051346698a0ba0c4e13e40097cc11b00ee03cca
+  react-native-pager-view: 592421df0259bf7a7a4fe85b74c24f3f39905605
   react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
   React-perflogger: 367418425c5e4a9f0f80385ee1eaacd2a7348f8e
   React-RCTActionSheet: e4885e7136f98ded1137cd3daccc05eaed97d5a6
