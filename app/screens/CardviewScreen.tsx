@@ -25,7 +25,6 @@ import { useMutation } from "react-query"
 import { useSwipe } from "../hooks/useSwipe"
 import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
-import { MapScreen } from "./MapScreen"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {

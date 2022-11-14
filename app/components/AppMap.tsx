@@ -9,6 +9,10 @@ import { IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
 import { Images } from "../theme/images"
 import { ISuckMapMarker } from "./ISuckMapMarker"
+import { View } from "react-native-ui-lib"
+import { BottomSheet } from "./BottomSheet"
+import { VenueCard } from "./VenueCard"
+import { useNavigation } from "@react-navigation/native"
 
 export interface AppMapProps {
   /**
@@ -21,6 +25,7 @@ export interface AppMapProps {
   latitude: number
   longitude: number,
   item: Array<IVenue> | Array<IDrop>
+  showBottomSheet?: boolean
   
 }
 
@@ -28,9 +33,9 @@ export interface AppMapProps {
  * Describe your component here
  */
 export const AppMap = observer(function AppMap(props: AppMapProps) {
-  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item } = props
+  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item, showBottomSheet } = props
   const $styles = [$container, style];
-
+const navigation = useNavigation();
   useEffect(() => {
     (async () => {
       const { status, } = await Location.requestForegroundPermissionsAsync()
@@ -44,7 +49,14 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     })()
   }, [])
 
+const onPressVenue  = (venue) =>{
+  navigation.navigate('VenueDetailScreen', {
+    venue
+  })
+} 
+
   return (
+    <>
     <MapView
       style={$styles}
       initialRegion={{
@@ -69,6 +81,13 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         <ISuckMapMarker key={index} venue={venue} />
       ))}
     </MapView>
+    {showBottomSheet && (<BottomSheet show={showBottomSheet}>
+      {item.map((feed) => (
+        <VenueCard key={feed.id} item={feed} isFeed={false} onPress={onPressVenue} />
+      ))}
+      
+    </BottomSheet>)}
+    </>
   )
 })
 

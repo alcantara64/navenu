@@ -24,7 +24,7 @@ export interface VenueCardProps {
   item: { image: string; category: string; name: string; distance: number, id: number, address: string },
   isFeed?: boolean
   onBookMark?: (feed: any) => void
-  savedFeeds: Array<IFeed>
+  savedFeeds?: Array<IFeed>
 }
 
 /**
