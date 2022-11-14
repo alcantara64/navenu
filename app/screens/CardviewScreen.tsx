@@ -4,6 +4,7 @@ import { FlatList, RefreshControl, TextStyle, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import {
+  AppMap,
   ArticleCard,
   ErrorMessage,
   LoadingIndicator,
@@ -24,11 +25,12 @@ import { useMutation } from "react-query"
 import { useSwipe } from "../hooks/useSwipe"
 import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
+import { MapScreen } from "./MapScreen"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen({ navigation }) {
     // Pull in one of our MST stores
-    const { feedsStore } = useStores()
+    const { feedsStore, authenticationStore } = useStores()
     const {
       catFilters,
       selectedFilterTypes,
@@ -36,6 +38,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       toggleSaveFeed,
       toggleHeaderState,
       showHeaderFilter,
+      isMapMode,
     } = feedsStore
 
     const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
@@ -45,6 +48,9 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const [showListModal, setShowListModal] = useState(false)
     const [listName, setListName] = useState("")
     const [selectedFeedItem, setSelectedFeedItem] = useState<IVenue | IDrop | IArticle>(null)
+
+    const [longitude, setLongitude] = useState<number>(authenticationStore.longitude)
+    const [latitude, setLatitude] = useState<number>(authenticationStore.latitude)
     const createListNameMutation = useMutation({
       mutationFn: createUserListName,
     })
@@ -133,6 +139,9 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     }
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
+    if(isMapMode) return<AppMap onSetErrorMessage={(e) => {
+      // do something with error
+    }}  longitude={longitude} latitude={latitude} onSetLatitude={setLatitude} onSetLongitude={setLongitude}  item={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters) as any} />
     return (
       <View margin-8>
         {showListModal && (

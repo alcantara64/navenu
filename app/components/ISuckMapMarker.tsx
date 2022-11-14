@@ -43,7 +43,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
           var icon = Images.SHOP;
           break;
       }
-      
+      console.log('venue all ==>',venue.lat, venue.lng);
       return (
         <Marker
           key={venue.id}

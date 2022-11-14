@@ -1,16 +1,18 @@
 import React from "react"
 import {
+  MapScreen,
   PreferencesScreen,
   SavedDropsScreen,
   SavedLocationsScreen,
   SearchScreen,
 } from "../screens"
-import { FontAwesome5, Foundation, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5, Foundation, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { TopBarLogoOnly } from "../components/TopBarLogoOnly"
 import { MainStack } from "./MainNavigationNavigator"
 import { ProfileButton } from "../components/ProfileButton";
 import { TopBar } from "../components/TopBar";
+import { BottomTabLogo } from "../components";
 
 export type BottomNavigationNavigatorParamList = {
   Demo: undefined,
@@ -20,6 +22,7 @@ export type BottomNavigationNavigatorParamList = {
   Location: undefined,
   SavedDrops: undefined,
   Settings: undefined,
+  Notification: undefined,
 
 }
 
@@ -37,25 +40,7 @@ export const BottomNavigationNavigator = () => {
           header: ({navigation}) => <TopBar  navigation={navigation}/>
         }}
       />
-        <BottomTab.Screen
-        name="Location"
-        component={SavedLocationsScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <FontAwesome5 name="map-marker-alt" color={color} size={size} />,
-          header: () => <TopBarLogoOnly />,
-        }}
-      />
-              <BottomTab.Screen
-        name="SavedDrops"
-        component={SavedDropsScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <FontAwesome name="bookmark" color={color} size={size} />,
-          header: () => <TopBarLogoOnly />,
-        }}
-      />
-      <BottomTab.Screen
+           <BottomTab.Screen
         name="SearchScreen"
         component={SearchScreen}
         options={{
@@ -64,6 +49,26 @@ export const BottomNavigationNavigator = () => {
           header: () => <TopBarLogoOnly />,
         }}
       /> 
+        <BottomTab.Screen
+        name="SavedDrops"
+        component={SavedDropsScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size }) => <BottomTabLogo/>,
+          header: () => <TopBarLogoOnly />,
+        }}
+      />
+        <BottomTab.Screen
+        name="Notification"
+        component={SavedDropsScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size }) => <Ionicons name="notifications-outline" size={size} color={color} />,
+          header: () => <TopBarLogoOnly />,
+        }}
+      />
+      
+ 
       <BottomTab.Screen
       name="Settings"
       component={PreferencesScreen}
