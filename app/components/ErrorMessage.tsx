@@ -1,14 +1,15 @@
 import * as React from "react"
-import { StyleProp, ViewStyle } from "react-native"
+import { StyleProp, ViewStyle, Image } from "react-native"
 import { observer } from "mobx-react-lite"
 import { View, Text } from "react-native-ui-lib"
+
 
 export interface ErrorMessageProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  message:string
+  message?:string
 }
 
 /**
@@ -20,7 +21,8 @@ export const ErrorMessage = observer(function ErrorMessage(props: ErrorMessagePr
 
   return (
     <View style={$styles}>
-      <Text text70red>{message}</Text>
+      <Image source={require('../../assets/Logo-white.png')} />
+      <Text text70red>{message || 'Ops! something went wrong!' }</Text>
     </View>
   )
 })

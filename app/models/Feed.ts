@@ -40,6 +40,7 @@ export const FeedStore = types
     selectedFilterTypes:types.optional(types.array(types.string), []),
     showHeaderFilter: types.maybe(types.boolean),
     savedFeeds: types.optional(types.array(Feed), []),
+    isMapMode: types.maybe(types.boolean),
 
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -77,6 +78,9 @@ export const FeedStore = types
     },
     async refetch(){
       this.getFeeds(self.pageParams)
+    },
+    async setMapMode(status: boolean){
+    self.isMapMode = status;
     },
 
     async fetchNextPage(){

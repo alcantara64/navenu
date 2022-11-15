@@ -35,6 +35,8 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       removeFilterType,
       toggleHeaderState,
       showHeaderFilter,
+      setMapMode,
+      isMapMode,
     },
   } = useStores()
   const [DoStateButton, setDoStateButton] = useState(false)
@@ -58,7 +60,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   const $styles = [$container, style]
   const navigateToMap = () => {
     // navigation.navigate('MapScreen')
-    navigation.navigate()
+    setMapMode(!isMapMode);
   }
   const toggleDrop = () => {
     const isToggle = selectedFilterTypes.includes(FEED_TYPE.drop)

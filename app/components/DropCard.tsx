@@ -15,6 +15,7 @@ import { View } from "react-native-ui-lib"
 import { categoryColorType, Colors } from "../theme"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { IFeed } from "../interface/feed"
+import { useNavigation } from "@react-navigation/native"
 
 export interface DropCardProps {
   /**
@@ -22,9 +23,8 @@ export interface DropCardProps {
    */
   style?: StyleProp<ViewStyle>
   item: any
-  onPress: (venue: any) => void
   onBookMark?: (feed: any) => void
-  savedFeeds: Array<IFeed>
+  savedFeeds?: Array<IFeed>
   isFeed?: boolean,
 }
 
@@ -32,7 +32,8 @@ export interface DropCardProps {
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { onPress, item, style, onBookMark, savedFeeds, isFeed } = props
+  const { item, onBookMark, savedFeeds, isFeed } = props
+  const navigation = useNavigation();
 
   const getStyleByCategory = (category) => {
     return { backgroundColor: categoryColorType[category] || Colors.orange }
@@ -41,9 +42,14 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
   const saveDrop = () => {
     onBookMark(item)
   }
+  const onDropPress = (venue) => {
+    navigation.navigate("DropScreen", {
+      venue,
+    })
+  }
 
   return (
-    <TouchableOpacity key={item.id} onPress={() => onPress(item)} activeOpacity={0.1}>
+    <TouchableOpacity key={item.id} onPress={() => onDropPress(item)} activeOpacity={0.1}>
       <ImageBackground
         source={{ uri: item.image }}
         imageStyle={$imageBackground}

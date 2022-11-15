@@ -12,13 +12,18 @@ export interface ISuckMapMarkerProps {
    */
   style?: StyleProp<ViewStyle>
   venue: any
+  onMarkerPressed: (item:any) => void
 }
 
 /**
  * Describe your component here
  */
 export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMarkerProps) {
-  const { venue } = props
+  const { venue, onMarkerPressed } = props
+
+  const handleMakerPress = () => {
+    onMarkerPressed(venue);
+  }
 
   const size = 100;
   switch (venue.type) {
@@ -43,9 +48,9 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
           var icon = Images.SHOP;
           break;
       }
-      
       return (
         <Marker
+         onPress={handleMakerPress}
           key={venue.id}
           coordinate={{
             latitude: parseFloat(venue.lat),
@@ -82,6 +87,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 //   style={{ width: 255, height: 255 }}
                 coordinate={{
@@ -131,6 +137,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 coordinate={{
                   latitude: parseFloat(venue.lat),
@@ -166,6 +173,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
   
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 coordinate={{
                   latitude: parseFloat(venue.lat),
@@ -200,6 +208,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 coordinate={{
                   latitude: parseFloat(venue.lat),
@@ -234,6 +243,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 coordinate={{
                   latitude: parseFloat(venue.lat),
@@ -268,6 +278,7 @@ export const ISuckMapMarker = observer(function ISuckMapMarker(props: ISuckMapMa
             }
             return (
               <Marker
+              onPress={handleMakerPress}
                 key={venue.id}
                 coordinate={{
                   latitude: parseFloat(venue.lat),

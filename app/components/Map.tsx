@@ -30,7 +30,6 @@ export const Map = observer(function Map(props: MapProps) {
 
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
-  console.log(lat)
   useEffect(() => {
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()

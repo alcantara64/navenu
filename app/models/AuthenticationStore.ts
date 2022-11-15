@@ -9,8 +9,8 @@ export const AuthenticationStoreModel = types
     authEmail: types.optional(types.string, ""),
     authPassword: types.optional(types.string, ""),
     isLoading: types.optional(types.boolean, false),
-    longitude: types.optional(types.string, ''),
-    latitude: types.optional(types.string, ''),
+    longitude: types.optional(types.number, 0),
+    latitude: types.optional(types.number, 0),
   })
   .views((store) => ({
     get isAuthenticated() {

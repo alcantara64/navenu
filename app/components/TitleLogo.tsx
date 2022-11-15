@@ -1,7 +1,6 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle, Image, ImageStyle } from "react-native"
+import { StyleProp, ViewStyle, Image, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
 
 export interface TitleLogoProps {
   /**
