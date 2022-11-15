@@ -1,8 +1,8 @@
 import _ from "lodash"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC } from "react"
 import { ViewStyle, Dimensions, ImageBackground, TextStyle } from "react-native"
-import { Carousel, Constants, View, Text, Button, Image } from "react-native-ui-lib"
+import { Carousel, View, Text, Button, Image } from "react-native-ui-lib"
 
 import { colors, typography, Colors } from "../theme"
 
