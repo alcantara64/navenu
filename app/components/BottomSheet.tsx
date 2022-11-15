@@ -3,6 +3,8 @@ import { Animated, Pressable, StyleProp, useWindowDimensions, View, ViewStyle } 
 import { observer } from "mobx-react-lite"
 
 import { useAnimatedBottom } from "../hooks/useAnimatedBottom"
+import { Colors } from "../theme"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 export interface BottomSheetProps {
   /**
@@ -13,49 +15,59 @@ export interface BottomSheetProps {
   show: boolean
   height?: number
   onOuterClick?: () => void
+  showBackgroundOverlay?: boolean
+  onClose: () => void
 }
 
 /**
  * Describe your component here
  */
 export const BottomSheet = observer(function BottomSheet(props: BottomSheetProps) {
-  const {  show, height, onOuterClick, children } = props
+  const { show, height, onOuterClick, children, showBackgroundOverlay, onClose } = props
 
   const { height: screenHeight } = useWindowDimensions()
 
   const bottom = useAnimatedBottom(show, height)
-
-  return (
-    <>
-      {show && (
-        <Pressable
-          onPress={onOuterClick}
-          style={[$outerOverlay, { height: screenHeight }]}
-        >
-          <View />
-        </Pressable>
-      )}
-      <Animated.View style={[$bottomSheet, { height, bottom }]}>
-        {children}
-      </Animated.View>
-    </>
-  )
+  if (show) {
+    return (
+      <>
+        {showBackgroundOverlay && (
+          <Pressable onPress={onOuterClick} style={[$outerOverlay, { height: screenHeight }]}>
+            <View />
+          </Pressable>
+        )}
+        <Animated.View style={[$bottomSheet, { height, bottom }]}>
+          <TouchableOpacity onPress={onClose}>
+            <View style={$closeButton} />
+          </TouchableOpacity>
+          {children}
+        </Animated.View>
+      </>
+    )
+  }
 })
 
-
- const $outerOverlay:ViewStyle =  {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1,
-    backgroundColor: 'black',
-    opacity: 0.3,
-  };
- const $bottomSheet:ViewStyle =  {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1,
-    backgroundColor: 'blue',
-    //borderRadius: 16,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10
-  };
+const $outerOverlay: ViewStyle = {
+  position: "absolute",
+  width: "100%",
+  zIndex: 1,
+  backgroundColor: "black",
+  opacity: 0.3,
+}
+const $bottomSheet: ViewStyle = {
+  position: "absolute",
+  width: "100%",
+  zIndex: 1,
+  backgroundColor: Colors.white,
+  borderTopRightRadius: 10,
+  borderTopLeftRadius: 10,
+  paddingTop: 10,
+  padding: 10,
+}
+const $closeButton: ViewStyle = {
+  borderWidth: 1,
+  width: 100,
+  alignSelf: "center",
+  marginBottom: 20,
+  marginTop: 10,
+}

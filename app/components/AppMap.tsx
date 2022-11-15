@@ -2,7 +2,7 @@ import * as React from "react"
 import { Dimensions, StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { mapStyle } from "../theme"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import * as Location from "expo-location"
 import MapView, { Marker } from "react-native-maps"
 import { IVenue } from "../interface/venues"
@@ -13,6 +13,8 @@ import { View } from "react-native-ui-lib"
 import { BottomSheet } from "./BottomSheet"
 import { VenueCard } from "./VenueCard"
 import { useNavigation } from "@react-navigation/native"
+import { FEED_TYPE } from "../interface/feed"
+import { DropCard } from "./DropCard"
 
 export interface AppMapProps {
   /**
@@ -33,9 +35,11 @@ export interface AppMapProps {
  * Describe your component here
  */
 export const AppMap = observer(function AppMap(props: AppMapProps) {
-  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item, showBottomSheet } = props
+  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item, } = props
   const $styles = [$container, style];
-const navigation = useNavigation();
+  const [showBottomSheet, setShowBottomSheet] = useState(false)
+  const [currentFeed, setCurrentFeed ] = useState<IDrop | IVenue | null>(null)
+
   useEffect(() => {
     (async () => {
       const { status, } = await Location.requestForegroundPermissionsAsync()
@@ -49,21 +53,24 @@ const navigation = useNavigation();
     })()
   }, [])
 
-const onPressVenue  = (venue) =>{
-  navigation.navigate('VenueDetailScreen', {
-    venue
-  })
-} 
+
+const handleBottomSheetClose = () => {
+  setShowBottomSheet(false)
+}
+const handleMarkerPressed = (feed:IDrop | IVenue) => {
+   setCurrentFeed(feed)
+   setShowBottomSheet(true);
+}
 
   return (
     <>
     <MapView
       style={$styles}
       initialRegion={{
-        latitude,
-        longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.01,
+        latitude:51.507351,
+        longitude: -0.127758,
+        latitudeDelta: 0,
+        longitudeDelta: -0,
       }}
       customMapStyle={mapStyle}
     >
@@ -78,13 +85,14 @@ const onPressVenue  = (venue) =>{
         key="user1"
       ></Marker>
       {item.map((venue, index) => (
-        <ISuckMapMarker key={index} venue={venue} />
+        <ISuckMapMarker onMarkerPressed={handleMarkerPressed} key={index} venue={venue} />
       ))}
     </MapView>
-    {showBottomSheet && (<BottomSheet show={showBottomSheet}>
-      {item.map((feed) => (
-        <VenueCard key={feed.id} item={feed} isFeed={false} onPress={onPressVenue} />
-      ))}
+    {showBottomSheet && (<BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
+        
+        {currentFeed?.type === FEED_TYPE.location && (<VenueCard item={currentFeed}   />)}
+        {currentFeed?.type === FEED_TYPE.drop && (<DropCard item={currentFeed} isFeed  />)}
+  
       
     </BottomSheet>)}
     </>

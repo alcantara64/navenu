@@ -14,6 +14,7 @@ import { verticalScale } from "../utils/metrics"
 import { Colors, typography } from "../theme"
 import { IFeed } from "../interface/feed"
 import { FontAwesome5 } from "@expo/vector-icons"
+import { useNavigation } from "@react-navigation/native"
 
 export interface VenueCardProps {
   /**
@@ -32,6 +33,13 @@ export interface VenueCardProps {
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
   const { onPress, item, isFeed =true, onBookMark, savedFeeds } = props
+  const navigation = useNavigation();
+
+  const onPressVenue  = (venue) =>{
+    navigation.navigate('VenueDetailScreen', {
+      venue
+    })
+  } 
 
   const saveDrop = () => {
     onBookMark(item)
@@ -40,7 +48,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
   return (
     <TouchableOpacity
       key={item.id}
-      onPress={() => onPress(item)}
+      onPress={() => onPressVenue(item)}
       activeOpacity={0.1}
       //on Press of any selector sending the selector value to
       // setSections function which will expand the Accordion accordingly

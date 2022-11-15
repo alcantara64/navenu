@@ -23,6 +23,7 @@ import {
   LoginScreen,
   PreferencesScreen,
   SearchScreen,
+  WelcomeScreen,
 } from "../screens"
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
@@ -72,18 +73,19 @@ const BottomTab = createBottomTabNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated },
+    authenticationStore: { isAuthenticated, logout },
   } = useStores();
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={isAuthenticated ? "Home" : "Login"}
+      initialRouteName={isAuthenticated ? "Home" : "Welcome"}
     >
       {isAuthenticated ? (
         <Stack.Screen name="Home" component={BottomNavigationNavigator} />
       ) : (
         <>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      
         </>
       )}
     </Stack.Navigator>
