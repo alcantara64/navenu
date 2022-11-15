@@ -73,7 +73,7 @@ const BottomTab = createBottomTabNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated, logout },
+    authenticationStore: { isAuthenticated },
   } = useStores();
   return (
     <Stack.Navigator
@@ -85,6 +85,7 @@ const AppStack = observer(function AppStack() {
       ) : (
         <>
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
       
         </>
       )}
