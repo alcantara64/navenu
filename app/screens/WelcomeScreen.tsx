@@ -66,6 +66,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
           <Carousel
             containerStyle={$carouselContainer}
             loop
+            autoplay
             pageControlProps={{
               size: 10,
               containerStyle: {
