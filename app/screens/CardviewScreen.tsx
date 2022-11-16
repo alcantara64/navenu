@@ -21,7 +21,7 @@ import { filterFeeds } from "../utils/transform"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
-import { useMutation } from "react-query"
+import { useMutation, useQueryClient } from "react-query"
 import { useSwipe } from "../hooks/useSwipe"
 import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
@@ -30,6 +30,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
   observer(function CardviewScreen({ navigation }) {
     // Pull in one of our MST stores
     const { feedsStore, authenticationStore } = useStores()
+    const queryClient = useQueryClient()
     const {
       catFilters,
       selectedFilterTypes,
@@ -54,7 +55,10 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       mutationFn: createUserListName,
     })
     const addItemToListMutation = useMutation({
-      mutationFn: addItemToUserList
+      mutationFn: addItemToUserList,
+      onSuccess: () =>{
+        queryClient.invalidateQueries({ queryKey: ['userList'] })
+      }
     })
     const { onTouchStart, onTouchEnd } = useSwipe(
       undefined,
@@ -149,7 +153,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             body={
               <View center flex style={$centeredView}>
                 <View style={$modalView}>
-                    <View row>
+                    <View row style={{flexWrap: 'wrap'}}>
                       {userList?.data?.userlist &&
                         Object.entries(userList.data.userlist).map((key, index) => (
                           <TouchableOpacity key={index} onPress={() => {onAddItemToUserList(key[1])}}>

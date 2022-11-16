@@ -64,15 +64,20 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       <View paddingH-page>
         <View style={$sliderContainer}>
           <Carousel
+          ref={carousel}
             containerStyle={$carouselContainer}
             loop
             autoplay
             pageControlProps={{
               size: 10,
+              onPagePress,
+              color:Colors.white,
+              inactiveColor:Colors.ash,
               containerStyle: {
                 alignSelf: "center",
                 position: "absolute",
                 bottom: 30,
+                
               },
             }}
             pageControlPosition={Carousel.pageControlPositions.OVER}

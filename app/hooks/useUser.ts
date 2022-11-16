@@ -24,7 +24,7 @@ export const useUser = (userId: string) => {
 
 export const useUserList = () => {
   return useQuery(["userList"], getUserList, {
-    enabled: false,
+    enabled: true,
   })
 }
 export const createUserListName = async (listName) => {
