@@ -1,6 +1,7 @@
+import { useNavigation } from "@react-navigation/native"
 import _ from "lodash"
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React, { FC, useMemo } from "react"
 import { ViewStyle, Dimensions, ImageBackground, TextStyle } from "react-native"
 import { Carousel, View, Text, Button, Image } from "react-native-ui-lib"
 
@@ -22,8 +23,13 @@ const welcomeLogo = require("../../assets/NavenuWhite.png")
 // }
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen() {
   const carousel = React.createRef<typeof Carousel>()
+  const navigation = useNavigation();
 
-  const Pages = () => [
+  const gotoLoginScreen = () => {
+    navigation.navigate('Login')
+  }
+
+  const Pages = useMemo( () => [
     {
       image: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider01.jpg",
       bottomTextHeader: "CONNECT",
@@ -45,7 +51,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       bottomTextSecond: "EVENTS. EXPERIENCES. ITEMS.",
       showAuthButtons: true,
     },
-  ]
+  ], [])
 
   const onPagePress = (index: number) => {
     if (carousel && carousel.current) {
@@ -58,19 +64,25 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       <View paddingH-page>
         <View style={$sliderContainer}>
           <Carousel
+          ref={carousel}
             containerStyle={$carouselContainer}
             loop
+            autoplay
             pageControlProps={{
               size: 10,
+              onPagePress,
+              color:Colors.white,
+              inactiveColor:Colors.ash,
               containerStyle: {
                 alignSelf: "center",
                 position: "absolute",
                 bottom: 30,
+                
               },
             }}
             pageControlPosition={Carousel.pageControlPositions.OVER}
           >
-            {Pages().map(
+            {Pages.map(
               (
                 { image, bottomTextHeader, bottomTextFirst, bottomTextSecond, showAuthButtons },
                 i,
@@ -106,6 +118,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                               label={"SIGN UP"}
                             />
                             <Button
+                             onPress={gotoLoginScreen}
                               marginL-5
                               size={Button.sizes.large}
                               borderRadius={15}

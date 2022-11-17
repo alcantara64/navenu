@@ -1,47 +1,52 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextStyle, ViewStyle } from "react-native"
-import * as Location from 'expo-location';
-import { AppButton, FormErrorMessage, Icon, TextInput, LoadingIndicator, Logo, Screen, Text, TextFieldAccessoryProps, View } from "../components"
-import { useStores} from "../models"
+import { TextStyle, ViewStyle, ImageBackground, Dimensions } from "react-native"
+import * as Location from "expo-location"
+import {
+  AppButton,
+  FormErrorMessage,
+  TextInput,
+  LoadingIndicator,
+  Text,
+  ToastLoader,
+} from "../components"
+import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
-import { Colors, colors } from "../theme"
+import { Colors } from "../theme"
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from '@react-native-google-signin/google-signin';
-import { KeyboardAwareScrollView } from "react-native-ui-lib";
-import { Images } from "../theme/images";
-import { Formik } from 'formik';
-import { loginValidationSchema } from "../utils/validations";
-import { useTogglePasswordVisibility } from "../hooks";
-import { useNavigation } from "@react-navigation/native";
-
+} from "@react-native-google-signin/google-signin"
+import { KeyboardAwareScrollView, View, keyboa } from "react-native-ui-lib"
+import { Formik } from "formik"
+import { loginValidationSchema } from "../utils/validations"
+import { useTogglePasswordVisibility } from "../hooks"
+import { useNavigation } from "@react-navigation/native"
+const authImage = require("../../assets/images/auth/auth-login-image.png")
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const navigation = useNavigation();
-  const authPasswordInput = useRef<TextInput>()
+  const navigation = useNavigation()
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
-  const [errorMsg, setErrorMsg] = useState('');
-  const [userInfo, setUserInfo] = useState<any>(null);
-  const [errorState, setErrorState] = useState('');
+  const [errorMsg, setErrorMsg] = useState("")
+  const [userInfo, setUserInfo] = useState<any>(null)
+  const [errorState, setErrorState] = useState("")
+  const [loading, setLoading] = useState(false)
   const {
     authenticationStore: {
-    
       setAuthEmail,
       setAuthPassword,
       validationErrors,
       login,
       isLoading,
-      setLongitudeAndLatitude
+      setLongitudeAndLatitude,
     },
   } = useStores()
-  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility();
+  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
 
   useEffect(() => {
     // todo refactor this
@@ -52,22 +57,21 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   }, [])
 
   useEffect(() => {
-    (async () => {
-      const  { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
+    ;(async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied")
+        return
       }
-      const location = await Location.getLastKnownPositionAsync({});
-      console.log('location ==>', location);
-     if(location){
-      setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude);
-
-     }else{
-      setErrorMsg('We could not fetch your location data');
-     }
-    })();
-  }, []);
+      const location = await Location.getLastKnownPositionAsync({})
+      console.log("location ==>", location)
+      if (location) {
+        setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
+      } else {
+        setErrorMsg("We could not fetch your location data")
+      }
+    })()
+  }, [])
 
   useEffect(() => {
     // Here is where you could fetch credientials from keychain or storage
@@ -78,9 +82,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   const googleSignIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      setUserInfo(userInfo);
+      await GoogleSignin.hasPlayServices()
+      const userInfo = await GoogleSignin.signIn()
+      setUserInfo(userInfo)
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -92,13 +96,14 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         // some other error happened
       }
     }
-  };
+  }
 
-  async function onLogin(values:{email:string, password:string}) {
-    const { email, password } = values;
+  async function onLogin(values: { email: string; password: string }) {
+    const { email, password } = values
+    setLoading(true)
     setIsSubmitted(true)
-    setAuthEmail(email);
-    setAuthPassword(password);
+    setAuthEmail(email)
+    setAuthPassword(password)
     setAttemptsCount(attemptsCount + 1)
 
     if (Object.values(validationErrors).some((v) => !!v)) return
@@ -107,27 +112,14 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     } catch (e) {
       console.error(e)
     }
+
     // Make a request to your server to get an authentication token.
     // If successful, reset the fields and set the token.
     setIsSubmitted(false)
     setAuthPassword("")
     setAuthEmail("")
+    setLoading(false)
   }
-
-  const PasswordRightAccessory = useMemo(
-    () =>
-      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-        return (
-          <Icon
-            icon={isAuthPasswordHidden ? "view" : "hidden"}
-            color={colors.palette.neutral800}
-            containerStyle={props.style}
-            onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
-          />
-        )
-      },
-    [isAuthPasswordHidden],
-  )
 
   useEffect(() => {
     return () => {
@@ -137,135 +129,136 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   }, [])
 
   return (
-    <Screen
-      preset="auto"
-      contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+    <ImageBackground
+      imageStyle={{ height: Dimensions.get("window").height }}
+      source={authImage}
     >
-      <View isSafe style={$container}>
-      <KeyboardAwareScrollView enableOnAndroid={true}>
-      <View style={$logoContainer}>
-          <Logo uri={Images.logo} />
-        </View>
-      {/* {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
+      <ToastLoader
+        isLoading={isLoading}
+        hasError={!!errorMsg}
+        errorMessage={errorMsg}
+        clearError={() => setErrorMsg("")}
+      />
+      <View bottom style={$container}>
+        <View>
+          <Formik
+            initialValues={{
+              email: "navenuteam@navenu.com",
+              password: "Gonavenu",
+            }}
+            validationSchema={loginValidationSchema}
+            onSubmit={(values) => onLogin(values)}
+          >
+            {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+              <>
+                {/* Input fields */}
+                <TextInput
+                  name="email"
+                  leftIconName="email"
+                  placeholder="Enter email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  autoFocus={true}
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                />
+                <FormErrorMessage error={errors.email} visible={touched.email} />
+                <TextInput
+                  name="password"
+                  leftIconName="key-variant"
+                  placeholder="Enter password"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={passwordVisibility}
+                  textContentType="password"
+                  rightIcon={rightIcon}
+                  handlePasswordVisibility={handlePasswordVisibility}
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                />
+                <FormErrorMessage error={errors.password} visible={touched.password} />
 
-      <Formik
-          initialValues={{
-            email: 'navenuteam@navenu.com',
-            password: 'Gonavenu',
-          }}
-          validationSchema={loginValidationSchema}
-          onSubmit={(values) => onLogin(values)}>
-          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
-            <>
-              {/* Input fields */}
-              <TextInput
-                name="email"
-                leftIconName="email"
-                placeholder="Enter email"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                autoFocus={true}
-                value={values.email}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-              />
-              <FormErrorMessage error={errors.email} visible={touched.email} />
-              <TextInput
-                name="password"
-                leftIconName="key-variant"
-                placeholder="Enter password"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={passwordVisibility}
-                textContentType="password"
-                rightIcon={rightIcon}
-                handlePasswordVisibility={handlePasswordVisibility}
-                value={values.password}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-              />
-              <FormErrorMessage error={errors.password} visible={touched.password} />
-          
-              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-              {/* Login button */}
-              <AppButton style={$button} onPress={handleSubmit}>
-                <Text style={$buttonText}>Login</Text>
-              </AppButton>
-            </>
-          )}
-        </Formik>
-     {  <GoogleSigninButton size={1} style={$googleButton}  onPress={googleSignIn}/>}
-     <AppButton
-          style={$borderlessButtonContainer}
-          borderless
-          title={'Create a new account?'}
-          onPress={() => navigation.navigate('Signup')}
-        />
-        <AppButton
-          style={$borderlessButtonContainer}
-          borderless
-          title={'Forgot Password'}
-          onPress={() => navigation.navigate('ForgotPassword')}
-        />
-      {/* <Button
+                {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
+                {/* Login button */}
+                <AppButton style={$button} onPress={handleSubmit}>
+                  <Text style={$buttonText}>Login</Text>
+                </AppButton>
+              </>
+            )}
+          </Formik>
+
+          {<GoogleSigninButton size={1} style={$googleButton} onPress={googleSignIn} />}
+          <AppButton
+            style={$borderlessButtonContainer}
+            borderless
+            title={"Create a new account?"}
+            // onPress={() => navigation.navigate("Signup")}
+          />
+          <AppButton
+            style={$borderlessButtonContainer}
+            borderless
+            title={"Forgot Password"}
+            //onPress={() => navigation.navigate("ForgotPassword")}
+          />
+          {/* <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
         style={$tapButton}
         preset="reversed"
         onPress={onLogin}
       /> */}
-      
-      {isLoading && <LoadingIndicator />}
-      </KeyboardAwareScrollView>
+
+          {isLoading && <LoadingIndicator />}
+        </View>
       </View>
-    </Screen>
+      {/* //</Screen> */}
+    </ImageBackground>
   )
 })
 
 const $screenContentContainer: ViewStyle = {
-
+  flex: 1,
 }
 const $container: ViewStyle = {
-  flex: 1,
-  flexDirection: 'column',
-  backgroundColor: Colors.white, // from config
-  padding: 24
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  // alignItems: 'center',
+  marginTop: '70%',
+
+  padding: 24,
 }
 
-const $logoContainer:ViewStyle =  {
-  alignItems: 'center',
-};
-
+const $logoContainer: ViewStyle = {
+  alignItems: "center",
+}
 
 const $button: ViewStyle = {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-    backgroundColor: Colors.orange,
-    padding: 10,
-    borderRadius: 8,
-};
+  width: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: 8,
+  backgroundColor: Colors.orange,
+  padding: 10,
+  borderRadius: 8,
+}
 
 const $buttonText: TextStyle = {
   fontSize: 20,
   color: Colors.white,
-  fontWeight: '700',
+  fontWeight: "700",
 }
 
 const $borderlessButtonContainer: TextStyle = {
   marginTop: 16,
   color: Colors.white,
-  alignItems: 'center',
-  justifyContent: 'center',
+  alignItems: "center",
+  justifyContent: "center",
 }
 const $googleButton: ViewStyle = {
-  width: '100%',
-  alignSelf: 'center',
-
+  width: "100%",
+  alignSelf: "center",
 }
-
-
-

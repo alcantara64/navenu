@@ -35,7 +35,7 @@ export interface AppMapProps {
  * Describe your component here
  */
 export const AppMap = observer(function AppMap(props: AppMapProps) {
-  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item, } = props
+  const { style, latitude, longitude , onSetErrorMessage, onSetLatitude, onSetLongitude, item, } = props
   const $styles = [$container, style];
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed ] = useState<IDrop | IVenue | null>(null)
@@ -67,8 +67,9 @@ const handleMarkerPressed = (feed:IDrop | IVenue) => {
     <MapView
       style={$styles}
       initialRegion={{
-        latitude:51.507351,
-        longitude: -0.127758,
+        latitude,
+        longitude,
+        // todo work on longitude delta, important for zooming
         latitudeDelta: 0,
         longitudeDelta: -0,
       }}
