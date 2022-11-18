@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.navenu.app">
+  package="com.navenu">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Added permissions -->
@@ -38,6 +38,6 @@
       </activity>
       <meta-data
      android:name="com.google.android.geo.API_KEY"
-     android:value="Your Google maps API Key Here"/>
+     android:value="AIzaSyDyo0BTb46EQ8l16z64wbopdgjJAgYi3g4"/>
     </application>
 </manifest>

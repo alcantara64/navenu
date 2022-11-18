@@ -1,9 +1,11 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
+import { ErrorMessage,  LoadingIndicator,  Screen, UserProfile } from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text } from "../components"
+import { View } from "react-native-ui-lib"
+import { useUser } from "../hooks/useUser"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -15,16 +17,20 @@ import { Screen, Text } from "../components"
 // Hint: Look for the 🔥!
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
-// @ts-ignore
-export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(function PreferencesScreen() {
+// @ts-ignore 
+export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(function PreferencesScreen({route}) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+  const userId = route.params.user.id;
+  const { data, error, isLoading } = useUser(userId);
 
+  if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
+  if (isLoading) return <LoadingIndicator />;
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
     <Screen style={$root} preset="scroll">
-      <Text text="preferences" />
+   <UserProfile user={data}></UserProfile>
     </Screen>
   )
 })
