@@ -11,6 +11,7 @@ export const AuthenticationStoreModel = types
     isLoading: types.optional(types.boolean, false),
     longitude: types.optional(types.number, 0),
     latitude: types.optional(types.number, 0),
+    errorMessage: types.optional(types.string, '')
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -52,6 +53,7 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
     },
      async login() {
+      this.setErrorMessage('');
       this.setLoading(true)
       const formData = new FormData()
       formData.append("email", store.authEmail)
@@ -60,8 +62,13 @@ export const AuthenticationStoreModel = types
       const result =  await api.login(formData);
       if (result.kind === "ok") {
         this.setAuthToken(result.token);
+      }else{
+       this.setErrorMessage('incorrect username or password')
       }
       this.setLoading(false);
+    },
+    setErrorMessage(value: string){
+     store.errorMessage = value
     },
     setLongitudeAndLatitude(longitude, latitude){
       store.longitude = longitude;
