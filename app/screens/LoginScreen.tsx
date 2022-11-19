@@ -44,6 +44,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       login,
       isLoading,
       setLongitudeAndLatitude,
+      errorMessage,
+      setErrorMessage
     },
   } = useStores()
   const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
@@ -128,6 +130,11 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   }, [])
 
+  const clearErrorMessage = () => {
+    setErrorMsg("")
+    setErrorMessage('')
+  }
+
   return (
     <ImageBackground
       imageStyle={{ height: Dimensions.get("window").height }}
@@ -135,9 +142,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     >
       <ToastLoader
         isLoading={isLoading}
-        hasError={!!errorMsg}
-        errorMessage={errorMsg}
-        clearError={() => setErrorMsg("")}
+        hasError={!!errorMsg || !!errorMessage}
+        errorMessage={errorMsg || errorMessage}
+        clearError={clearErrorMessage}
       />
       <View bottom style={$container}>
         <View>
@@ -149,7 +156,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             validationSchema={loginValidationSchema}
             onSubmit={(values) => onLogin(values)}
           >
-            {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+            {({ values, touched, errors, isValid, handleChange, handleSubmit, handleBlur }) => (
               <>
                 {/* Input fields */}
                 <TextInput
@@ -183,7 +190,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
                 {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
                 {/* Login button */}
-                <AppButton style={$button} onPress={handleSubmit}>
+                <AppButton style={$button} onPress={handleSubmit} disabled={true}>
                   <Text style={$buttonText}>Login</Text>
                 </AppButton>
               </>
@@ -219,9 +226,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   )
 })
 
-const $screenContentContainer: ViewStyle = {
-  flex: 1,
-}
+
 const $container: ViewStyle = {
   display: "flex",
   flexDirection: "column",
@@ -232,16 +237,12 @@ const $container: ViewStyle = {
   padding: 24,
 }
 
-const $logoContainer: ViewStyle = {
-  alignItems: "center",
-}
-
 const $button: ViewStyle = {
   width: "100%",
   justifyContent: "center",
   alignItems: "center",
   marginTop: 8,
-  backgroundColor: Colors.orange,
+  backgroundColor: Colors.ash,
   padding: 10,
   borderRadius: 8,
 }
