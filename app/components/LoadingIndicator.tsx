@@ -1,9 +1,9 @@
 import * as React from "react"
 import { StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import Lottie from 'lottie-react-native';
-import { useEffect, useRef } from "react";
-import { View, LoaderScreen, Colors } from 'react-native-ui-lib';
+import Lottie from "lottie-react-native"
+import { useEffect, useRef } from "react"
+import { View, LoaderScreen, Colors } from "react-native-ui-lib"
 
 export interface LoadingIndicatorProps {
   /**
@@ -16,23 +16,27 @@ export const LoadingIndicator = observer(function LoadingIndicator(props: Loadin
   const { style } = props
   const $styles = [$container, style]
 
-  const animationRef = useRef<Lottie | null>(); // The <> is for TypeScript, but can be removed for JavaScript
+  const animationRef = useRef<Lottie | null>() // The <> is for TypeScript, but can be removed for JavaScript
 
   useEffect(() => {
-    animationRef.current?.play();
-  }, []);
+    animationRef.current?.play()
+  }, [])
 
   return (
-    <View style={$styles}>
-     {/* <Lottie ref={(animation) => {
+    <View style={$styles} center>
+      {/* <Lottie ref={(animation) => {
         animationRef.current = animation;
       }} source={require('../../assets/lottie/loader.json')} autoPlay loop /> */}
-<LoaderScreen color={Colors.blue30} overlay />
+      <LoaderScreen color={Colors.blue30} overlay />
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  width:'100%'
-}
+  position: 'absolute',
+  top: 20,
+  left:20,
+  right: 20,
+  bottom: 20,
 
+}

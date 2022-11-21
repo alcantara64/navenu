@@ -36,7 +36,7 @@ export const BottomNavigationNavigator = () => {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({color, size}) => <Foundation name="home" size={size} color={color} /> ,
-          headerShown: true,
+          headerShown: false,
           header: ({navigation}) => <TopBar  navigation={navigation}/>
         }}
       />

@@ -25,7 +25,7 @@ export function MainStack() {
   const {feedsStore} = useStores();
 
   return (
-    <Stack.Navigator initialRouteName="Home"  screenOptions={{ cardStyle: $cardStyle, headerShown: false }}>
+    <Stack.Navigator initialRouteName="Home"  screenOptions={{ cardStyle: $cardStyle, headerShown: true }}>
       <Stack.Group>
         <Stack.Screen
           name="Home"
@@ -38,7 +38,7 @@ export function MainStack() {
           options={{ header: ({navigation}) => <TopBar navigation={navigation}/> }}
         />
       </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      <Stack.Group screenOptions={{ presentation: 'card',  }}>
         <Stack.Screen name="DropScreen" component={DropScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="VenueDetailScreen"
@@ -56,5 +56,5 @@ export function MainStack() {
 }
 
 const $cardStyle: ViewStyle = {
-  backgroundColor: "transparent",
+  height: '100%'
 }

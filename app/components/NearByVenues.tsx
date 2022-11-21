@@ -10,6 +10,7 @@ import { useState } from "react"
 import { SlimVenueCard } from "./SlimVenueCard"
 import { ISuckMapMarker } from "./ISuckMapMarker"
 import _ from  'lodash';
+import { AppMap } from "./AppMap"
 
 export interface NearByVenuesProps {
   /**
@@ -32,9 +33,13 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const [StayStateButton, setStayStateButton] = useState(false);
   const [FitStateButton, setFitStateButton] = useState(false);
   const [miniFilter, setMiniFilter] = useState([]);
+  const [selectedVenue, setSelectedVenue] = useState()
   const addCat = (cat) => {
     setMiniFilter([...miniFilter, cat]);
   };
+  const onMarkerPress = (venue) => {
+
+  }
   const removeCat = (cat) => {
     const newCatFilter = _.without(miniFilter, cat);
     //const newCatFilter = catFilters.filter((x) => x !== cat);
@@ -48,14 +53,14 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   if (miniFilter.length === 0) {
     Venuecards = venues.map((venue, index) => <SlimVenueCard venue={venue} key={'g' + index} />);
 
-    Markers = venues.map((venue, index) => <ISuckMapMarker venue={venue} key={'f' + index} />);
+    Markers = venues.map((venue, index) => <ISuckMapMarker onMarkerPressed={() => {}} venue={venue} key={'f' + index} />);
   } else {
     Venuecards = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
         return <SlimVenueCard venue={venue} key={'m' + index} />;
     });
     Markers = venues.map((venue, index) => {
-      if (miniFilter.includes(venue.category)) return <ISuckMapMarker venue={venue} key={'b' + index} />;
+      if (miniFilter.includes(venue.category)) return <ISuckMapMarker onMarkerPressed={() => {}} venue={venue} key={'b' + index} />;
     });
   }
 
@@ -92,6 +97,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         customMapStyle={mapStyle}>
         {Markers}
       </MapView>
+      {/* <AppMap onSetLatitude={() => {}} onSetLongitude={() => {}} latitude={51.4936171} longitude={-0.1675824} useExternalMarkers={false} ExternalMakers={Markers}/> */}
       <View flex>{Venuecards}</View>
       </>
   )

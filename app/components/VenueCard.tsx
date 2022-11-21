@@ -32,7 +32,7 @@ export interface VenueCardProps {
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { onPress, item, isFeed =true, onBookMark, savedFeeds } = props
+  const { item, isFeed =true, onBookMark, savedFeeds } = props
   const navigation = useNavigation();
 
   const onPressVenue  = (venue) =>{

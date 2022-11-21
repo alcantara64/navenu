@@ -14,7 +14,7 @@ import { VenueCard } from "./VenueCard"
 import { FEED_TYPE } from "../interface/feed"
 import { DropCard } from "./DropCard"
 import { View } from "react-native-ui-lib"
-import {Text} from './Text'
+import { Text } from "./Text"
 
 export interface AppMapProps {
   /**
@@ -28,14 +28,25 @@ export interface AppMapProps {
   longitude: number
   item: Array<IVenue> | Array<IDrop>
   showBottomSheet?: boolean
+  ExternalMakers?: React.ReactNode
+  useExternalMarkers?: boolean
 }
 
 /**
  * Describe your component here
  */
 export const AppMap = observer(function AppMap(props: AppMapProps) {
-  const { style, latitude, longitude, onSetErrorMessage, onSetLatitude, onSetLongitude, item } =
-    props
+  const {
+    style,
+    latitude,
+    longitude,
+    onSetErrorMessage,
+    onSetLatitude,
+    onSetLongitude,
+    item,
+    useExternalMarkers,
+    ExternalMakers,
+  } = props
   const $styles = [$container, style]
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
@@ -61,12 +72,6 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     setShowBottomSheet(true)
   }
   const getDropsByID = (id: Array<string>) => {
-    console.log(
-      "id",
-      id,
-      item?.filter((item) => id.includes(item.id)),
-    )
-
     return item.filter((item) => id.includes(item.id))
   }
   return (
@@ -74,8 +79,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
       <MapView
         style={$styles}
         initialRegion={{
-          latitude: 51.507351,
-          longitude: 0.127758,
+          latitude,
+          longitude,
           // todo work on longitude delta, important for zooming
           latitudeDelta: 10,
           longitudeDelta: 5,
@@ -92,21 +97,27 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
           description="This is where you are"
           key="user1"
         ></Marker>
-        {item.map((venue, index) => (
-          <ISuckMapMarker onMarkerPressed={handleMarkerPressed} key={index} venue={venue} />
-        ))}
+        {useExternalMarkers &&
+          item?.map((venue, index) => (
+            <ISuckMapMarker onMarkerPressed={handleMarkerPressed} key={index} venue={venue} />
+          ))}
+        {!useExternalMarkers && ExternalMakers}
       </MapView>
       {showBottomSheet && (
         <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}
           {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}
-         {getDropsByID(currentFeed.drops as any).length > 0 && (  <View>
-            <View><Text>Drops</Text></View>
-          <FlatList
-            data={getDropsByID(currentFeed.drops as any)}
-            renderItem={(item) => <DropCard item={item} isFeed />}
-          />
-          </View>)}
+          {getDropsByID(currentFeed.drops as any).length > 0 && (
+            <View>
+              <View>
+                <Text>Drops</Text>
+              </View>
+              <FlatList
+                data={getDropsByID(currentFeed.drops as any)}
+                renderItem={(item) => <DropCard item={item} isFeed />}
+              />
+            </View>
+          )}
         </BottomSheet>
       )}
     </>

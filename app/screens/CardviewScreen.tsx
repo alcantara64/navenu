@@ -76,11 +76,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       setTopBarStatus(false)
     }
 
-    const onVPress = (venue) => {
-      navigation.navigate("VenueDetailScreen", {
-        venue,
-      })
-    }
     const onDPress = (venue) => {
       navigation.navigate("DropScreen", {
         venue,
@@ -121,7 +116,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             isFeed
             onBookMark={onBookMark}
             item={item}
-            onPress={onVPress}
           />
         )
       }
