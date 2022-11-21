@@ -9,7 +9,7 @@ export class UserService {
     this.httpClient = new Api()
   }
 
- async getUser() {
+ async getUsers() {
     const response:ApiResponse<UserResponse> =   await this.httpClient.get('/users');
     if (!response.ok) {
         const problem = getGeneralApiProblem(response)
@@ -22,6 +22,19 @@ export class UserService {
 
   }
 
+  async getUser(id) {
+    const response:ApiResponse<UserResponse> =   await this.httpClient.get(`/users/${id}`);
+    if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+      const rawData = response.data;
+      
+  
+     return {kind: 'ok', data: rawData.data}
+
+  }
+  
   async getUserList(){
     const response:ApiResponse<IUserListResponse> =   await this.httpClient.get('/UserLists/');
     if(!response.ok){

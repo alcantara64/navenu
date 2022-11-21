@@ -4,7 +4,8 @@ import { AddListItemPayload, Api } from "../services/api"
 import { UserService } from "../services/userService"
 
 const getUserById = async (userId: string) => {
-  const { data } = await axios.get(`https://api.navenu.com/index.php/Users/${userId}`)
+  const api = new Api()
+  const  data = await api.get(`/Users/${userId}`)
   return data
 }
 const getUserList = async () => {

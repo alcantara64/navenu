@@ -15,14 +15,14 @@ import { useUser } from "../hooks/useUser"
 // - Import your screen, and add it to the stack:
 //     `<Stack.Screen name="Preferences" component={PreferencesScreen} />`
 // Hint: Look for the 🔥!
-
+//  `<UserProfile user={data}></UserProfile>`
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore 
 export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(function PreferencesScreen({route}) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
-  const userId = route.params.user.id;
-  const { data, error, isLoading } = useUser(userId);
+  // const userId = route.params.user.id;
+ const { data, error, isLoading } = useUser('1241');
 
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
@@ -30,7 +30,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
   // const navigation = useNavigation()
   return (
     <Screen style={$root} preset="scroll">
-   <UserProfile user={data}></UserProfile>
+
     </Screen>
   )
 })
