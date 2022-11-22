@@ -28,12 +28,12 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
   return (
-    <Screen style={$root} preset="scroll">
+    <Screen style={$root} preset="auto">
         <View style={$container}>
       
         <VenueDetailCard venue={data}></VenueDetailCard>
         {data?.images?.length > 0 && <Gallery items={data.images} />}
-        <NearByVenues venues={data.nearby} />
+        <NearByVenues venues={data?.nearby} />
   
     </View>
     </Screen>

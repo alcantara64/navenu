@@ -18,8 +18,8 @@ import {
 } from "@expo/vector-icons"
 import { IVenue } from "../interface/venues"
 import { useNavigation } from "@react-navigation/native"
-import { Colors } from "../theme"
-import { getInitials } from "../utils/transform"
+import { Colors, typography } from "../theme"
+import { getInitials, getStyleByCategory } from "../utils/transform"
 import { openLinkInBrowser } from "../utils/openLinkInBrowser"
 import { DropCard } from "./DropCard"
 
@@ -63,14 +63,14 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             {venue.name}
           </Text>
           <View row style={$horizontalLine}></View>
-          <Text text90 white style={$venueNameText}>
+          <Text text90 white marginB-5 style={$venueNameAddress}>
             {venue.address}
           </Text>
         </View>
         <View style={$functionBtns}>
           <View flex-1 center spread>
             <TouchableOpacity
-              style={{ marginVertical: 15 }}
+              style={{ marginVertical: 10 }}
               onPress={() => console.log("Button 1")}
             >
               <MaterialIcons name="ios-share" size={45} color="#FFFFFF" />
@@ -81,11 +81,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
           </View>
         </View>
       </ImageBackground>
-      <View style={$contentContainer}>
+      <View style={{...$contentContainer, ...getStyleByCategory(venue.category)}}>
         <View flex padding-15 style={$venueContent}>
-          <View marginT-5 padding-15>
+          <View marginT-5 padding-8>
             <Text text60>HEADLINE</Text>
-            <Text marginT-15>{venue.long_description}</Text>
+            <Text marginT-5 style={$longDescription}>{venue.long_description}</Text>
             <TouchableOpacity onPress={onLinkPress}>
               <Text style={$linkUrl} marginT-15>
                 VISIT SITE
@@ -218,8 +218,8 @@ const $closeBtn: ViewStyle = {
   position: "absolute",
 }
 const $functionBtns: ViewStyle = {
-  right: 10,
-  bottom: 10,
+  right: 5,
+  bottom: 5,
   position: "absolute",
 }
 const $imagetop: ViewStyle = {
@@ -233,10 +233,14 @@ const $categoryText: TextStyle = {
   marginBottom: 0,
   color: "#FFFFFF",
   textTransform: "uppercase",
+  fontFamily: typography.fonts.bourtonbase.normal,
+  fontSize:14
 }
 const $venueNameText: TextStyle = {
   marginBottom: 15,
   textTransform: "uppercase",
+  fontFamily: typography.fonts.bourtonbase.normal,
+  fontSize: 22,
 }
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,
@@ -289,4 +293,14 @@ const $imageContainer: ViewStyle = {
 }
 const $curatorTextColor: TextStyle = {
   color: Colors.orange,
+}
+const $venueNameAddress: TextStyle ={
+  fontFamily: 'inter',
+  fontWeight: '400',
+  fontStyle: 'normal',
+}
+const $longDescription : TextStyle ={
+  fontFamily: 'inter',
+  fontWeight: '400',
+  fontSize: 12,
 }

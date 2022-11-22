@@ -9,6 +9,7 @@ import { useState } from "react"
 import Carousel from "react-native-reanimated-carousel"
 import { IDrop } from "../interface/drops"
 import { CountdownTimer, VenueCard } from "."
+import { getStyleByCategory } from "../utils/transform"
 
 export interface DropDropDetailCardProps {
   /**
@@ -83,7 +84,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
         </View>
       </ImageBackground>
-      <View style={$contentContainer}>
+      <View style={{...$contentContainer, ...getStyleByCategory(drop.category)}}>
         <View flex style={$dropContent} padding-20>
           {drop.description && (
             <View>
@@ -98,7 +99,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
                   label="CODE CLAIMED!"
                   color="white"
                   borderRadius={10}
-                  backgroundColor={Colors.orange}
+                  backgroundColor={getStyleByCategory(drop.category).backgroundColor}
                 />
                 <Button
                   size="large"
@@ -111,16 +112,18 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             )}
             {!drop.claimed && (
               <>
-                <View marginL-4 row style={$countDownContainer}>
+                <View marginL-4 row style={{...$countDownContainer, ...getStyleByCategory(drop.category), borderColor:getStyleByCategory(drop.category).backgroundColor}}>
                   <Text style={$countdownText}>ENDS IN</Text>
                   <CountdownTimer time={drop.expiration} />
                 </View>
                 <Button
                   size="large"
+                  fullWidth
+
                   label={"CLAIM CODE!"}
                   color="white"
-                  borderRadius={10}
                   onPress={onClaimCode}
+                  style={$claimButton}
                   backgroundColor={Colors.ash}
                 />
               </>
@@ -226,9 +229,9 @@ const $horizontalLine: ViewStyle = {
 }
 const $countDownContainer: ViewStyle = {
   backgroundColor: Colors.orange,
-  width: "50%",
   borderRadius: 5,
   padding: 5,
+  alignItems: 'center',
 }
 const $countdownText: TextStyle = {
   marginBottom: 0,
@@ -237,4 +240,7 @@ const $countdownText: TextStyle = {
   marginRight: 4,
   padding: 9,
   fontSize: 15,
+}
+const $claimButton: ViewStyle = {
+  borderRadius: 5
 }
