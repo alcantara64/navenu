@@ -40,33 +40,6 @@ export const UsersListModel = types.model("UsersList",{
   },
 
 }))
-.actions((self) => {dw22z
-  function markLoading(loading) {
-    self.isLoading = loading
-}
-
- function updateList(json) {
-      json.forEach((cardJson) => {
-          self.cards.put(cardJson)
-      })
-  }
-
-const loadCards=flow(function* loadCards(){
-  try {
-    const userService = new UserService()
-    const result = userService.getUserList()
-    updateList(result.data)
-    markLoading(false)
-  } catch (err) {
-    console.error("Failed to load books ", err)
-}
-})
-
-  return {
-      updateList,
-      loadCards
-  }
-})
 
 const UserModel = types.model({
   longitude: types.optional(types.number, 0),
@@ -92,7 +65,7 @@ const UserModel = types.model({
 /**
  * Model description here for TypeScript hints.
  */
-export const UserStoreModel = types
+export const UserStore = types
   .model("User")
   .props({
 currentUser:types.map(UserModel),
@@ -114,7 +87,7 @@ usersList:types.map(UsersListModel),
         this.setIsLoading(true)
         this.setError({ isError: false, message: "" })
         const userService = new UserService()
-        const result = await userService.getUser()
+        const result = await userService.getUser('1241')
   
         if (result.kind === "ok") {
           this.setCurrentUser(result.data)
@@ -133,7 +106,7 @@ usersList:types.map(UsersListModel),
 
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
-export interface User extends Instance<typeof UserModel> {}
-export interface UserSnapshotOut extends SnapshotOut<typeof UserModel> {}
-export interface UserSnapshotIn extends SnapshotIn<typeof UserModel> {}
-export const createUserDefaultModel = () => types.optional(UserModel, {})
+export interface User extends Instance<typeof UserStore> {}
+export interface UserSnapshotOut extends SnapshotOut<typeof UserStore> {}
+export interface UserSnapshotIn extends SnapshotIn<typeof UserStore> {}
+export const createUserDefaultModel = () => types.optional(UserStore, {})

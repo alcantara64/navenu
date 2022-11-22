@@ -1,9 +1,10 @@
-import React, { FC } from "react"
+import React, { FC , useEffect} from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { ErrorMessage,  LoadingIndicator,  Screen, UserProfile } from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
+import { useStores } from "../models"
 import { View } from "react-native-ui-lib"
 import { useUser } from "../hooks/useUser"
 // import { useNavigation } from "@react-navigation/native"
@@ -22,7 +23,13 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // const userId = route.params.user.id;
- const { data, error, isLoading } = useUser('1241');
+  const { userStore } = useStores()
+    const { isLoading, error, getUser} = userStore
+
+    useEffect(() => {
+
+      getUser()
+    }, [])
 
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
