@@ -90,7 +90,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       {showHeaderFilter && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
-          <View marginT-5 row>
+          <View marginT-5 row  style={{justifyContent:'space-between'}}>
             <TouchableOpacity onPress={toggleDrop} flex-1>
               <ImageBackground
                 source={require("../../assets/images/drops-background.jpg")}
@@ -103,7 +103,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity style={$middleImage} onPress={toggleVenue} >
+            <TouchableOpacity onPress={toggleVenue} >
               <ImageBackground
                 source={require("../../assets/images/venue.png")}
                 style={[
@@ -184,10 +184,9 @@ const $filterType: ImageStyle = {
   paddingTop: 20,
   paddingLeft: 10,
   paddingBottom: 10,
-  marginRight: 16,
   marginBottom: 5,
   flexGrow: 1,
-  width: 110,
+  width: 120,
 }
 const $filterTypeImageStyle: ImageStyle = {
   borderRadius: 5,

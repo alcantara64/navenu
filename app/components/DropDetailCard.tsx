@@ -71,15 +71,15 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             <View></View>
           </View>
 
-          <View flex-1 center paddingB-20 spread>
+          <View flex-1 center paddingB-20 spread >
             <TouchableOpacity
               style={{ marginVertical: 15 }}
               onPress={() => console.log("Button 1")}
             >
-              <MaterialIcons name="ios-share" size={45} color="#FFFFFF" />
+              <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity onPress={saveDrop} style={{ marginVertical: 5 }}>
-              <FontAwesome5 solid={bookmark} name="bookmark" size={40} color="#FFFFFF" />
+              <FontAwesome5 solid={bookmark} name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
