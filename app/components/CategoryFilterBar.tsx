@@ -135,18 +135,20 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
 
 const $container: ViewStyle = {
   flexDirection: "row",
-  justifyContent: 'space-evenly',
+  justifyContent: 'space-between',
   alignItems: "center",
   overflow: 'scroll',
+  flexGrow: 1,
+  flexShrink: 1,
 }
 const $button: ViewStyle = {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: 5,
   marginRight:5,
-  padding:moderateScale(10),
+  padding:moderateScale(8),
   backgroundColor: Colors.ash,
-  opacity: 0.5
+  opacity: 0.5,
 }
 const $Staybutton: ViewStyle = {
   borderRadius: 10,

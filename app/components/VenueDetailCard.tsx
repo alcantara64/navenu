@@ -67,16 +67,16 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             {venue.address}
           </Text>
         </View>
-        <View style={$functionBtns}>
+        <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
             <TouchableOpacity
               style={{ marginVertical: 10 }}
               onPress={() => console.log("Button 1")}
             >
-              <MaterialIcons name="ios-share" size={45} color="#FFFFFF" />
+              <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5 }}>
-              <FontAwesome5 name="bookmark" size={40} color="#FFFFFF" />
+              <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -298,6 +298,7 @@ const $venueNameAddress: TextStyle ={
   fontFamily: 'inter',
   fontWeight: '400',
   fontStyle: 'normal',
+  marginBottom: 15,
 }
 const $longDescription : TextStyle ={
   fontFamily: 'inter',
