@@ -15,6 +15,7 @@ import { FEED_TYPE } from "../interface/feed"
 import { DropCard } from "./DropCard"
 import { View } from "react-native-ui-lib"
 import { Text } from "./Text"
+import { getDropsByID } from "../utils/transform"
 
 export interface AppMapProps {
   /**
@@ -71,9 +72,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     setCurrentFeed(feed)
     setShowBottomSheet(true)
   }
-  const getDropsByID = (id: Array<string>) => {
-    return item.filter((item) => id.includes(item.id))
-  }
+
   return (
     <>
       <MapView
@@ -107,13 +106,13 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}
           {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}
-          {getDropsByID(currentFeed.drops as any).length > 0 && (
+          {getDropsByID(currentFeed.drops as any, item).length > 0 && (
             <View>
               <View>
                 <Text>Drops</Text>
               </View>
               <FlatList
-                data={getDropsByID(currentFeed.drops as any)}
+                data={getDropsByID(currentFeed.drops as any, item)}
                 renderItem={(item) => <DropCard item={item} isFeed />}
               />
             </View>

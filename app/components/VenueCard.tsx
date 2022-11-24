@@ -21,7 +21,7 @@ export interface VenueCardProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  onPress: (item: any) => void
+  onPress?: (item: any) => void
   item: { image: string; category: string; name: string; distance: number, id: number, address: string },
   isFeed?: boolean
   onBookMark?: (feed: any) => void

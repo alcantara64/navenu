@@ -75,6 +75,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
+            
             <TouchableOpacity style={{ marginVertical: 5 }}>
               <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
@@ -84,8 +85,8 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       <View style={{...$contentContainer, ...getStyleByCategory(venue.category)}}>
         <View flex padding-15 style={$venueContent}>
           <View marginT-5 padding-8>
-            <Text text60>HEADLINE</Text>
-            <Text marginT-5 style={$longDescription}>{venue.long_description}</Text>
+            <Text header>HEADLINE</Text>
+            <Text belowHeaderText marginT-5 style={$longDescription}>{venue.long_description}</Text>
             <TouchableOpacity onPress={onLinkPress}>
               <Text style={$linkUrl} marginT-15>
                 VISIT SITE
@@ -186,15 +187,15 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   </Text>
                 )}
                 <View marginL-10>
-                  <Text>CURATORS</Text>
-                  <Text>MENTIONED</Text>
-                  <Text>THIS VENUE</Text>
+                  <Text sectionHeader>CURATORS</Text>
+                  <Text sectionHeader>MENTIONED</Text>
+                  <Text sectionHeader>THIS VENUE</Text>
                 </View>
               </View>
             </View>
           )}
          {venue.drops && venue.drops.length > 0 && <View  marginV-15> 
-            <Text text70 >DROPS</Text>
+            <Text sectionHeader >DROPS</Text>
 
             <View marginT-15>
            { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
