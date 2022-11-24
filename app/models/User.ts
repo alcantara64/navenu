@@ -27,14 +27,14 @@ export const Card= types.model("Card",{
   distance: types.optional(types.number, 0),
   lat: types.maybe(types.string),
   lng: types.maybe(types.string),
-  claimCode:types.maybe(types.string),
+  claimCode:types.optional(types.string,''),
   venue_image: types.optional(types.string,''),
-  venue:types.maybe(types.string),
+  venue:types.optional(types.string,''),
   active: types.maybe(types.boolean),
   expired:types.maybe(types.boolean),
   user_claimed: types.maybe(types.boolean),
   NoCodes: types.maybe(types.boolean),
-  user_code: types.maybe(types.string),
+  user_code: types.optional(types.string,''),
 }).actions(self => ({
   // Removes Card from List
   remove() {
