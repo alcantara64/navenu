@@ -1,10 +1,20 @@
-import { Instance, SnapshotIn, SnapshotOut, types,getParent ,flow} from "mobx-state-tree"
+import { Instance, SnapshotIn, SnapshotOut, types,getParent ,destroy} from "mobx-state-tree"
 import _ from 'lodash';
-import { UserService } from "../services/userService";
-import { IUser } from "../interface/user";
+import {  Api } from "../services/api"
 import { ErrorModel } from "./Feed"
 
+/*  Below you will find 1 parent model and 3 children model 
+*  
+*   UserStore = Is the parent model that contains the 3 children below:
+*    
+*   UserModel = Represents the Users information 
+*   UserListsModel = Represents a User list that contains an array of Card
+*        Card = Represents each card in a user list (UserListsModel)
+*   
+*  References i based this off of https://github.com/ecklf/react-hooks-mobx-state-tree/blob/main/src/models/Cart.ts
+*/
 
+// Model for each Card saved in the UserLists
 export const Card= types.model("Card",{
   id: types.identifierNumber,
   title: types.maybe(types.string),
@@ -25,22 +35,47 @@ export const Card= types.model("Card",{
   user_claimed: types.maybe(types.boolean),
   NoCodes: types.maybe(types.boolean),
   user_code: types.maybe(types.string),
-})
+}).actions(self => ({
+  // Removes Card from List
+  remove() {
+    getParent<typeof UsersListModel>(self, 2).remove(self);
+  }
+}));
 
-
+// Model for  Users lists
 export const UsersListModel = types.model("UsersList",{
   user_list_id: types.identifierNumber,
   listname:types.string,
+  // Where our cards are stored
   cards: types.optional(types.array(Card), []),
   error: types.optional(ErrorModel, { message: "", isError: false }),
   isLoading: types.maybe(types.boolean),
-})  .views((self) => ({
+}).views((self) => ({
+  // Saw this in an example not sure if it works
   get list() {
       return getParent(self)
   },
 
+})).actions((self)=>({
+
+  // Change the listname 
+  // @TODO how to update database?
+  changeName(newName: string) {
+    self.listname = newName;
+  },
+// Adding Card to UserListModel.cards 
+  addCard(
+    card: SnapshotIn<typeof Card> | Instance<typeof Card>
+  ) {
+    self.cards.push(card);
+  },
+  // Remove Card from UserListModel.cards
+  remove(item: SnapshotIn<typeof Card>) {
+    destroy(item);
+  }
 }))
 
+// User Model stores User info 
 const UserModel = types.model({
   longitude: types.optional(types.number, 0),
   latitude: types.optional(types.number, 0),
@@ -60,16 +95,44 @@ const UserModel = types.model({
   home_town:types.optional(types.string,""),
   avatar:types.optional(types.string,""),
 
-})
+}).actions((self)=>({
 
+  // Change user fields according to mock up
+  // @TODO how to update database?
+  changeName(newName: string) {
+    self.display_name = newName;
+  },
+  changeAvatar(newName: string) {
+    self.avatar = newName;
+  },
+  changeDescription(newDescription: string) {
+    self.description = newDescription;
+  },
+  changeHometown(newHometown:string){
+    self.home_town=newHometown;
+  },
+  changeShortDescription(newShort:string){
+    self.short_description=newShort;
+  },
+  changeGender(newGender:string){
+    self.gender=newGender;
+  },
+  changeProfession(newProfession:string){
+    self.profession=newProfession;
+  }
+}));
 /**
- * Model description here for TypeScript hints.
+ * Main Model store that contains user info and user list 
+ * @TODO add user preferences 
  */
 export const UserStore = types
   .model("User")
   .props({
+    // Current UserModel
 currentUser:types.map(UserModel),
+// UserLists 
 usersList:types.map(UsersListModel),
+// State for toggling display of user preferences bottom sheet
     showPreferencesModal: types.maybe(types.boolean),
     error: types.optional(ErrorModel, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
@@ -83,22 +146,47 @@ usersList:types.map(UsersListModel),
       setIsLoading(status: boolean) {
         self.isLoading = status
       },
+      // Attempting to load User data from api into current user model 
       async getUser() {
         this.setIsLoading(true)
         this.setError({ isError: false, message: "" })
-        const userService = new UserService()
-        const result = await userService.getUser('1241')
+        const api = new Api()
+        const  result = await api.get(`/Users/`)
   
-        if (result.kind === "ok") {
+        if (result.success === true) {
+          // FIll UserModel with API Data
           this.setCurrentUser(result.data)
+          // Fill UserListModel with API DATA 
+          this.setUserLists(result.data.userLists)
         } else {
-          this.setError({ isError: true, message: "Fetching Your information" })
+          this.setError({ isError: true, message: "Error Fetching Your information" })
         }
         this.setIsLoading(false)
       },
+      // setting current user. easy because its a flat object
       setCurrentUser(value) {
         self.currentUser = value
       },
+      // @TODO need help
+      // Trying to save data from API to UserLists Model
+      setUserLists(value) {
+        // making userLists easier to deal with
+        const lists=value.userLists;
+        // Setting List name 
+       const listnames=Object.keys(lists);
+       // loop through array of listnames
+       for(const l in listnames){
+
+       }
+       // loop through each list
+        for(const x in lists){
+
+          // self.userLists.listname=Object.keys(input.userLists)
+
+
+        }
+      },
+    // Method to toggle display of user settings bottom sheet in mockup
       togglePreferencesModal(){
         self.showPreferencesModal = !self.showPreferencesModal;
        },
