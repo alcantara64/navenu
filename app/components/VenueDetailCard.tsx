@@ -122,7 +122,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MENU
               </Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity>
+            <TouchableOpacity>
               <View padding-20 style={$boxContainer}>
                 <AntDesign name="calendar" size={24} color="white" />
               </View>
@@ -130,7 +130,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 {" "}
                 BOOK
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <TouchableOpacity>
               <View padding-20 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
@@ -263,7 +263,7 @@ const $venueContent: ViewStyle = {
   borderTopRightRadius: 15,
   backgroundColor: "#F2F2F2",
   borderTopLeftRadius: 15,
-  padding: 15,
+  padding: 8,
 }
 const $linkUrl: TextStyle = {
   color: Colors.orange,
