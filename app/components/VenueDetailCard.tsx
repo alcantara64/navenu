@@ -282,6 +282,8 @@ const $boxContainer: ViewStyle = {
 const $boxWrapper: ViewStyle = {
   justifyContent: "flex-start",
   flexWrap: "wrap",
+  flexShrink: 6,
+  flexGrow: 1,
 }
 const $roundedImage: ImageStyle = {
   height: 70,
