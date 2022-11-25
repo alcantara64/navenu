@@ -22,7 +22,6 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const venueId = route.params.venue.id;
-
   const { data, error, isLoading } = useVenue(venueId);
 
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;

@@ -51,3 +51,7 @@ export const getStyleByCategory = (category) => {
     borderColor: categoryColorType[category] || "transparent",
   }
 }
+export const getDropsByID = (id: Array<string>, items:Array<any>) => {
+  if(!items || !id ) return []
+  return items.filter((item) => id.includes(item.id))
+}

@@ -24,6 +24,7 @@ import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
 import { CloudMessaging } from './services/cloudMessagingService';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { configureDesignSystem } from './utils/designSystem';
 
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
@@ -96,8 +97,8 @@ function App(props: AppProps) {
     // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500)
   })
-
-
+// load uiLib items
+  configureDesignSystem()
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.

@@ -57,7 +57,7 @@ const $outerOverlay: ViewStyle = {
 const $bottomSheet: ViewStyle = {
   position: "absolute",
   width: "100%",
-  zIndex: 1,
+  zIndex: 10,
   backgroundColor: Colors.white,
   borderTopRightRadius: 10,
   borderTopLeftRadius: 10,

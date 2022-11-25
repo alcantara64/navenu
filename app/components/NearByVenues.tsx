@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { FlatList, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, mapStyle, typography } from "../theme"
 import { IVenue } from "../interface/venues"
@@ -11,6 +11,10 @@ import { SlimVenueCard } from "./SlimVenueCard"
 import { ISuckMapMarker } from "./ISuckMapMarker"
 import _ from  'lodash';
 import { AppMap } from "./AppMap"
+import { BottomSheet } from "./BottomSheet"
+import { VenueCard } from "./VenueCard"
+import { DropCard } from "./DropCard"
+import { getDropsByID } from "../utils/transform"
 
 export interface NearByVenuesProps {
   /**
@@ -33,12 +37,14 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const [StayStateButton, setStayStateButton] = useState(false);
   const [FitStateButton, setFitStateButton] = useState(false);
   const [miniFilter, setMiniFilter] = useState([]);
-  const [selectedVenue, setSelectedVenue] = useState()
+  const [selectedVenue, setSelectedVenue] = useState<IVenue>(null)
+  const [showBottomSheet, setShowBottomSheet] = useState(false)
   const addCat = (cat) => {
     setMiniFilter([...miniFilter, cat]);
   };
   const onMarkerPress = (venue) => {
-
+     setSelectedVenue(venue);
+     setShowBottomSheet(true)
   }
   const removeCat = (cat) => {
     const newCatFilter = _.without(miniFilter, cat);
@@ -51,23 +57,27 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   let Venuecards;
 
   if (miniFilter.length === 0) {
-    Venuecards = venues.map((venue, index) => <SlimVenueCard venue={venue} key={'g' + index} />);
+    Venuecards = venues.map((venue, index) => <SlimVenueCard  venue={venue} key={'g' + index} />);
 
-    Markers = venues.map((venue, index) => <ISuckMapMarker onMarkerPressed={() => {}} venue={venue} key={'f' + index} />);
+    Markers = venues.map((venue, index) => <ISuckMapMarker onMarkerPressed={onMarkerPress} venue={venue} key={'f' + index} />);
   } else {
     Venuecards = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
         return <SlimVenueCard venue={venue} key={'m' + index} />;
     });
     Markers = venues.map((venue, index) => {
-      if (miniFilter.includes(venue.category)) return <ISuckMapMarker onMarkerPressed={() => {}} venue={venue} key={'b' + index} />;
+      if (miniFilter.includes(venue.category)) return <ISuckMapMarker onMarkerPressed={onMarkerPress} venue={venue} key={'b' + index} />;
     });
   }
-
+  const handleBottomSheetClose = () => {
+    setShowBottomSheet(false);
+  }
   return (
-    <>
+    <View >
+      <View marginB-10 marginL-10>
+      <Text left sectionHeader>Venues Near By</Text>
+      </View>
       <View centerH flex>
-        <Text text40BL>Venues Near By</Text>
         <CategoryFilterBar
           addCat={addCat}
           removeCat={removeCat}
@@ -98,8 +108,22 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         {Markers}
       </MapView>
       {/* <AppMap onSetLatitude={() => {}} onSetLongitude={() => {}} latitude={51.4936171} longitude={-0.1675824} useExternalMarkers={false} ExternalMakers={Markers}/> */}
+      <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose} height={600}>
+          {selectedVenue && <VenueCard item={selectedVenue} />}
+          {getDropsByID(selectedVenue?.drops as any, venues).length > 0 && (
+            <View>
+              <View>
+                <Text>Drops</Text>
+              </View>
+              <FlatList
+                data={getDropsByID(selectedVenue.drops as any, venues)}
+                renderItem={(item) => <DropCard item={item} isFeed />}
+              />
+            </View>
+          )}
+        </BottomSheet>
       <View flex>{Venuecards}</View>
-      </>
+      </View>
   )
 })
 
