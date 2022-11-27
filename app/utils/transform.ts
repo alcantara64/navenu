@@ -1,3 +1,4 @@
+import { ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
 import { categoryColorType, Colors } from "../theme"
 
@@ -50,11 +51,17 @@ export const getStyleByCategory = (category, isText?: boolean, noBackground?: bo
       color: categoryColorType[category] || "transparent",
     }
   }
-  return {
-    backgroundColor: noBackground ? "transparent" : categoryColorType[category] || "transparent",
+  const style:ViewStyle = {
     borderColor: categoryColorType[category] || "transparent",
+    backgroundColor :  categoryColorType[category] || "white",
+    borderTopColor: categoryColorType[category],
   }
+  if(noBackground){
+   delete style.backgroundColor;
+  }
+  return style;
 }
+
 export const getDropsByID = (id: Array<string>, items: Array<any>) => {
   if (!items || !id) return []
   return items.filter((item) => id.includes(item.id))

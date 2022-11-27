@@ -57,7 +57,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
           body={
 
             <TouchableOpacity style={$centeredView} onPressOut={closeClaimModal}>
-              <View style={$modalView}>
+              <View style={{...$modalView, ...getStyleByCategory(currentDrop.category, false, true)}}>
               <TouchableWithoutFeedback>
                 <>
                 <View row  center>
@@ -65,10 +65,10 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
                 <CategoryIcons/>
                 </View>
                 <Text largeDarkHeader style={$headerText}>CODE CLAIMED!</Text>
-                <View style={$codeClaimedBox}><Text bigTextDark center>{claimedCode}</Text></View>
+                <View style={{...$codeClaimedBox, ...getStyleByCategory(currentDrop.category, false, true) }}><Text bigTextDark center>{claimedCode}</Text></View>
                 <View row>
                 <Text text80>Codes are Automatically saved on your </Text>
-                <Text style={getStyleByCategory('DO', true, true)}>profile</Text>
+                <Text style={getStyleByCategory(currentDrop.category, true, true)}>profile</Text>
                 </View>
                 </>
                 </TouchableWithoutFeedback>
