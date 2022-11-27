@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { TextStyle, ViewStyle } from "react-native"
+import { TextStyle, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import {
@@ -11,9 +11,10 @@ import {
   Screen,
 } from "../components"
 import { useStores } from "../models"
-import { View, Text } from "react-native-ui-lib"
+import { View, Text, Image, TouchableOpacity } from "react-native-ui-lib"
 import { Colors } from "../theme"
-import { HorizontalLine } from "../components/HorizontalLine"
+import { getStyleByCategory } from "../utils/transform"
+import CategoryIcons from '../../assets/icons/drops/claim-icons.svg'
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -34,7 +35,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
     useEffect(() => {
       setShowClaimModal(false);
       getDropDetail(route.params.venue.id)
-    }, [])
+    }, [route.params.venue.id])
 
     if (error.isError || (!currentDrop && !isLoading)) {
       return <ErrorMessage message={error.message} />
@@ -45,23 +46,34 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
    const claimCode = () => {
      claimDropCode(currentDrop.id);
    } 
+   const closeClaimModal = () => {
+    setShowClaimModal(false)
+   }
     return (
       <Screen style={$root} preset="scroll">
-       {showClaimedModal && <Modal
+       { <Modal
           show={showClaimedModal}
+          onRequestClose={closeClaimModal}
           body={
-            <View style={$centeredView}>
+
+            <TouchableOpacity style={$centeredView} onPressOut={closeClaimModal}>
               <View style={$modalView}>
-                <View row >
+              <TouchableWithoutFeedback>
+                <>
+                <View row  center>
   
-                <Text style={$modalText}>Icons</Text>
+                <CategoryIcons/>
                 </View>
-                <HorizontalLine style={$modalHorizontalColour}></HorizontalLine>
-                <Text style={$headerText}>CODE CLAIMED!</Text>
-                <View style={$codeClaimedBox}><Text center text60>{claimedCode}</Text></View>
-                <Text text80>Codes are Automatically saved on your profile</Text>
+                <Text largeDarkHeader style={$headerText}>CODE CLAIMED!</Text>
+                <View style={$codeClaimedBox}><Text bigTextDark center>{claimedCode}</Text></View>
+                <View row>
+                <Text text80>Codes are Automatically saved on your </Text>
+                <Text style={getStyleByCategory('DO', true, true)}>profile</Text>
+                </View>
+                </>
+                </TouchableWithoutFeedback>
               </View>
-            </View>
+            </TouchableOpacity>
           }
         />}
 
@@ -78,13 +90,11 @@ const $centeredView: ViewStyle = {
   flex: 1,
   justifyContent: "flex-end",
   bottom: 0,
-  marginTop: 22,
   position: "relative",
   backgroundColor: "rgba(0, 0, 0, 0.9)",
 }
 
 const $modalView: ViewStyle = {
-  margin: 20,
   backgroundColor: "white",
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
@@ -101,24 +111,13 @@ const $modalView: ViewStyle = {
   borderTopWidth: 10,
   borderTopColor: Colors.orange,
 }
-const $modalText: TextStyle = {
-  marginBottom: 15,
-  textAlign: "center",
-}
-const $modalHorizontalColour: ViewStyle ={
-  width:'100%', 
-  borderColor:'#D8D8D8',
-  borderRadius: 4
-}
 const $headerText: TextStyle = {
-   fontSize: 20,
-   fontWeight: 'bold',
    marginTop: 15,
    marginBottom: 15,
 } 
 const $codeClaimedBox:ViewStyle = {
-  borderWidth: 10,
-  borderRadius: 8,
+  borderWidth: 3,
+  borderRadius: 10,
   padding: 15,
   width: "100%",
   borderColor: Colors.orange,

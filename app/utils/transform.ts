@@ -36,7 +36,6 @@ export const filterFeeds = (
     })
   }
   if (typeFilter.length < 1 && categoryFilter.length > 0) {
-    console.log("typeFilter 4", typeFilter.length, categoryFilter.length)
     feeds?.forEach((feed) => {
       if (categoryFilter.includes(feed.category)) {
         filteredList.push(feed)
@@ -45,13 +44,18 @@ export const filterFeeds = (
   }
   return filteredList
 }
-export const getStyleByCategory = (category) => {
+export const getStyleByCategory = (category, isText?: boolean, noBackground?: boolean) => {
+  if (isText) {
+    return {
+      color: categoryColorType[category] || "transparent",
+    }
+  }
   return {
-    backgroundColor: categoryColorType[category] || "transparent",
+    backgroundColor: noBackground ? "transparent" : categoryColorType[category] || "transparent",
     borderColor: categoryColorType[category] || "transparent",
   }
 }
-export const getDropsByID = (id: Array<string>, items:Array<any>) => {
-  if(!items || !id ) return []
+export const getDropsByID = (id: Array<string>, items: Array<any>) => {
+  if (!items || !id) return []
   return items.filter((item) => id.includes(item.id))
 }

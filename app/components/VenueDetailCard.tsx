@@ -94,9 +94,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             </TouchableOpacity>
           </View>
           <View row style={$lineDivider}></View>
-          <View style={$boxWrapper} row marginT-10>
+          <View style={$boxWrapper} row marginT-10 spread>
             <TouchableOpacity onPress={onCallPhone}>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <Ionicons name="call-outline" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -105,7 +105,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <AntDesign name="clockcircleo" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -114,7 +114,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <SimpleLineIcons name="book-open" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -123,7 +123,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <AntDesign name="calendar" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -132,7 +132,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
               </View>
               <Text center marginT-8>
@@ -141,7 +141,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="taxi" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -277,12 +277,12 @@ const $bigDivider: ViewStyle = {
 const $boxContainer: ViewStyle = {
   backgroundColor: Colors.ash,
   borderRadius: 15,
-  marginRight: 5,
+  padding: 18,
 }
 const $boxWrapper: ViewStyle = {
-  justifyContent: "flex-start",
+  justifyContent: 'space-between',
   flexWrap: "wrap",
-  flexShrink: 6,
+  flexShrink: 1,
   flexGrow: 1,
 }
 const $roundedImage: ImageStyle = {

@@ -6,6 +6,10 @@ import { ErrorModel } from "./Feed"
  * Model description here for TypeScript hints.
  *
  */
+const dropImages = types.model({
+  image: types.maybe(types.string),
+  id: types.maybe(types.string)
+})
 const DropDetailDropModel = types.model({
   id: types.identifier,
   title: types.maybe(types.string),
@@ -35,8 +39,9 @@ const DropModel = types.model({
   drops: types.array(DropDetailDropModel),
   expiration: types.maybe(types.string),
   venue_image: types.maybe(types.string),
-  code: types.maybe(types.string),
-  claimed: types.maybe(types.boolean),
+  user_code: types.maybe(types.string),
+  user_claimed: types.maybe(types.boolean),
+  images: types.maybeNull(types.array(dropImages)),
 })
 export const DropStoreModel = types
   .model("DropStore")
