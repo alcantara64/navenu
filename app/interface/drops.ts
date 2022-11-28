@@ -12,7 +12,7 @@ export interface IDrop  {
     image: string
     expiration: string,
     code?: string 
-    claimed: boolean 
+    user_claimed: boolean 
     venue_id: string
     intro: string
     venue: string
@@ -20,4 +20,6 @@ export interface IDrop  {
     venue_image: string
     tags: Array<string>
     drops?: Array<IDrop>
+    user_code: string
+    images: Array<{id: string, image: string}>
   }

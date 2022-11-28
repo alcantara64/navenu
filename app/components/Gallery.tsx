@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { Dimensions, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { IGallery } from "../interface/venues"
@@ -21,18 +21,17 @@ export interface GalleryProps {
 export const Gallery = observer(function Gallery(props: GalleryProps) {
   const { style, items } = props
   const $styles = [$container, style]
-
   return (
-    <View>
-      <View marginB-5 marginT-10>
-        <Text sectionHeader>Gallery</Text>
-      </View>
+    <View >
     <Carousel<IGallery>
-    width={40}
+    width={Dimensions.get('screen').width -40 }
+    height={150}
     style={$styles}
+    loop
+    autoPlay
     data={items}
     renderItem={({ item }) => {
-      return <Image source={{uri: item.image}} />
+      return <Image height={200} source={{uri: item.image}} />
     }}
   />
   </View>

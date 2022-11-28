@@ -33,6 +33,13 @@ const colors: DesignSystemColors = {
   
   
     Typography.loadTypographies({
+      largeDarkHeader:{
+        fontFamily: typography.primary.normal,
+        fontSize: 26,
+        textTransform: 'uppercase',
+        color: '#000000',
+        lineSpacing: 1.92,
+      },
       header: {
         fontFamily: typography.primary.normal,
         fontSize: 22,
@@ -42,9 +49,10 @@ const colors: DesignSystemColors = {
       },
       belowHeaderText : {
         fontFamily: 'Inter',
-        fontWeight: 400,
+        fontWeight: '400',
         fontSize: 12,
-        color: '#1E1E1E'
+        color: '#1E1E1E',
+        textTransform: 'lowercase'
       },
       sectionHeader: {
         fontFamily: typography.primary.normal,
@@ -53,5 +61,13 @@ const colors: DesignSystemColors = {
         color: '#333333',
         lineSpacing: 1.92,
       },
+      bigTextDark :{
+        fontFamily: 'Inter-Regular',
+        fontWeight: '400',
+        fontSize: 32,
+        color: '#333333',
+        textTransform: 'uppercase',
+      }
+
     });
   };

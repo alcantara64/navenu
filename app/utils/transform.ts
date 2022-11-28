@@ -1,3 +1,4 @@
+import { ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
 import { categoryColorType, Colors } from "../theme"
 
@@ -36,7 +37,6 @@ export const filterFeeds = (
     })
   }
   if (typeFilter.length < 1 && categoryFilter.length > 0) {
-    console.log("typeFilter 4", typeFilter.length, categoryFilter.length)
     feeds?.forEach((feed) => {
       if (categoryFilter.includes(feed.category)) {
         filteredList.push(feed)
@@ -45,13 +45,24 @@ export const filterFeeds = (
   }
   return filteredList
 }
-export const getStyleByCategory = (category) => {
-  return {
-    backgroundColor: categoryColorType[category] || "transparent",
-    borderColor: categoryColorType[category] || "transparent",
+export const getStyleByCategory = (category, isText?: boolean, noBackground?: boolean) => {
+  if (isText) {
+    return {
+      color: categoryColorType[category] || "transparent",
+    }
   }
+  const style:ViewStyle = {
+    borderColor: categoryColorType[category] || "transparent",
+    backgroundColor :  categoryColorType[category] || "white",
+    borderTopColor: categoryColorType[category],
+  }
+  if(noBackground){
+   delete style.backgroundColor;
+  }
+  return style;
 }
-export const getDropsByID = (id: Array<string>, items:Array<any>) => {
-  if(!items || !id ) return []
+
+export const getDropsByID = (id: Array<string>, items: Array<any>) => {
+  if (!items || !id) return []
   return items.filter((item) => id.includes(item.id))
 }
