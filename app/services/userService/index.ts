@@ -16,8 +16,6 @@ export class UserService {
         if (problem) return problem
       }
       const rawData = response.data;
-      
-  
      return {kind: 'ok', data: rawData.data}
 
   }

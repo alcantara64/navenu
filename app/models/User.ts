@@ -153,10 +153,10 @@ export const UserStoreModel = types
       self.error = { isError: false, message: "" }
       const userService = new UserService()
       const response = yield userService.getUsers()
-
+      
       if (response.kind === "ok") {
         // FIll UserModel with API Data
-        self.currentUser = response.data
+        self.currentUser = response.data.user
         // Fill UserListModel with API DATA
         self.usersList = response.data.userLists
       } else {
