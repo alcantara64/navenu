@@ -12,10 +12,11 @@ import { observer } from "mobx-react-lite"
 import { Text } from "./Text"
 import { CountdownTimer } from "./CountdownTimer"
 import { View } from "react-native-ui-lib"
-import { categoryColorType, Colors } from "../theme"
+import { Colors } from "../theme"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { IFeed } from "../interface/feed"
 import { useNavigation } from "@react-navigation/native"
+import { getStyleByCategory } from '../utils/transform'
 
 export interface DropCardProps {
   /**
@@ -35,9 +36,6 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
   const { item, onBookMark, savedFeeds, isFeed } = props
   const navigation = useNavigation();
 
-  const getStyleByCategory = (category) => {
-    return { backgroundColor: categoryColorType[category] || Colors.orange }
-  }
 
   const saveDrop = () => {
     onBookMark(item)
@@ -49,7 +47,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
   }
 
   return (
-    <TouchableOpacity key={item.id} onPress={() => onDropPress(item)} activeOpacity={0.1}>
+    <TouchableOpacity style={$dropCardContainer} key={item.id} onPress={() => onDropPress(item)} activeOpacity={0.1}>
       <ImageBackground
         source={{ uri: item.image }}
         imageStyle={$imageBackground}
@@ -94,12 +92,13 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
   )
 })
 
+const $dropCardContainer:ViewStyle = {
+  minHeight: 100,
+}
 const $cardTextContainer: TextStyle = {
-  //alignItems: "baseline",
   marginHorizontal: 6,
 }
 const $countdownText: TextStyle = {
-  marginBottom: 0,
   color: "#FFFFFF",
   marginRight: 4,
   fontFamily: "bourtonbasedrop",
@@ -127,6 +126,8 @@ const $countDownContainer: ViewStyle = {
   padding: 2,
   display: "flex",
   alignSelf: "flex-start",
+  alignItems: 'center',
+  justifyContent: 'center'
 }
 const $expiredDroContainer: ViewStyle = {
   backgroundColor: Colors.ash,

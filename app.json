@@ -16,7 +16,9 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.navenu.app",
@@ -51,6 +53,8 @@
         "backgroundColor": "#191015"
       }
     },
-    "plugins": ["@react-native-google-signin/google-signin"]
+    "plugins": [
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }

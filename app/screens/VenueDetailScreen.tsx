@@ -22,18 +22,17 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const venueId = route.params.venue.id;
-
   const { data, error, isLoading } = useVenue(venueId);
 
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
   return (
-    <Screen style={$root} preset="scroll">
+    <Screen style={$root} preset="auto">
         <View style={$container}>
       
         <VenueDetailCard venue={data}></VenueDetailCard>
         {data?.images?.length > 0 && <Gallery items={data.images} />}
-        <NearByVenues venues={data.nearby} />
+        <NearByVenues venues={data?.nearby} />
   
     </View>
     </Screen>

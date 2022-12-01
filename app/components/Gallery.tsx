@@ -1,17 +1,17 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { Dimensions, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
-import { Text } from "./Text"
 import { IGallery } from "../interface/venues"
 import Carousel from "react-native-reanimated-carousel"
+import { View, Text, Image } from "react-native-ui-lib"
 
 export interface GalleryProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  items: IGallery
+  items: Array<IGallery>
 
 }
 
@@ -19,18 +19,22 @@ export interface GalleryProps {
  * Describe your component here
  */
 export const Gallery = observer(function Gallery(props: GalleryProps) {
-  const { style } = props
+  const { style, items } = props
   const $styles = [$container, style]
-
   return (
-    <Carousel<{ color: string }>
-    width={40}
+    <View >
+    <Carousel<IGallery>
+    width={Dimensions.get('screen').width -40 }
+    height={150}
     style={$styles}
-    data={[{ color: "red" }, { color: "purple" }, { color: "yellow" }]}
-    renderItem={({ color }) => {
-      return <View style={{ backgroundColor: color, height: 80, }} />
+    loop
+    autoPlay
+    data={items}
+    renderItem={({ item }) => {
+      return <Image height={200} source={{uri: item.image}} />
     }}
   />
+  </View>
   )
 })
 
@@ -38,8 +42,3 @@ const $container: ViewStyle = {
   justifyContent: "center",
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}

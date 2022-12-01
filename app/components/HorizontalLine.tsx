@@ -10,14 +10,15 @@ export interface HorizontalLineProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  color?: 'white'| 'black'
 }
 
 /**
  * Describe your component here
  */
 export const HorizontalLine = observer(function HorizontalLine(props: HorizontalLineProps) {
-  const { style } = props
-  const $styles = [$horizontalLine, style]
+  const { style, color } = props
+  const $styles = [$horizontalLine, style, {borderColor: color === 'black'? Colors.black: Colors.white  }]
 
   return (
     <View row style={$styles}></View>
@@ -26,6 +27,5 @@ export const HorizontalLine = observer(function HorizontalLine(props: Horizontal
 
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,
-  borderColor: Colors.black,
   margin: 5,
 }

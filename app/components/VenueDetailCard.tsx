@@ -18,8 +18,8 @@ import {
 } from "@expo/vector-icons"
 import { IVenue } from "../interface/venues"
 import { useNavigation } from "@react-navigation/native"
-import { Colors } from "../theme"
-import { getInitials } from "../utils/transform"
+import { Colors, typography } from "../theme"
+import { getInitials, getStyleByCategory } from "../utils/transform"
 import { openLinkInBrowser } from "../utils/openLinkInBrowser"
 import { DropCard } from "./DropCard"
 
@@ -63,29 +63,30 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             {venue.name}
           </Text>
           <View row style={$horizontalLine}></View>
-          <Text text90 white style={$venueNameText}>
+          <Text text90 white marginB-5 style={$venueNameAddress}>
             {venue.address}
           </Text>
         </View>
-        <View style={$functionBtns}>
+        <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
             <TouchableOpacity
-              style={{ marginVertical: 15 }}
+              style={{ marginVertical: 10 }}
               onPress={() => console.log("Button 1")}
             >
-              <MaterialIcons name="ios-share" size={45} color="#FFFFFF" />
+              <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
+            
             <TouchableOpacity style={{ marginVertical: 5 }}>
-              <FontAwesome5 name="bookmark" size={40} color="#FFFFFF" />
+              <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
-      <View style={$contentContainer}>
+      <View style={{...$contentContainer, ...getStyleByCategory(venue.category)}}>
         <View flex padding-15 style={$venueContent}>
-          <View marginT-5 padding-15>
-            <Text text60>HEADLINE</Text>
-            <Text marginT-15>{venue.long_description}</Text>
+          <View marginT-5 padding-8>
+            <Text header>HEADLINE</Text>
+            <Text belowHeaderText marginT-5 style={$longDescription}>{venue.long_description}</Text>
             <TouchableOpacity onPress={onLinkPress}>
               <Text style={$linkUrl} marginT-15>
                 VISIT SITE
@@ -93,9 +94,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             </TouchableOpacity>
           </View>
           <View row style={$lineDivider}></View>
-          <View style={$boxWrapper} row marginT-10>
+          <View style={$boxWrapper} row marginT-10 spread>
             <TouchableOpacity onPress={onCallPhone}>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <Ionicons name="call-outline" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -104,7 +105,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <AntDesign name="clockcircleo" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -113,7 +114,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <SimpleLineIcons name="book-open" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -121,17 +122,17 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MENU
               </Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+            <TouchableOpacity>
+              <View padding-15 style={$boxContainer}>
                 <AntDesign name="calendar" size={24} color="white" />
               </View>
               <Text center marginT-8>
                 {" "}
                 BOOK
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
               </View>
               <Text center marginT-8>
@@ -140,7 +141,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View padding-20 style={$boxContainer}>
+              <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="taxi" size={24} color="white" />
               </View>
               <Text center marginT-8>
@@ -186,15 +187,15 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   </Text>
                 )}
                 <View marginL-10>
-                  <Text>CURATORS</Text>
-                  <Text>MENTIONED</Text>
-                  <Text>THIS VENUE</Text>
+                  <Text sectionHeader>CURATORS</Text>
+                  <Text sectionHeader>MENTIONED</Text>
+                  <Text sectionHeader>THIS VENUE</Text>
                 </View>
               </View>
             </View>
           )}
          {venue.drops && venue.drops.length > 0 && <View  marginV-15> 
-            <Text text70 >DROPS</Text>
+            <Text sectionHeader >DROPS</Text>
 
             <View marginT-15>
            { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
@@ -218,8 +219,8 @@ const $closeBtn: ViewStyle = {
   position: "absolute",
 }
 const $functionBtns: ViewStyle = {
-  right: 10,
-  bottom: 10,
+  right: 5,
+  bottom: 5,
   position: "absolute",
 }
 const $imagetop: ViewStyle = {
@@ -233,10 +234,14 @@ const $categoryText: TextStyle = {
   marginBottom: 0,
   color: "#FFFFFF",
   textTransform: "uppercase",
+  fontFamily: typography.fonts.bourtonbase.normal,
+  fontSize:14
 }
 const $venueNameText: TextStyle = {
   marginBottom: 15,
   textTransform: "uppercase",
+  fontFamily: typography.fonts.bourtonbase.normal,
+  fontSize: 22,
 }
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,
@@ -258,7 +263,7 @@ const $venueContent: ViewStyle = {
   borderTopRightRadius: 15,
   backgroundColor: "#F2F2F2",
   borderTopLeftRadius: 15,
-  padding: 15,
+  padding: 8,
 }
 const $linkUrl: TextStyle = {
   color: Colors.orange,
@@ -272,11 +277,13 @@ const $bigDivider: ViewStyle = {
 const $boxContainer: ViewStyle = {
   backgroundColor: Colors.ash,
   borderRadius: 15,
-  marginRight: 5,
+  padding: 18,
 }
 const $boxWrapper: ViewStyle = {
-  justifyContent: "flex-start",
+  justifyContent: 'space-between',
   flexWrap: "wrap",
+  flexShrink: 1,
+  flexGrow: 1,
 }
 const $roundedImage: ImageStyle = {
   height: 70,
@@ -289,4 +296,15 @@ const $imageContainer: ViewStyle = {
 }
 const $curatorTextColor: TextStyle = {
   color: Colors.orange,
+}
+const $venueNameAddress: TextStyle ={
+  fontFamily: 'inter',
+  fontWeight: '400',
+  fontStyle: 'normal',
+  marginBottom: 15,
+}
+const $longDescription : TextStyle ={
+  fontFamily: 'inter',
+  fontWeight: '400',
+  fontSize: 12,
 }

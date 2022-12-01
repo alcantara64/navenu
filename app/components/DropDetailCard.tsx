@@ -8,7 +8,8 @@ import { DropCard } from "./DropCard"
 import { useState } from "react"
 import Carousel from "react-native-reanimated-carousel"
 import { IDrop } from "../interface/drops"
-import { CountdownTimer, VenueCard } from "."
+import { CountdownTimer, Gallery, VenueCard } from "."
+import { getStyleByCategory } from "../utils/transform"
 
 export interface DropDropDetailCardProps {
   /**
@@ -42,18 +43,6 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
  })
   } 
 
-  // const renderItem = ({ item, index, separators }) =>(
-  //   <TouchableHighlight key={item.id}>
-  //  {/* <Image  source={item.image} /> */}
-  //   <View><Image  source={{uri:item.image}} style={{
-  //                   width:80,
-  //                   height:40,
-  //                   resizeMode:'contain',
-  //                   margin:8
-  //               }} /></View>
-  //   </TouchableHighlight>
-  // )
-
   return (
     <View style={$styles}>
       <ImageBackground source={{ uri: drop.image }} resizeMode="cover" style={$imageTop}>
@@ -70,74 +59,72 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             <View></View>
           </View>
 
-          <View flex-1 center paddingB-20 spread>
+          <View flex-1 center paddingB-20 spread >
             <TouchableOpacity
               style={{ marginVertical: 15 }}
               onPress={() => console.log("Button 1")}
             >
-              <MaterialIcons name="ios-share" size={45} color="#FFFFFF" />
+              <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity onPress={saveDrop} style={{ marginVertical: 5 }}>
-              <FontAwesome5 solid={bookmark} name="bookmark" size={40} color="#FFFFFF" />
+              <FontAwesome5 solid={bookmark} name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
-      <View style={$contentContainer}>
+      <View style={{...$contentContainer, ...getStyleByCategory(drop.category)}}>
         <View flex style={$dropContent} padding-20>
           {drop.description && (
             <View>
-              <Text text70>{drop.description}</Text>
+              <Text belowHeaderText>{drop.description}</Text>
             </View>
           )}
-          <View flex row marginB-10 marginT-10 spread br10>
-            {drop.claimed && (
+          <View flex row marginB-10 marginT-10 spread >
+            {drop.user_claimed && (
               <>
                 <Button
                   size="large"
                   label="CODE CLAIMED!"
                   color="white"
                   borderRadius={10}
-                  backgroundColor={Colors.orange}
+                  backgroundColor={getStyleByCategory(drop.category).backgroundColor}
+                  labelStyle ={$buttonLabel}
                 />
                 <Button
                   size="large"
-                  label={drop.code}
+                  label={drop.user_code}
                   color="white"
                   borderRadius={10}
                   backgroundColor={Colors.ash}
+                  labelStyle ={$buttonLabel}
                 />
               </>
             )}
-            {!drop.claimed && (
+            {!drop.user_claimed && (
               <>
-                <View marginL-4 row style={$countDownContainer}>
+                <View marginL-4 row style={{...$countDownContainer, ...getStyleByCategory(drop.category), borderColor:getStyleByCategory(drop.category).backgroundColor}}>
                   <Text style={$countdownText}>ENDS IN</Text>
                   <CountdownTimer time={drop.expiration} />
                 </View>
                 <Button
                   size="large"
+                  fullWidth
+
                   label={"CLAIM CODE!"}
                   color="white"
-                  borderRadius={10}
                   onPress={onClaimCode}
+                  style={$claimButton}
                   backgroundColor={Colors.ash}
                 />
               </>
             )}
           </View>
-          <View row>
-            <Carousel<{ color: string }>
-              width={40}
-              data={[{ color: "red" }, { color: "purple" }, { color: "yellow" }]}
-              renderItem={({ color }) => {
-                return <View style={{ backgroundColor: color, flex: 1 }} />
-              }}
-            />
+          <View row marginT-10 marginB-10>
+           {drop.images?.length > 0 && <Gallery items={drop.images}></Gallery>}
           </View>
           <View row style={$horizontalLine}></View>
           <View row marginT-20 marginB-10>
-            <Text text60>The Venue</Text>
+            <Text sectionHeader>The Venue</Text>
           </View>
 
           <View>
@@ -145,11 +132,11 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View row marginT-20 marginB-10>
-            <Text text60>The DROPS</Text>
+            <Text sectionHeader>ALL DROPS</Text>
           </View>
           <View>
             {drop &&
-              drop.drops.map((item) => <DropCard key={item.id} onPress={() => {}} item={item} />)}
+              drop.drops.map((item) => <DropCard key={item.id} item={item} />)}
           </View>
           <View row style={$horizontalLine}></View>
         </View>
@@ -226,9 +213,9 @@ const $horizontalLine: ViewStyle = {
 }
 const $countDownContainer: ViewStyle = {
   backgroundColor: Colors.orange,
-  width: "50%",
   borderRadius: 5,
   padding: 5,
+  alignItems: 'center',
 }
 const $countdownText: TextStyle = {
   marginBottom: 0,
@@ -237,4 +224,13 @@ const $countdownText: TextStyle = {
   marginRight: 4,
   padding: 9,
   fontSize: 15,
+}
+const $claimButton: ViewStyle = {
+  borderRadius: 5
+}
+const $buttonLabel: TextStyle ={
+  fontFamily: 'Inter-Regular',
+  textTransform: 'uppercase',
+  color: Colors.white,
+  fontSize: 18,
 }
