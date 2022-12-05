@@ -19,7 +19,7 @@ const DropDetailDropModel = types.model({
   name: types.maybe(types.string),
   intro: types.maybe(types.string),
 })
-const DropModel = types.model({
+export const DropModel = types.model({
   id: types.identifier,
   title: types.maybe(types.string),
   description: types.maybe(types.string),
@@ -30,8 +30,8 @@ const DropModel = types.model({
   category: types.maybe(types.string),
   intro: types.maybe(types.string),
   owner: types.maybe(types.string),
-  lat: types.maybe(types.string),
-  lng: types.maybe(types.string),
+  lat: types.maybe(types.number),
+  lng: types.maybe(types.number),
   venue_id: types.maybe(types.string),
   venue: types.maybe(types.string),
   distance: types.maybeNull(types.number),

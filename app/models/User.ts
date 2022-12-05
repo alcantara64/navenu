@@ -3,6 +3,7 @@ import _ from "lodash"
 import { Api } from "../services/api"
 import { ErrorModel } from "./Feed"
 import { UserService } from "../services/userService"
+import { DropModel } from "./DropStore"
 
 /*  Below you will find 1 parent model and 3 children model
  *
@@ -131,11 +132,13 @@ export const UserStoreModel = types
   .model("User")
   .props({
     // Current UserModel
-    currentUser: types.map(UserModel),
+    currentUser: types.maybe(UserModel),
     // UserLists
-    usersList: types.map(UsersListModel),
+     usersList: types.frozen(),
     // State for toggling display of user preferences bottom sheet
     showPreferencesModal: types.maybe(types.boolean),
+    //  user saved deals
+    userDrops: types.optional(types.array(DropModel), []),
     error: types.optional(ErrorModel, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
   })
@@ -152,13 +155,14 @@ export const UserStoreModel = types
       self.isLoading = true
       self.error = { isError: false, message: "" }
       const userService = new UserService()
-      const response = yield userService.getUsers()
+      const response = yield userService.getUsers();
       
       if (response.kind === "ok") {
         // FIll UserModel with API Data
         self.currentUser = response.data.user
         // Fill UserListModel with API DATA
-        self.usersList = response.data.userLists
+        self.usersList = response.data.userLists;
+        self.userDrops = response.data.savedDeals;
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }

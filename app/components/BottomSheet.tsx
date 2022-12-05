@@ -63,6 +63,7 @@ const $bottomSheet: ViewStyle = {
   borderTopLeftRadius: 10,
   paddingTop: 10,
   padding: 10,
+  bottom: 0,
 }
 const $closeButton: ViewStyle = {
   borderWidth: 1,

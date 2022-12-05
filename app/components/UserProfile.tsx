@@ -3,10 +3,14 @@ import { ImageBackground, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View } from "react-native-ui-lib"
 import { FontAwesome5, Ionicons } from "@expo/vector-icons"
-import { IUser } from "../interface/user"
+import { ISavedLocation, IUser } from "../interface/user"
 import { useNavigation } from "@react-navigation/native"
+import LinearGradient from "react-native-linear-gradient"
 import { Colors } from "../theme"
 import { DropList } from "./DropList"
+import { IDrop } from "../interface/drops"
+import { UserListCard } from "./UserListCard"
+import { useState } from "react"
 
 export interface UserProfileProps {
   /**
@@ -14,57 +18,28 @@ export interface UserProfileProps {
    */
   user: IUser
   style?: StyleProp<ViewStyle>
+  userDrops: Array<IDrop>
+  userList: Record<string, never>
+  locations?: Array<ISavedLocation>
 }
 
 /**
  * Describe your component here
  */
 export const UserProfile = observer(function UserProfile(props: UserProfileProps) {
-  const { user } = props
-  const navigation = useNavigation()
+  const { user, userDrops, userList } = props
+  const navigation = useNavigation();
+  const userListNames = Object.keys(userList || {}); 
+  const [dropListCount, setDropListCount] = useState(3)
+  const [userListCount, setUserListCount] = useState(3)
   const goBack = () => {
     navigation.goBack()
   }
- const MOCKDROP = [{
-  id: 24,
-  "type": "drop",
-  "venue_id": "3777",
-  "venue": "Bob Bob Ricard",
-  "venue_image": "https://media.navenu.com/media/venues/10cc14fe79bee9d3d499d8a3a4468486.jpg",
-  "image": "https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg",
-  "lat": "51.51233000000000000000",
-  "lng": "-0.13725250000000000000",
-  "name": "Free Half a dozen oysters with your Champagne!",
-  "description": "Enjoy half a dozen oysters on us when you purchase 2 glasses of champagne! Now that's definitely a reason to press the button!",
-  "active": true,
-  "expired": false,
-  "user_claimed": true,
-  "unclaimedCodeCount": 6,
-  "NoCodes": false,
-  "user_code": "TEST2",
-  "owner": "Bob Bob Ricard",
-  "parent_category": "Bar",
-  "category": "DRINK",
-  "campaign": "Bob Bob Ricard",
-  "distance": 0.84,
-  "percentage_elapsed": 75,
-  "expiration": "2023/03/21 00:00:00",
-  "tags": [
-      "103",
-      "157",
-      "158",
-      "159",
-      "130",
-      "153",
-      "155",
-      "135",
-      "156"
-  ]
-},]
+
   return (
     <>
       <ImageBackground
-        source={require("../../assets/images/mock/profile-mock.jpg")}
+        source={{uri:user.avatar }}
         resizeMode="cover"
         style={$imagetop}
       >
@@ -97,17 +72,53 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
       </ImageBackground>
       <View style={$contentContainer}>
         <View style={$mainContent}>
-          <View marginT-10 >
+          <View marginT-10>
             <View style={$dropsContainer}>
-            <Text header>MY Drops</Text>
-            <View marginT-20>
-              <DropList drops={MOCKDROP}/>
-            </View>
-            <View ><Text center underline>LOAD MORE</Text></View>
+              <Text header>MY Drops</Text>
+              <View marginT-20>
+                <DropList drops={[...userDrops].splice(0, dropListCount)} />
+              </View>
+              {userDrops.length > 3 && userDrops.length < dropListCount && (
+                <View>
+                  <LinearGradient
+                    colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
+                    style={$fadedContainer}
+                  />
+                  <TouchableOpacity marginT-10 onPress={() => {
+                    setDropListCount(userDrops.length);
+                  }}>
+                    <Text center white black bottom underline belowHeaderText>
+                      LOAD MORE
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
 
+            <View style={$dropsContainer}>
+              <Text header>My List</Text>
+              <View marginT-20>
+                {userListNames.slice(0,userListCount).map((name) => (
+                  <UserListCard key={name} image="" name={name} />
+))}
+              </View>
+              {userListNames.length > 3 && userListNames.length < userListCount && (
+                <View>
+                  <LinearGradient
+                    colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
+                    style={$fadedContainer}
+                  />
+                  <TouchableOpacity onPress = {() => {
+                    setUserListCount(userListCount);
+                  }}>
+                    <Text center white black bottom underline belowHeaderText>
+                      LOAD MORE
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           </View>
-
         </View>
       </View>
     </>
@@ -161,6 +172,13 @@ const $mainContent: ViewStyle = {
   padding: 8,
 }
 
-const $dropsContainer:ViewStyle ={
-  position: 'relative'
+const $dropsContainer: ViewStyle = {
+  position: "relative",
+}
+const $fadedContainer: ViewStyle = {
+  bottom: 25,
+  zIndex: 10,
+  position: "absolute",
+  width: "100%",
+  height: "100%",
 }

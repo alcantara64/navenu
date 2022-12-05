@@ -1,11 +1,11 @@
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
-import { ErrorMessage, LoadingIndicator, Screen, UserProfile } from "../components"
+import { BottomSheet, ErrorMessage, LoadingIndicator, Screen, UserProfile } from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { useStores } from "../models"
-import { View } from "react-native-ui-lib"
+import { View, Text } from "react-native-ui-lib"
 import { IUser } from "../interface/user"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
@@ -25,38 +25,29 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
     // const { someStore, anotherStore } = useStores()
     // const userId = route.params.user.id;
     const { userStore } = useStores()
-    const { isLoading, error, getUser } = userStore
-    const MOCK_USER: IUser = {
-      ID: 233333,
-      
-      social_id: 89999,
-      user_login: 'user login',
-      user_nicename:'John Doe',
-      user_email:'johndoe@gmail.com',
-      user_url:'www.url.us',
-      display_name:'Laura Strummer',
-      last_name:'Strumer', 
-      description:'description' ,
-      name:'name',
-      profession:'', 
-      short_description:'',
-      gender:'Male', 
-      home_town: '', 
-      avatar: ''
+    const { isLoading, error, getUser,  usersList, currentUser, userDrops} = userStore;
+    const [showBottomSheet, setShowBottomSheet] = useState(true);
 
+    const closeBottomSheet = () => {
+      setShowBottomSheet(false);
+    }
+    const openBottomSheet = () => {
+      setShowBottomSheet(true);
     }
 
     useEffect(() => {
      getUser()
     }, [])
-    if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
+    if (error.isError) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
     if (isLoading) return <LoadingIndicator />;
     // Pull in navigation via hook
     // const navigation = useNavigation()
-    return (
+    return (<>
       <Screen style={$root} preset="scroll">
-        <UserProfile user={MOCK_USER} />
+        <UserProfile user={currentUser} userList={usersList} userDrops={userDrops} />
       </Screen>
+      <BottomSheet show={showBottomSheet} onClose={closeBottomSheet}><View bg-red><Text>Hello</Text></View></BottomSheet>
+      </>
     )
   },
 )
