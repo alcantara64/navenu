@@ -55,7 +55,7 @@ const $outerOverlay: ViewStyle = {
   opacity: 0.3,
 }
 const $bottomSheet: ViewStyle = {
-  position: "absolute",
+  position: "relative",
   width: "100%",
   zIndex: 10,
   backgroundColor: Colors.white,
@@ -64,6 +64,8 @@ const $bottomSheet: ViewStyle = {
   paddingTop: 10,
   padding: 10,
   bottom: 0,
+  borderTopColor: Colors.do,
+  borderTopWidth: 8,
 }
 const $closeButton: ViewStyle = {
   borderWidth: 1,

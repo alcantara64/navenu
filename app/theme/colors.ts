@@ -116,6 +116,7 @@ export const Colors = {
   offwhite: '#EEF5DB',
   offred: '#FE5F55',
   ash: '#333333',
+  grey: '#F2F2F2',
 };
 
 export const categoryColorType = {

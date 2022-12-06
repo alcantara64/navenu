@@ -20,27 +20,59 @@ export class UserService {
 
   }
 
-  async getUser(id) {
-    const response:ApiResponse<UserResponse> =   await this.httpClient.get(`/users/${id}`);
+  async uploadAvatarImage(payload:FormData){
+    // upload image to the server
+    const response:ApiResponse<any> =   await this.httpClient.post('/Users/avatar', payload);
     if (!response.ok) {
-        const problem = getGeneralApiProblem(response)
-        if (problem) return problem
-      }
-      const rawData = response.data;
-      
-  
-     return {kind: 'ok', data: rawData.data}
-
-  }
-  
-  async getUserList(){
-    const response:ApiResponse<IUserListResponse> =   await this.httpClient.get('/UserLists/');
-    if(!response.ok){
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
-    const rawData = response.data;
-    return {kind: 'ok', data: rawData.data}
+   
+   return {kind: 'ok'}
+  }
+
+  async updateDisplayName(payload:{displayname: string}){
+    // upload image to the server
+    const response:ApiResponse<any> =   await this.httpClient.post('/Users/displayname', payload);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+   
+   return {kind: 'ok'}
+  }
+
+  async updateProfession(payload:{profession: string}){
+    // upload image to the server
+    const response:ApiResponse<any> =   await this.httpClient.post('/Users/profession', payload);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+   
+   return {kind: 'ok'}
+  }
+
+  async updateHomeTown(payload:{hometown:string}){
+    // upload image to the server
+    const response:ApiResponse<any> =   await this.httpClient.post('/Users/hometown', payload);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+   
+   return {kind: 'ok'}
+  }
+
+  async updateAbout(payload:{about:string}){
+    // upload image to the server
+    const response:ApiResponse<any> =   await this.httpClient.post('/Users/about', payload);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+   
+   return {kind: 'ok'}
   }
 
   async createListName(payload){

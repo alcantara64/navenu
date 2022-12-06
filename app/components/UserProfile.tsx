@@ -21,13 +21,14 @@ export interface UserProfileProps {
   userDrops: Array<IDrop>
   userList: Record<string, never>
   locations?: Array<ISavedLocation>
+  showSetting: (value:boolean) => void
 }
 
 /**
  * Describe your component here
  */
 export const UserProfile = observer(function UserProfile(props: UserProfileProps) {
-  const { user, userDrops, userList } = props
+  const { user, userDrops, userList, showSetting } = props
   const navigation = useNavigation();
   const userListNames = Object.keys(userList || {}); 
   const [dropListCount, setDropListCount] = useState(3)
@@ -35,11 +36,10 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
   const goBack = () => {
     navigation.goBack()
   }
-
   return (
     <>
       <ImageBackground
-        source={{uri:user.avatar }}
+        source={{uri:user?.avatar }}
         resizeMode="cover"
         style={$imagetop}
       >
@@ -52,19 +52,19 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
           <Text cardSubtitleText>{"TITLE"}</Text>
           <View marginT-4>
             <Text white cardTitle>
-              {user.display_name}
+              {user?.display_name}
             </Text>
           </View>
           <View marginT-10 row style={$horizontalLine}></View>
           <View marginB-15>
             <Text white cardUserName>
-              @{user.user_nicename}
+              @{user?.user_nicename}
             </Text>
           </View>
         </View>
         <View style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity style={{ marginVertical: 5 }}>
+            <TouchableOpacity style={{ marginVertical: 5 }} onPress={showSetting}>
               <Ionicons name="settings-outline" size={27} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
@@ -78,7 +78,7 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
               <View marginT-20>
                 <DropList drops={[...userDrops].splice(0, dropListCount)} />
               </View>
-              {userDrops.length > 3 && userDrops.length < dropListCount && (
+              {userDrops.length > 3 && dropListCount < userDrops.length  && (
                 <View>
                   <LinearGradient
                     colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
@@ -102,14 +102,14 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
                   <UserListCard key={name} image="" name={name} />
 ))}
               </View>
-              {userListNames.length > 3 && userListNames.length < userListCount && (
+              {userListNames.length > 3 && userListCount < userListNames.length  && (
                 <View>
                   <LinearGradient
                     colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
                     style={$fadedContainer}
                   />
                   <TouchableOpacity onPress = {() => {
-                    setUserListCount(userListCount);
+                    setUserListCount(userListNames.length);
                   }}>
                     <Text center white black bottom underline belowHeaderText>
                       LOAD MORE

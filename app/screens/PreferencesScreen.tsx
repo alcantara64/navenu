@@ -1,12 +1,32 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
-import { BottomSheet, ErrorMessage, LoadingIndicator, Screen, UserProfile } from "../components"
+import { TextStyle, ViewStyle } from "react-native"
+import {
+  BottomSheet,
+  ErrorMessage,
+  LoadingIndicator,
+  Screen,
+  ToastLoader,
+  UserProfile,
+} from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { useStores } from "../models"
-import { View, Text } from "react-native-ui-lib"
-import { IUser } from "../interface/user"
+import {
+  View,
+  Text,
+  ExpandableSection,
+  Incubator,
+  Colors,
+  Button,
+  TouchableOpacity,
+} from "react-native-ui-lib"
+import { Entypo } from "@expo/vector-icons"
+import DocumentPicker from "react-native-document-picker"
+import { UserService } from "../services/userService"
+import { colors } from "../theme"
+
+const { TextField } = Incubator
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -22,31 +42,317 @@ import { IUser } from "../interface/user"
 export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(
   function PreferencesScreen({ route }) {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { authenticationStore } = useStores()
+    
     // const userId = route.params.user.id;
     const { userStore } = useStores()
-    const { isLoading, error, getUser,  usersList, currentUser, userDrops} = userStore;
-    const [showBottomSheet, setShowBottomSheet] = useState(true);
+    const { isLoading, error, getUser, usersList, currentUser, userDrops } = userStore
+    const [showBottomSheet, setShowBottomSheet] = useState(false)
+    const [profileSectionExpandable, setProfileSectionExpandible] = useState({
+      userName: false,
+      imageUpload: false,
+      color: false,
+      preference: false,
+      about: false,
+      contact: false,
+      location: false,
+    })
+    const [singleFile, setSingleFile] = useState(null)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [userName, setUserName] = useState({
+      isTouched: false,
+      value: currentUser.display_name,
+    })
+
+    const logout = () => {
+      authenticationStore.logout()
+    }
 
     const closeBottomSheet = () => {
-      setShowBottomSheet(false);
+      setShowBottomSheet(false)
     }
     const openBottomSheet = () => {
-      setShowBottomSheet(true);
+      setShowBottomSheet(true)
+    }
+    const uploadImage = async () => {
+      // Check if any file is selected or not
+      setLoading(true)
+      if (singleFile != null) {
+        // If file selected then create FormData
+        const fileToUpload = singleFile
+        const data = new FormData()
+        data.append("avatar", fileToUpload)
+        // upload image file to server
+        const userService = new UserService()
+        const response = await userService.uploadAvatarImage(data)
+
+        if (response.kind !== "ok") {
+          setErrorMessage("Image upload failed")
+        }
+        setSingleFile(null)
+      } else {
+        // If no file selected the show alert
+        alert("Please Select File first")
+      }
+      setLoading(false)
+    }
+    const selectFile = async () => {
+      // Opening Document Picker to select one file
+      try {
+        const res = await DocumentPicker.pickSingle({
+          // Select only images
+          type: DocumentPicker.types.images,
+          // There can me more options as well
+        })
+        // Setting the state to show single file attributes
+        setSingleFile(res)
+      } catch (err) {
+        setSingleFile(null)
+        // Handling any exception (If any)
+        if (DocumentPicker.isCancel(err)) {
+          // If user canceled the document selection
+          alert("Canceled")
+        } else {
+          // For Unknown Error
+          setErrorMessage("An expected error occur please try again")
+          throw err
+        }
+      }
     }
 
     useEffect(() => {
-     getUser()
+      getUser()
     }, [])
-    if (error.isError) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
-    if (isLoading) return <LoadingIndicator />;
+    if (error.isError) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
+    if (isLoading) return <LoadingIndicator />
     // Pull in navigation via hook
     // const navigation = useNavigation()
-    return (<>
-      <Screen style={$root} preset="scroll">
-        <UserProfile user={currentUser} userList={usersList} userDrops={userDrops} />
-      </Screen>
-      <BottomSheet show={showBottomSheet} onClose={closeBottomSheet}><View bg-red><Text>Hello</Text></View></BottomSheet>
+    const expandableHeaders = (title: string, targetChberon: boolean) => (
+      <View style={$headerTextContainer} row spread>
+        <View>
+          <Text style={$labelStyle}>{title}</Text>
+        </View>
+        <View center>
+          <Entypo name={targetChberon ? "chevron-up" : "chevron-down"} size={24} color="black" />
+        </View>
+      </View>
+    )
+    return (
+      <>
+        <Screen style={$root} preset="scroll">
+          <ToastLoader
+            isLoading={loading}
+            hasError={!!errorMessage}
+            errorMessage={errorMessage}
+            clearError={() => setErrorMessage("")}
+          />
+          <UserProfile
+            user={currentUser}
+            userList={usersList}
+            userDrops={userDrops}
+            showSetting={openBottomSheet}
+          />
+        </Screen>
+        <BottomSheet show={showBottomSheet} onClose={closeBottomSheet}>
+          <View bg-red padding-4>
+            <View>
+              <View>
+                <Text sectionHeader>ACCOUNT SETTINGS</Text>
+              </View>
+              <View marginT-20>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        userName: !profileSectionExpandable.userName,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.userName}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "User Name",
+                      profileSectionExpandable.userName,
+                    )}
+                  >
+                    <TextField
+                      trailingAccessory={
+                        <TouchableOpacity>
+                          <Text style={$saveText} underline>
+                            SAVE
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                      placeholder="Type User Name"
+                      fieldStyle={$withUnderline}
+                    />
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        imageUpload: !profileSectionExpandable.imageUpload,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.imageUpload}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "Profile Pic",
+                      profileSectionExpandable.imageUpload,
+                    )}
+                  >
+                    <View row spread>
+                      <Button
+                        center
+                        marginB-5
+                        bottom
+                        label={
+                          singleFile ? "Selected " + singleFile.name.slice(0, 20) : "Select File"
+                        }
+                        onPress={selectFile}
+                      />
+                      {singleFile && (
+                        <TouchableOpacity center onPress={uploadImage}>
+                          <Text style={$saveText} underline>
+                            Upload
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        location: !profileSectionExpandable.location,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.location}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "Current Location",
+                      profileSectionExpandable.location,
+                    )}
+                  >
+                    <TextField
+                      trailingAccessory={
+                        <TouchableOpacity>
+                          <Text style={$saveText} underline>
+                            SAVE
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                      placeholder="Upload Photo"
+                      fieldStyle={$withUnderline}
+                    />
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        preference: !profileSectionExpandable.preference,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.preference}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "Preferences",
+                      profileSectionExpandable.preference,
+                    )}
+                  >
+                    <TextField
+                      trailingAccessory={
+                        <TouchableOpacity>
+                          <Text style={$saveText} underline>
+                            SAVE
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                      placeholder="Upload Photo"
+                      fieldStyle={$withUnderline}
+                    />
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        about: !profileSectionExpandable.about,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.about}
+                    paddingB-10
+                    sectionHeader={expandableHeaders("About", profileSectionExpandable.about)}
+                  >
+                    <TextField
+                      trailingAccessory={
+                        <TouchableOpacity>
+                          <Text style={$saveText} underline>
+                            SAVE
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                      placeholder="Upload Photo"
+                      fieldStyle={$withUnderline}
+                    />
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        contact: !profileSectionExpandable.contact,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.contact}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "Contact info",
+                      profileSectionExpandable.contact,
+                    )}
+                  >
+                    <TextField
+                      trailingAccessory={
+                        <TouchableOpacity>
+                          <Text style={$saveText} underline>
+                            SAVE
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                      placeholder="Upload Photo"
+                      fieldStyle={$withUnderline}
+                    />
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <TouchableOpacity onPress={logout}>
+                    <Text marginT-4 marginB-4 style={$labelStyle}>
+                      Logout
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            <View marginT-80>
+              <Button  backgroundColor={'#333333'} fullWidth bottom label={"Share Navenu"} onPress={selectFile} />
+            </View>
+          </View>
+        </BottomSheet>
       </>
     )
   },
@@ -55,3 +361,30 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
 const $root: ViewStyle = {
   flex: 1,
 }
+const $withUnderline: ViewStyle = {
+  borderBottomWidth: 1,
+  borderColor: Colors.$outlineDisabledHeavy,
+  paddingBottom: 4,
+  height: 35,
+}
+
+const $labelStyle: TextStyle = {
+  fontFamily: "Inter-Regular",
+  fontStyle: "normal",
+  fontWeight: "600",
+}
+const $saveText: TextStyle = {
+  fontFamily: "Inter-Regular",
+  fontWeight: "700",
+  fontSize: 8,
+  color: "#007CFF",
+}
+const $expandableContainer: ViewStyle = {
+  borderBottomColor: Colors.$outlineDisabledHeavy,
+  borderBottomWidth: 1,
+  marginBottom: 10,
+}
+const $headerTextContainer: ViewStyle = {
+  alignItems: "center",
+}
+
