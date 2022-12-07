@@ -20,6 +20,19 @@ export class UserService {
 
   }
 
+    async getUserList(){
+      const response:ApiResponse<IUserListResponse> =   await this.httpClient.get('/UserLists/');
+
+      if(!response.ok){
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+      const rawData = response.data;
+      return {kind: 'ok', data: rawData.data}
+      
+    }
+  
+
   async uploadAvatarImage(payload:FormData){
     // upload image to the server
     const response:ApiResponse<any> =   await this.httpClient.post('/Users/avatar', payload);
