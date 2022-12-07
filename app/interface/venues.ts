@@ -6,12 +6,12 @@ export interface IVenue {
   lat: number
   distance: string | null
   category: any
-  phone: number
-  website: string
-  price_level: string
-  operating_hours: string | null
-  open_now: boolean
-  rating: string | null
+  phone?: number
+  website?: string
+  price_level?: string
+  operating_hours?: string | null
+  open_now?: boolean
+  rating?: string | null
   lng: number
   type: "Article" | "location" | "drop"
   image: string
@@ -30,11 +30,11 @@ export interface IVenue {
   postal_code: string
   tags: Array<string>
   nearby: Array<INearby>
-  images: Array<IGallery>
-  menu: Array<IMenu>
-  curators: Array<ICurators>
-  articles: Array<IArticle>
-  drops: Array<IDrop>
+  images?: Array<IGallery>
+  menu?: Array<IMenu>
+  curators?: Array<ICurators>
+  articles?: Array<IArticle>
+  drops?: Array<IDrop>
 }
 
 interface INearby {

@@ -75,7 +75,7 @@ export const BottomNavigationNavigator = () => {
       options={{
         tabBarShowLabel: false,
         tabBarIcon: ({ color, size }) => <ProfileButton  />,
-        header: () => <TopBarLogoOnly />,
+        headerShown:false
       }}
     />
 

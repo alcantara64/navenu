@@ -1,10 +1,10 @@
-import axios from "axios"
-import { useMutation, useQuery } from "react-query"
+import { useQuery } from "react-query"
 import { AddListItemPayload, Api } from "../services/api"
 import { UserService } from "../services/userService"
 
-const getUserById = async (userId: string) => {
-  const { data } = await axios.get(`https://api.navenu.com/index.php/Users/${userId}`)
+const getUser = async () => {
+  const api = new Api()
+  const  data = await api.get(`/Users`)
   return data
 }
 const getUserList = async () => {
@@ -19,7 +19,7 @@ const getUserList = async () => {
 }
 
 export const useUser = (userId: string) => {
-  return useQuery(["userInfo", userId], () => getUserById(userId))
+  return useQuery(["userInfo", userId], () => getUser())
 }
 
 export const useUserList = () => {

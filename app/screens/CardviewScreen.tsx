@@ -134,6 +134,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         )
       }
     }
+    console.log('data ==>', data)
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
     if(isMapMode) return<AppMap onSetErrorMessage={(e) => {
@@ -179,7 +180,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         <FlatList
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          data={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters)}
+          data={filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters)}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           progressViewOffset={18}

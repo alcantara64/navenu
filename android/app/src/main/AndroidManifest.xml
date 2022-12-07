@@ -24,6 +24,8 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/BootTheme">
+      <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+        android:exported="true"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -38,6 +40,6 @@
       </activity>
       <meta-data
      android:name="com.google.android.geo.API_KEY"
-     android:value="Your Google maps API Key Here"/>
+     android:value="AIzaSyDyo0BTb46EQ8l16z64wbopdgjJAgYi3g4"/>
     </application>
 </manifest>

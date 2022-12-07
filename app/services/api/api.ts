@@ -81,7 +81,7 @@ export class Api {
    return this.apisauce.get<any>(url, params, axiosConfig);
   }
 
-  async post(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
+  async post(url:string, payload?:Record<string, unknown> | FormData, axiosConfig?:AxiosRequestConfig){
     return this.apisauce.post(url, payload, axiosConfig);
    }
   

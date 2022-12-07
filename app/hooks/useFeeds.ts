@@ -1,21 +1,26 @@
 import { useInfiniteQuery } from "react-query"
-import { Api } from "../services/api"
+import { useStores } from "../models"
+import { FeedService } from "../services/feedsService"
 
 const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
-  const api = new Api()
-
   let queryParams = pageParam
   if (queryKey[1].catFilters !== undefined) {
     const catstr = queryKey[1].catFilters.join(",")
     queryParams = `cats=${catstr}`
   }
-  const response = await api.get(`/feed/${queryParams}`)
-  return response.data.data
+  const feedsService = new FeedService();
+  
+  const response = await feedsService.getFeeds(queryParams)
+  if(response.kind !== 'ok'){
+    throw new Error('error in feeds');
+  }
+  return response.feeds;
 }
 
 export const useFeeds = (catFilters: any) => {
   return useInfiniteQuery(["feed", catFilters], getFeeds, {
     getNextPageParam: (lastPage) => {
+      // todo nick return next page params from the api
       if(lastPage?.pageParam){
         return lastPage?.pageParam + 1
       }else{

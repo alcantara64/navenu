@@ -8,9 +8,8 @@ export class FeedService {
     this.httpClient = new Api()
   }
 
- async getFeeds( pageNumber=1, cartString?:string,) {
-   const queryString = `${pageNumber}?${cartString}`;
-    const response:ApiResponse<FeedResponse> =   await this.httpClient.get(`/feed`);
+ async getFeeds(queryParams?: string) {
+    const response:ApiResponse<FeedResponse> =   await this.httpClient.get(`/feed/${queryParams}`);
     if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) return problem
