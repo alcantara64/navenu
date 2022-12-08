@@ -1,22 +1,19 @@
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { FlatList, RefreshControl, TextStyle, ViewStyle } from "react-native"
+import { TextStyle, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import {
   AppMap,
-  ArticleCard,
+  CardList,
   ErrorMessage,
   LoadingIndicator,
   Modal,
   TextInput,
-  VenueCard,
 } from "../components"
-import { DropCard } from "../components/DropCard"
 import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
-import { FEED_TYPE } from "../interface/feed"
 import { filterFeeds } from "../utils/transform"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
@@ -56,19 +53,12 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     })
     const addItemToListMutation = useMutation({
       mutationFn: addItemToUserList,
-      onSuccess: () =>{
-        queryClient.invalidateQueries({ queryKey: ['userList'] })
-      }
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["userList"] })
+      },
     })
-    const { onTouchStart, onTouchEnd } = useSwipe(
-      undefined,
-      undefined,
-      onSwipeUp,
-      onSwipeDown,
-      6,
-    )
+    const { onTouchStart, onTouchEnd } = useSwipe(undefined, undefined, onSwipeUp, onSwipeDown, 6)
 
-   
     function onSwipeUp() {
       setTopBarStatus(true)
     }
@@ -76,70 +66,51 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       setTopBarStatus(false)
     }
 
-    const onDPress = (venue) => {
-      navigation.navigate("DropScreen", {
-        venue,
-      })
-    }
     const getMoreDate = () => {
       hasNextPage && fetchNextPage()
     }
-    const setTopBarStatus = (value:boolean) => {
-      if(value && showHeaderFilter) return
-      if(!value && showHeaderFilter){
+    const setTopBarStatus = (value: boolean) => {
+      if (value && showHeaderFilter) return
+      if (!value && showHeaderFilter) {
         toggleHeaderState()
       }
-      if(value && !showHeaderFilter){
+      if (value && !showHeaderFilter) {
         toggleHeaderState()
       }
-
     }
     const onBookMark = (item) => {
       userList.refetch()
-      setSelectedFeedItem(item);
+      setSelectedFeedItem(item)
       setShowListModal(true)
     }
     const addListName = () => {
       createListNameMutation.mutate(listName)
       userList.refetch()
     }
-    const onAddItemToUserList = (listItem) =>{
-      addItemToListMutation.mutate({user_list_id: listItem?.user_list_id, type: selectedFeedItem?.type, id: selectedFeedItem?.id});
-      setShowListModal(false);
+    const onAddItemToUserList = (listItem) => {
+      addItemToListMutation.mutate({
+        user_list_id: listItem?.user_list_id,
+        type: selectedFeedItem?.type,
+        id: selectedFeedItem?.id,
+      })
+      setShowListModal(false)
     }
 
-    const renderItem = ({ item }) => {
-      if (item.type === "location") {
-        return (
-          <VenueCard
-            savedFeeds={savedFeeds}
-            isFeed
-            onBookMark={onBookMark}
-            item={item}
-          />
-        )
-      }
-      if (item.type === FEED_TYPE.article) {
-        return <ArticleCard item={item} />
-      }
-      if (item.type === FEED_TYPE.drop) {
-        return (
-          <DropCard
-            savedFeeds={savedFeeds}
-            isFeed
-            onBookMark={toggleSaveFeed}
-            item={item}
-            onPress={onDPress}
-          />
-        )
-      }
-    }
-    console.log('data ==>', data)
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
-    if(isMapMode) return<AppMap onSetErrorMessage={(e) => {
-      // do something with error
-    }}  longitude={longitude} latitude={latitude} onSetLatitude={setLatitude} onSetLongitude={setLongitude}  item={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters) as any} />
+    if (isMapMode)
+      return (
+        <AppMap
+          onSetErrorMessage={(e) => {
+            // do something with error
+          }}
+          longitude={longitude}
+          latitude={latitude}
+          onSetLatitude={setLatitude}
+          onSetLongitude={setLongitude}
+          item={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters) as any}
+        />
+      )
     return (
       <View margin-8>
         {showListModal && (
@@ -148,18 +119,23 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             body={
               <View center flex style={$centeredView}>
                 <View style={$modalView}>
-                    <View row style={{flexWrap: 'wrap'}}>
-                      {userList?.data?.userlist &&
-                        Object.entries(userList.data.userlist).map((key, index) => (
-                          <TouchableOpacity key={index} onPress={() => {onAddItemToUserList(key[1])}}>
-                          <Text  left style={$listText}>
+                  <View row style={{ flexWrap: "wrap" }}>
+                    {userList?.data?.userlist &&
+                      Object.entries(userList.data.userlist).map((key, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            onAddItemToUserList(key[1])
+                          }}
+                        >
+                          <Text left style={$listText}>
                             {" "}
                             {key[0]}{" "}
                           </Text>
-                          </TouchableOpacity>
-                        ))}
-                    </View>
-                  
+                        </TouchableOpacity>
+                      ))}
+                  </View>
+
                   {userList.isLoading && <LoadingIndicator />}
                   {userList.error && <Text>an error occurred try again later</Text>}
                   <View style={{ width: "100%" }}>
@@ -177,19 +153,14 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             }
           ></Modal>
         )}
-        <FlatList
-          onTouchStart={onTouchStart}
+        <CardList
           onTouchEnd={onTouchEnd}
+          onTouchStart={onTouchStart}
           data={filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters)}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          progressViewOffset={18}
-          onEndReached={getMoreDate}
-          ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
-          refreshControl={
-            <RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />
-          }
-          extraData={JSON.stringify(catFilters.concat(selectedFilterTypes))}
+          getMoreData={getMoreDate}
+          isFetchingNextPage={isFetchingNextPage}
+          onBookMark={onBookMark}
+          toggleSaveFeed={toggleSaveFeed}
         />
       </View>
     )

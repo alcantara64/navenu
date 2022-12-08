@@ -9,17 +9,22 @@ export interface UserListCardProps {
    */
   style?: StyleProp<ViewStyle>
   image: string
-  name: string
+  name: string,
+  onListPress: (value:any) => void
 }
 
 /**
  * Describe your component here
  */
 export const UserListCard = observer(function UserListCard(props: UserListCardProps) {
-  const { image, name } = props;
+  const { image, name, onListPress } = props;
+
+  const listPressed = () => {
+    onListPress(name)
+  }
 
   return (
-    <TouchableOpacity style={$dropCardContainer}  activeOpacity={0.1}>
+    <TouchableOpacity style={$dropCardContainer}  onPress={listPressed}  activeOpacity={0.1}>
     <ImageBackground
       source={{ uri: image || 'https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg' }}
       imageStyle={$imageBackground}
