@@ -22,19 +22,23 @@ export interface UserProfileProps {
   userList: Record<string, never>
   locations?: Array<ISavedLocation>
   showSetting: (value:boolean) => void
+  onSetSelectedList: (value: any) => void
 }
 
 /**
  * Describe your component here
  */
 export const UserProfile = observer(function UserProfile(props: UserProfileProps) {
-  const { user, userDrops, userList, showSetting } = props
+  const { user, userDrops, userList, showSetting, onSetSelectedList } = props
   const navigation = useNavigation();
   const userListNames = Object.keys(userList || {}); 
   const [dropListCount, setDropListCount] = useState(3)
   const [userListCount, setUserListCount] = useState(3)
   const goBack = () => {
     navigation.goBack()
+  }
+  const onSelectedListItemPressed = (listName:string) => {
+     onSetSelectedList({...userList[listName] as any, userListName:listName})
   }
   return (
     <>
@@ -99,7 +103,7 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
               <Text header>My List</Text>
               <View marginT-20>
                 {userListNames.slice(0,userListCount).map((name) => (
-                  <UserListCard key={name} image="" name={name} />
+                  <UserListCard onListPress={onSelectedListItemPressed} key={name} image="" name={name} />
 ))}
               </View>
               {userListNames.length > 3 && userListCount < userListNames.length  && (

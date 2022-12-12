@@ -3,7 +3,9 @@ import { observer } from "mobx-react-lite"
 import { TextStyle, ViewStyle } from "react-native"
 import {
   BottomSheet,
+  CardList,
   ErrorMessage,
+  HorizontalLine,
   LoadingIndicator,
   Screen,
   ToastLoader,
@@ -21,10 +23,10 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native-ui-lib"
-import { Entypo } from "@expo/vector-icons"
+import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons"
 import DocumentPicker from "react-native-document-picker"
 import { UserService } from "../services/userService"
-import { colors } from "../theme"
+
 
 const { TextField } = Incubator
 // import { useNavigation } from "@react-navigation/native"
@@ -64,6 +66,12 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       isTouched: false,
       value: currentUser.display_name,
     })
+    const [showUserListModal, setShowUserListModal] = useState(false);
+    const [selectedListItem, setSelectedListItem] = useState(null)
+
+    useEffect(() => {
+      getUser()
+    }, [])
 
     const logout = () => {
       authenticationStore.logout()
@@ -73,6 +81,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       setShowBottomSheet(false)
     }
     const openBottomSheet = () => {
+      setShowUserListModal(false);
       setShowBottomSheet(true)
     }
     const uploadImage = async () => {
@@ -120,10 +129,15 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         }
       }
     }
+    const onCloseUserListModal = () => {
+      setShowUserListModal(false)
+    }
+    const setCurrentListItem = (listItem) => {
+     setShowBottomSheet(false) 
+     setSelectedListItem(listItem);
+     setShowUserListModal(true)
+    }
 
-    useEffect(() => {
-      getUser()
-    }, [])
     if (error.isError) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
     // Pull in navigation via hook
@@ -152,6 +166,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
             userList={usersList}
             userDrops={userDrops}
             showSetting={openBottomSheet}
+            onSetSelectedList={setCurrentListItem}
           />
         </Screen>
         <BottomSheet show={showBottomSheet} onClose={closeBottomSheet}>
@@ -350,6 +365,24 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
 
             <View marginT-80>
               <Button  backgroundColor={'#333333'} fullWidth bottom label={"Share Navenu"} onPress={selectFile} />
+            </View>
+          </View>
+        </BottomSheet>
+      
+        <BottomSheet show={showUserListModal} onClose={onCloseUserListModal}>
+          <View padding-8>
+            <View row right marginB-5>
+              <TouchableOpacity>
+             <AntDesign name="delete" size={30} color="black" />
+             </TouchableOpacity>
+             <TouchableOpacity>
+             <MaterialIcons name="ios-share" size={30} color="#black" />
+             </TouchableOpacity>
+             </View>
+            <HorizontalLine color="black" />
+            <Text header marginT-10>{selectedListItem?.userListName}</Text>
+            <View marginT-15>
+            <CardList data={selectedListItem?.cards || []} />
             </View>
           </View>
         </BottomSheet>
