@@ -11,6 +11,12 @@
  Theo Lamar =  UI/UX Designer (Toronto Canada)  theolamar@gmail.com
  
  Russell Cunningham = Data Manager (Toronto Canada) russellwcunningham@gmail.com
+ 
+## Figma Design
+
+[Navenu Figma](https://www.figma.com/file/1VQdbZ2qUgG4YT91I2xaX4/Navenu-Master?node-id=56%3A480) 
+
+Please contact Theo Lamar for any graphic assets or UI/UX related questions or suggestions.
 
 ## Task Management
 
@@ -27,9 +33,34 @@ Please follow this workflow. So there is no overlapping work and to prevent futu
 
 The hours indicated in your pull request is used as a cross reference with Lemon billable hours.
 
-##IMPORTANT! Any hours billed with Lemon, that do not include an associated pull request WILL BE DISPUTED!!
+## IMPORTANT! Any hours billed with Lemon, that do not include an associated pull request WILL BE DISPUTED!!
 
 If your work is to exceed 8 hours, please submit a pull request (No Pull request should be over 8 billable hours) , even if the code is incomplete. 
+
+# Web Based Venue Management
+
+[Venue Administration DEV](https://api.navenu.com/admin/venue)
+
+# API End Point
+
+[Dev Navenu End Point](https://api.navenu.com/api/)
+
+Test account credentials navenuteam@navenu.com:Gonavenu
+
+# Wordpress User and Editorial Management
+
+[Dev Navenu Administration](https://dev.navenu.com/wp-admin/)
+
+# Dev Version of public facing website 
+
+[Navenu Website Dev](https://dev.navenu.com) 
+
+# CDN URL 
+
+Images and video are stored in AWS S3 and distributed from AWS Cloudfront from the following domain:
+
+[https://media.navenu.com](https://media.navenu.com)
+
 
 
 ## Main Libraries Used (refer to package.json for complete list):
