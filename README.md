@@ -2,11 +2,15 @@
 
 ## Development Team 
 
-Nick Nguyen = Project Lead / Web and API Developer (California USA)  Nick@Navenu.com (949)386-0344  
-Emmanuel Agahiu =    React Native Developer (Amsterdam Netherlands)  emmanuelagahiu@gmail.com
-Ariel Conti = React Native Developer (Lisbon Portugal)   arielconti10@gmail.com
-Theo Lamar =  UI/UX Designer (Toronto Canada)  theolamar@gmail.com
-Russell Cunningham = Data Manager (Toronto Canada) russellwcunningham@gmail.com
+ Nick Nguyen = Project Lead / Web and API Developer (California USA)  Nick@Navenu.com (949)386-0344
+ 
+ Emmanuel Agahiu =    React Native Developer (Amsterdam Netherlands)  emmanuelagahiu@gmail.com
+ 
+ Ariel Conti = React Native Developer (Lisbon Portugal)   arielconti10@gmail.com
+ 
+ Theo Lamar =  UI/UX Designer (Toronto Canada)  theolamar@gmail.com
+ 
+ Russell Cunningham = Data Manager (Toronto Canada) russellwcunningham@gmail.com
 
 ## Task Management
 
@@ -21,7 +25,10 @@ Please follow this workflow. So there is no overlapping work and to prevent futu
 - Move Task to "In Progress" column when you are working on it
 - Upon Task completion. Submit a pull request for review, in your pull review you MUST indicate the following 1) JIRA Task ID 2)description of work performed inc any task that cant be quantified in code (meetings, research, debug, etc) 3) billable HOURS 
 
-The hours indicated in your pull request is used as a cross reference with Lemon billable hours. IMPORTANT! Any hours billed with Lemon, that do not include an associated pull request WILL BE DISPUTED!! 
+The hours indicated in your pull request is used as a cross reference with Lemon billable hours.
+
+##IMPORTANT! Any hours billed with Lemon, that do not include an associated pull request WILL BE DISPUTED!!
+
 If your work is to exceed 8 hours, please submit a pull request (No Pull request should be over 8 billable hours) , even if the code is incomplete. 
 
 
