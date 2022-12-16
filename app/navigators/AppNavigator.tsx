@@ -20,6 +20,7 @@ import { NavenuButton, TopBar, TopBarLogoOnly } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
+  LocationScreen,
   LoginScreen,
   PreferencesScreen,
   SearchScreen,
@@ -53,7 +54,8 @@ export type AppStackParamList = {
   DropScreen: {venue: any}
   VenueDetailScreen: undefined
   CuratorProfileScreen: undefined
-  Cardview: undefined
+  Cardview: undefined,
+  Location: undefined,
 }
 
 /**
@@ -83,6 +85,7 @@ const AppStack = observer(function AppStack() {
       {isAuthenticated ? (<>
         <Stack.Screen name="Home" component={BottomNavigationNavigator} />
         <Stack.Screen  name="PreferencesScreen" component={PreferencesScreen}  />
+        <Stack.Screen name="Location" component={LocationScreen} />
         </>
       ) : (
         <>
