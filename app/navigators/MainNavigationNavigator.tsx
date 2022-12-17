@@ -22,8 +22,6 @@ export type MainNavigationNavigatorParamList = {
 
 const Stack = createStackNavigator<MainNavigationNavigatorParamList>()
 export function MainStack() {
-  const {feedsStore} = useStores();
-
   return (
     <Stack.Navigator initialRouteName="Home"  screenOptions={{ cardStyle: $cardStyle, headerShown: true }}>
       <Stack.Group>
@@ -31,11 +29,6 @@ export function MainStack() {
           name="Home"
           component={CardviewScreen}
           options={{ header: ({navigation}) => <TopBar navigation={navigation} /> }}
-        />
-        <Stack.Screen
-          name="MapScreen"
-          component={MapScreen}
-          options={{ header: ({navigation}) => <TopBar navigation={navigation}/> }}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'card',  }}>

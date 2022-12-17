@@ -1,10 +1,8 @@
 import React from "react"
 import {
-  MapScreen,
-  PreferencesScreen,
   SavedDropsScreen,
-  SavedLocationsScreen,
   SearchScreen,
+  UserProfileScreen,
 } from "../screens"
 import { FontAwesome5, Foundation, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -18,7 +16,6 @@ export type BottomNavigationNavigatorParamList = {
   Demo: undefined,
   Feed: undefined,
   SearchScreen: undefined,
-  PreferencesScreen: undefined,
   Location: undefined,
   SavedDrops: undefined,
   Settings: undefined,
@@ -67,11 +64,9 @@ export const BottomNavigationNavigator = () => {
           header: () => <TopBarLogoOnly />,
         }}
       />
-      
- 
       <BottomTab.Screen
       name="Settings"
-      component={PreferencesScreen}
+      component={UserProfileScreen}
       options={{
         tabBarShowLabel: false,
         tabBarIcon: ({ color, size }) => <ProfileButton  />,
