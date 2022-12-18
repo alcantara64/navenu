@@ -30,10 +30,9 @@ export const AppButton = observer(function AppButton(props: AppButtonProps) {
     borderless,
     title,
     disabled,
+    ...extraProps
   } = props
-
   const _style = useCallback(({ pressed }) => [style, { opacity: pressed ? activeOpacity : 1 }], [])
-
   if (borderless) {
     return (
       <Pressable onPress={onPress} style={_style} disabled={disabled}>
@@ -50,13 +49,14 @@ export const AppButton = observer(function AppButton(props: AppButtonProps) {
         onPress={onPress}
         disabled={disabled}
         fullWidth
-        style={$buttonStyle}
+        style={[$buttonStyle, _style]}
+        {...extraProps}
       />
     )
   }
 
   return (
-    <Pressable onPress={onPress} style={_style}>
+    <Pressable onPress={onPress} style={style}>
       {children}
     </Pressable>
   )
