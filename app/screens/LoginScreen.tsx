@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useMemo, useRef, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { TextStyle, ViewStyle, ImageBackground, Dimensions } from "react-native"
 import * as Location from "expo-location"
 import {
@@ -18,7 +18,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin"
-import { KeyboardAwareScrollView, View, keyboa } from "react-native-ui-lib"
+import { View } from "react-native-ui-lib"
 import { Formik } from "formik"
 import { loginValidationSchema } from "../utils/validations"
 import { useTogglePasswordVisibility } from "../hooks"
@@ -156,7 +156,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             validationSchema={loginValidationSchema}
             onSubmit={(values) => onLogin(values)}
           >
-            {({ values, touched, errors, isValid, handleChange, handleSubmit, handleBlur }) => (
+            {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
               <>
                 {/* Input fields */}
                 <TextInput
@@ -189,7 +189,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                 <FormErrorMessage error={errors.password} visible={touched.password} />
 
                 {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
-                {/* Login button */}
                 <AppButton style={$button} onPress={handleSubmit} disabled={true}>
                   <Text style={$buttonText}>Login</Text>
                 </AppButton>

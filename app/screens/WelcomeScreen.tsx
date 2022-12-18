@@ -5,6 +5,7 @@ import React, { FC, useMemo } from "react"
 import { ViewStyle, Dimensions, ImageBackground, TextStyle } from "react-native"
 import { Carousel, View, Text, Button, Image } from "react-native-ui-lib"
 
+
 import { colors, typography, Colors } from "../theme"
 
 const welcomeLogo = require("../../assets/NavenuWhite.png")
@@ -23,35 +24,38 @@ const welcomeLogo = require("../../assets/NavenuWhite.png")
 // }
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen() {
   const carousel = React.createRef<typeof Carousel>()
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const gotoLoginScreen = () => {
-    navigation.navigate('Login')
+    navigation.navigate("Login")
   }
 
-  const Pages = useMemo( () => [
-    {
-      image: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider01.jpg",
-      bottomTextHeader: "CONNECT",
-      bottomTextFirst: "WITH THE VERY BEST LOCATIONS",
-      bottomTextSecond: "LIFESTYLES AND COMMUNITY LEADERS.",
-      showAuthButtons: false,
-    },
-    {
-      image: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider02.jpg",
-      bottomTextHeader: "DISCOVER",
-      bottomTextFirst: "YOUR PICK OF TRUSTED INSIDER",
-      bottomTextSecond: "RECOMMENDATIONS, ON-DEMAND..",
-      showAuthButtons: false,
-    },
-    {
-      image: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider03.jpg",
-      bottomTextHeader: "TAKE ADVANTAGE",
-      bottomTextFirst: "OF DYNAMIC WEEKLY DROPS",
-      bottomTextSecond: "EVENTS. EXPERIENCES. ITEMS.",
-      showAuthButtons: true,
-    },
-  ], [])
+  const Pages = useMemo(
+    () => [
+      {
+        image: require('../../assets/images/slider01.jpeg'),
+        bottomTextHeader: "CONNECT",
+        bottomTextFirst: "WITH THE VERY BEST LOCATIONS",
+        bottomTextSecond: "LIFESTYLES AND COMMUNITY LEADERS.",
+        showAuthButtons: false,
+      },
+      {
+        image: require('../../assets/images/slider02.jpeg'),
+        bottomTextHeader: "DISCOVER",
+        bottomTextFirst: "YOUR PICK OF TRUSTED INSIDER",
+        bottomTextSecond: "RECOMMENDATIONS, ON-DEMAND..",
+        showAuthButtons: false,
+      },
+      {
+        image: require('../../assets/images/slider03.jpeg'),
+        bottomTextHeader: "TAKE ADVANTAGE",
+        bottomTextFirst: "OF DYNAMIC WEEKLY DROPS",
+        bottomTextSecond: "EVENTS. EXPERIENCES. ITEMS.",
+        showAuthButtons: true,
+      },
+    ],
+    [],
+  )
 
   const onPagePress = (index: number) => {
     if (carousel && carousel.current) {
@@ -64,20 +68,19 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       <View paddingH-page>
         <View style={$sliderContainer}>
           <Carousel
-          ref={carousel}
+            ref={carousel}
             containerStyle={$carouselContainer}
             loop
             autoplay
             pageControlProps={{
               size: 10,
               onPagePress,
-              color:Colors.white,
-              inactiveColor:Colors.ash,
+              color: Colors.white,
+              inactiveColor: Colors.ash,
               containerStyle: {
                 alignSelf: "center",
                 position: "absolute",
                 bottom: 30,
-                
               },
             }}
             pageControlPosition={Carousel.pageControlPositions.OVER}
@@ -91,9 +94,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                   <View flex centerV key={i}>
                     <ImageBackground
                       style={{ flex: 1 }}
-                      source={{
-                        uri: image,
-                      }}
+                      source={ image}
                     >
                       <View marginT-50 center>
                         <Image white source={welcomeLogo} />
@@ -118,7 +119,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                               label={"SIGN UP"}
                             />
                             <Button
-                             onPress={gotoLoginScreen}
+                              onPress={gotoLoginScreen}
                               marginL-5
                               size={Button.sizes.large}
                               borderRadius={15}
