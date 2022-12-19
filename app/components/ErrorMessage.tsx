@@ -1,7 +1,8 @@
 import * as React from "react"
-import { StyleProp, ViewStyle, Image } from "react-native"
+import { StyleProp, ViewStyle, Image, TextStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, Text } from "react-native-ui-lib"
+import { View } from "react-native-ui-lib"
+import { Text } from '../components/Text';
 
 
 export interface ErrorMessageProps {
@@ -16,13 +17,14 @@ export interface ErrorMessageProps {
  * Describe your component here
  */
 export const ErrorMessage = observer(function ErrorMessage(props: ErrorMessageProps) {
-  const { style, message } = props
+  const { style } = props
   const $styles = [$container, style]
 
   return (
     <View style={$styles}>
       <Image source={require('../../assets/Logo-white.png')} />
-      <Text text70red>{message || 'Ops! something went wrong!' }</Text>
+      <Text size="xl" style={$errorTitle}>{'Ops! something went wrong!'}</Text>
+      <Text size="xxs" style={$errorSubtitle}>WE'RE LOOKING INTO</Text>
     </View>
   )
 })
@@ -33,4 +35,15 @@ const $container: ViewStyle = {
   alignItems: "center",
 }
 
+const $errorTitle: TextStyle = {
+  width: 200,
+  lineHeight: 35,
+  textAlign: 'center',
+  marginTop: 23,
+}
+
+const $errorSubtitle = {
+  marginTop: 21, 
+  fontFamily: 'Inter-Regular',
+}
 
