@@ -118,16 +118,15 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     }
     const uploadImage = async () => {
       // Check if any file is selected or not
-      console.log('uploading image')
       setLoading(true)
       if (singleFile != null) {
         // If file selected then create FormData
         const fileToUpload = singleFile
-        fileToUpload.assets[0].uri = Platform.OS === 'ios' ? fileToUpload.assets[0].uri.replace('file://', '') : fileToUpload.assets[0].uri;
-
+        fileToUpload.assets[0].name = fileToUpload.assets[0].fileName
+        fileToUpload.assets[0].size = fileToUpload.assets[0].fileSize
         // check if is IOS
         const data = new FormData();
-        data.append("avatar", JSON.stringify(fileToUpload.assets[0]))
+        data.append("avatar", fileToUpload.assets[0])
         // upload image file to server
         const userService = new UserService()
         const response = await userService.uploadAvatarImage(data)
@@ -147,7 +146,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       try {
         const res = await launchImageLibrary({
           mediaType: 'photo',
-          includeBase64: false,
         }, (response) => {
           if (response.didCancel) {
             console.log('User cancelled image picker');
