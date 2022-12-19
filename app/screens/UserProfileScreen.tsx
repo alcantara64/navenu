@@ -10,6 +10,7 @@ import {
   Screen,
   ToastLoader,
   UserProfile,
+  Text as TextComponent
 } from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
@@ -27,11 +28,7 @@ import {
 import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons"
 import DocumentPicker from "react-native-document-picker"
 import { launchImageLibrary } from 'react-native-image-picker';
-
 import { UserService } from "../services/userService"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../models"
-
 const { TextField } = Incubator
 
 const RadioButton = ({ color, selected, onPress }) => {
@@ -82,6 +79,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       about: false,
       contact: false,
       location: false,
+      logout: false,
     })
 
     const [selectedOption, setSelectedOption] = useState('');
@@ -333,11 +331,14 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                       profileSectionExpandable.location,
                     )}
                   >
-                    <Button 
-                      label={"London"}
+                    <TouchableOpacity 
                       marginV-10
                       style={$locationButton} 
-                    />
+                    >
+                      <Text style={$locationButtonText}>
+                        LONDON
+                      </Text>
+                    </TouchableOpacity>
                   </ExpandableSection>
                 </View>
 
@@ -404,11 +405,37 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                   </ExpandableSection>
                 </View> */}
                 <View marginT-10 style={$expandableContainer}>
-                  <TouchableOpacity onPress={logout}>
-                    <Text marginT-4 marginB-4 style={$labelStyle}>
-                      Logout
-                    </Text>
-                  </TouchableOpacity>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        logout: !profileSectionExpandable.logout,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.logout}
+                    paddingB-10
+                    sectionHeader={expandableHeaders(
+                      "Logout",
+                      profileSectionExpandable.logout,
+                    )}
+                  >
+                    <View row centerV spread>
+                      <Text style={$logoutLabel}>DO YOU REALLY WANT TO LEAVE NAVENU?</Text>
+                      <View row centerV>
+                        <TouchableOpacity style={$logoutButton} onPress={logout}>
+                          <Text style={$logoutButtonText}>YES</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={$logoutButton} onPress={() =>
+                          setProfileSectionExpandible({
+                            ...profileSectionExpandable,
+                            logout: !profileSectionExpandable.logout}
+                          )}>
+                          <Text style={$logoutButtonText}>NO</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </ExpandableSection>
                 </View>
               </View>
             </View>
@@ -456,6 +483,15 @@ const $labelStyle: TextStyle = {
   fontStyle: "normal",
   fontWeight: "600",
 }
+
+const $logoutLabel: TextStyle = {
+  fontFamily: "Inter-Regular",
+  fontStyle: "normal",
+  fontWeight: "600",
+  fontSize: 9,
+  lineHeight: 12,
+}
+
 const $saveText: TextStyle = {
   fontFamily: "Inter-Regular",
   fontWeight: "700",
@@ -483,7 +519,26 @@ const $selectFileButtonText: TextStyle = {
 const $locationButton: ViewStyle = {
   backgroundColor: "#333333",
   borderRadius: 5,
-  width: 100,
+  width: 60,
+  height: 34,
   alignItems: "center",
+  justifyContent: "center",
   marginVertical: 10,
+}
+
+const $logoutButton: ViewStyle = {
+  ...$locationButton,
+  marginLeft: 10,
+}
+
+const $logoutButtonText: TextStyle = {
+  ...$selectFileButtonText,
+  color: "#FFF",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 10,
+}
+
+const $locationButtonText: TextStyle = {
+  ...$logoutButtonText
 }
