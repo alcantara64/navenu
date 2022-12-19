@@ -35,7 +35,11 @@ export class UserService {
 
   async uploadAvatarImage(payload:FormData){
     // upload image to the server
-    const response:ApiResponse<any> =   await this.httpClient.post('/Users/avatar', payload);
+    const response:ApiResponse<any> = await this.httpClient.post('/Users/avatar', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -44,9 +48,10 @@ export class UserService {
    return {kind: 'ok'}
   }
 
-  async updateDisplayName(payload:{displayname: string}){
-    // upload image to the server
-    const response:ApiResponse<any> =   await this.httpClient.post('/Users/displayname', payload);
+  async updateDisplayName(payload:{display_name: string}){
+    const bodyFormData = new FormData();
+    bodyFormData.append('display_name', payload.display_name);
+    const response:ApiResponse<any> = await this.httpClient.post('/Users/displayname', bodyFormData);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -78,8 +83,9 @@ export class UserService {
   }
 
   async updateAbout(payload:{about:string}){
-    // upload image to the server
-    const response:ApiResponse<any> =   await this.httpClient.post('/Users/about', payload);
+    const bodyFormData = new FormData();
+    bodyFormData.append('description', payload.about);
+    const response:ApiResponse<any> =  await this.httpClient.post('/Users/about', bodyFormData);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
