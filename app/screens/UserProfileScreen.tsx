@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextStyle, ViewStyle, Platform } from "react-native"
+import { TextStyle, ViewStyle, Platform , Share } from "react-native"
+
 import {
   BottomSheet,
   CardList,
@@ -83,7 +84,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     })
 
     const [selectedOption, setSelectedOption] = useState('');
-
     const [singleFile, setSingleFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
     const [loading, setLoading] = useState(false)
@@ -175,6 +175,14 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
      setShowBottomSheet(false) 
      setSelectedListItem(listItem);
      setShowUserListModal(true)
+    }
+
+    const shareLink = () => {
+      Share.share({
+        message: 'Check out Navenu',
+        url: `https://www.navenu.com`,
+        title: 'Navenu',
+      })
     }
 
     if (error.isError) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
@@ -439,7 +447,13 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
             </View>
 
             <View marginT-80>
-              <Button  backgroundColor={'#333333'} fullWidth bottom label={"Share Navenu"} onPress={selectFile} />
+              <Button   
+                backgroundColor={'#333333'} 
+                fullWidth 
+                bottom 
+                label={"Share Navenu"} 
+                onPress={shareLink}
+              />
             </View>
           </View>
         </BottomSheet>

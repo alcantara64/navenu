@@ -84,7 +84,7 @@ export class UserService {
 
   async updateAbout(payload:{about:string}){
     const bodyFormData = new FormData();
-    bodyFormData.append('about', payload.about);
+    bodyFormData.append('description', payload.about);
     const response:ApiResponse<any> =  await this.httpClient.post('/Users/about', bodyFormData);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
