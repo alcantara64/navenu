@@ -168,6 +168,30 @@ export const UserStoreModel = types
       }
       self.isLoading = false
     }),
+    updateUserName: flow(function* (name: string) {
+      self.isLoading = true
+      self.error = { isError: false, message: "" }
+      const userService = new UserService()
+      const response = yield userService.updateDisplayName({display_name: name});
+      if (response.kind === "ok") {
+        self.currentUser.display_name = response.data
+      } else {
+        self.error = { isError: true, message: "Error Updating Your information" }
+      }
+      self.isLoading = false
+    }),
+    updateUserDescription: flow(function* (description: string) {
+      self.isLoading = true
+      self.error = { isError: false, message: "" }
+      const userService = new UserService()
+      const response = yield userService.updateAbout({about: description});
+      if (response.kind === "ok") {
+        self.currentUser.description = response.data
+      } else {
+        self.error = { isError: true, message: "Error Updating Your information" }
+      }
+      self.isLoading = false
+    }),
     // setting current user. easy because its a flat object
     setCurrentUser(value) {
       self.currentUser = value
