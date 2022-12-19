@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "react-query"
-import { useStores } from "../models"
 import { FeedService } from "../services/feedsService"
 
 const getFeeds = async ({ pageParam = 1, queryKey }: any) => {

@@ -1,42 +1,58 @@
 import * as React from "react"
-import { Pressable, StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
 import { Text } from "./Text"
 import { useCallback } from "react"
-import { Colors } from "react-native-ui-lib"
+import { Button } from "react-native-ui-lib"
 
 export interface AppButtonProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  children?: React.ReactNode;
-  onPress? : () => void;
-  activeOpacity?: number,
-  borderless?: boolean,
+  children?: React.ReactNode
+  onPress?: () => void
+  activeOpacity?: number
+  borderless?: boolean
   title?: string
   disabled?: boolean
-
-
+  bigButton?: boolean
 }
 
-
 export const AppButton = observer(function AppButton(props: AppButtonProps) {
-  const { style, children, onPress, activeOpacity = 0.3, borderless, title, disabled } = props;
- 
-
-  const _style = useCallback(({ pressed }) => [
+  const {
     style,
-    { opacity: pressed ? activeOpacity : 1 }
-  ], []);
+    children,
+    bigButton,
+    onPress,
+    activeOpacity = 0.3,
+    borderless,
+    title,
+    disabled,
+  } = props
+
+  const _style = useCallback(({ pressed }) => [style, { opacity: pressed ? activeOpacity : 1 }], [])
 
   if (borderless) {
     return (
       <Pressable onPress={onPress} style={_style} disabled={disabled}>
         <Text style={$borderlessButtonText}>{title}</Text>
       </Pressable>
-    );
+    )
+  }
+  if (bigButton) {
+    return (
+      <Button
+        labelStyle={$labelStyle}
+        backgroundColor={"#333333"}
+        label={title}
+        onPress={onPress}
+        disabled={disabled}
+        fullWidth
+        style={$buttonStyle}
+      />
+    )
   }
 
   return (
@@ -48,11 +64,13 @@ export const AppButton = observer(function AppButton(props: AppButtonProps) {
 
 const $borderlessButtonText: TextStyle = {
   fontSize: 16,
-  color: Colors.blue
 }
 
-const $text: TextStyle = {
+const $buttonStyle: ViewStyle = {
+  borderRadius: 10,
+  marginTop: 15,
+}
+const $labelStyle: TextStyle = {
+  padding: 8,
   fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
 }
