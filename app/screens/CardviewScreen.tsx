@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextStyle, ViewStyle } from "react-native"
+import { TextStyle, ViewStyle, Dimensions } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import {
@@ -15,7 +15,7 @@ import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
 import { filterFeeds } from "../utils/transform"
-import { View, Text, TouchableOpacity } from "react-native-ui-lib"
+import { View, Text, TouchableOpacity, SkeletonView } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
 import { useMutation, useQueryClient } from "react-query"
@@ -97,7 +97,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     }
 
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
-    if (isLoading) return <LoadingIndicator />
     if (isMapMode)
       return (
         <AppMap
@@ -112,7 +111,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         />
       )
     return (
-      <View margin-8>
+      <View margin-8 >
         {showListModal && (
           <Modal
             show={showListModal}
@@ -153,14 +152,23 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             }
           ></Modal>
         )}
-        <CardList
-          onTouchEnd={onTouchEnd}
-          onTouchStart={onTouchStart}
-          data={filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters)}
-          getMoreData={getMoreDate}
-          isFetchingNextPage={isFetchingNextPage}
-          onBookMark={onBookMark}
-          toggleSaveFeed={toggleSaveFeed}
+        <SkeletonView 
+          height={110}
+          width={Dimensions.get("window").width - 16}
+          style={$skeletonViewStyle}
+          times={6}
+          borderRadius={8}
+          renderContent={() => 
+          <CardList
+            onTouchEnd={onTouchEnd}
+            onTouchStart={onTouchStart}
+            data={filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters)}
+            getMoreData={getMoreDate}
+            isFetchingNextPage={isFetchingNextPage}
+            onBookMark={onBookMark}
+            toggleSaveFeed={toggleSaveFeed}
+          />}
+          showContent={!isLoading}
         />
       </View>
     )
@@ -189,4 +197,7 @@ const $modalView: ViewStyle = {
   // borderTopWidth: 10,
   width: "80%",
   borderRadius: 8,
+}
+const $skeletonViewStyle: ViewStyle = {
+  marginVertical: 3
 }
