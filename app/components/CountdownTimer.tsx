@@ -1,10 +1,8 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { Text, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Colors, colors, typography } from "../theme"
 import CountDown from 'react-native-countdown-component';
-import { formatDate, isValidDate } from "../utils/formatDate";
-
+import moment from 'moment';
 
 export interface CountdownTimerProps {
   /**
@@ -20,19 +18,24 @@ export interface CountdownTimerProps {
  */
 export const CountdownTimer = observer(function CountdownTimer(props: CountdownTimerProps) {
   const {time, showSeparator} = props
+  const countDownDate = moment(time, "YYYY/MM/DD HH:mm:ss");
+  const currentTime = moment();
+  const diff = countDownDate.diff(currentTime);
 
- // if(!isValidDate(time)) return null
+  const diffInDays = diff / (1000 * 60 * 60 * 24);
+  const diffInSeconds = diff / 1000;
 
-//  const formattedDate =  formatDate(time)
-  const date = new Date();
-  
-  const seconds = date.getTime() / 1000; //1440516958
-  
+  if(diffInDays > 1) {
+    return (
+      <Text style={$countdownText}>{diffInDays.toFixed()} DAYS</Text>
+    )
+  }
+
   return (
     <CountDown
       size={9}
-      until={seconds}
-      digitStyle={$digitStyle}
+      until={diffInSeconds}
+      digitStyle={$countdownText}
       digitTxtStyle={$digitTextStyle}
       timeLabelStyle={$timeLabelStyle}
       separatorStyle={$separatorStyle}
@@ -44,7 +47,11 @@ export const CountdownTimer = observer(function CountdownTimer(props: CountdownT
   );
 })
 
-const $digitStyle:ViewStyle = { backgroundColor: 'transparent' }
-const $digitTextStyle:TextStyle = { color: '#FFFF', fontWeight: 'bold', fontSize:16 }
+const $digitTextStyle:TextStyle = { color: '#FFFF', fontWeight: 'bold', fontSize:16, fontFamily: "bourtonbasedrop" }
 const $timeLabelStyle:TextStyle = { color: 'red', fontWeight: 'bold' }
 const $separatorStyle:TextStyle = { color: '#FFFFFF' }
+const $countdownText: TextStyle = {
+  color: "#FFFFFF",
+  marginRight: 4,
+  fontFamily: "bourtonbasedrop",
+}

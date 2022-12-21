@@ -65,7 +65,7 @@ export class Api {
   async login(payload:{password:string, email:string}):Promise<{ kind: "ok"; token:string } | GeneralApiProblem>{
     
     const response: ApiResponse<LoginResponse> = await this.apisauce.post(
-      `/Authentication/key`,
+      `/Authentication/login`,
       payload
     )
     if (!response.ok) {

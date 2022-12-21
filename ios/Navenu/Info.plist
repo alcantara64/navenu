@@ -25,6 +25,10 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
+	<string>Allow $(PRODUCT_NAME) to access your photo library</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to access your camera</string>
+	<key>NSCameraUsageDescription</key>
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
