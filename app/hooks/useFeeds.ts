@@ -1,4 +1,5 @@
-import { useInfiniteQuery } from "react-query"
+import { useInfiniteQuery, useQuery } from "react-query"
+import { IAutoCompletePayload } from "../interface/feed"
 import { FeedService } from "../services/feedsService"
 
 const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
@@ -31,4 +32,17 @@ export const useFeeds = (catFilters: any) => {
     onError: (error) => console.log(error),
     staleTime: 1000 * 60 * 60,
   })
+}
+
+const getAutoCompleteSuggestions = async ({queryKey}) => { 
+ const payload = queryKey[1]
+  const feedsService = new FeedService();
+  const response = await feedsService.getAutoCompleteSuggestions(payload)
+  if(response.kind !== 'ok'){
+    throw new Error('error in feeds');
+  }
+  return response.results;
+}
+export const useAutoCompleteFeedsSuggestion = (payload:IAutoCompletePayload) =>{
+   return useQuery(['auto-complete', payload],getAutoCompleteSuggestions);
 }

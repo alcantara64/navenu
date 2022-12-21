@@ -1,5 +1,6 @@
 import { ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
+import { IAutoComplete } from "../services/api"
 import { categoryColorType, Colors } from "../theme"
 
 export const getInitials = function (string) {
@@ -65,4 +66,29 @@ export const getStyleByCategory = (category, isText?: boolean, noBackground?: bo
 export const getDropsByID = (id: Array<string>, items: Array<any>) => {
   if (!items || !id) return []
   return items.filter((item) => id.includes(item.id))
+}
+// transform the result of the category data into a sing array
+export const transformAutoCompleteResponseToASingleArray = (data:IAutoComplete) => {
+  const transFormedData = [];
+  if(data.borough && data.borough.length){
+   data.borough.forEach((borough) => {
+    transFormedData.push(`Borough:${borough}`)
+   })
+  }
+  if(data.cats && data.cats.length){
+    data.cats.forEach((cat) => {
+      transFormedData.push(`Cats:${cat}`)
+    })
+  }
+  if(data.location && data.location.length){
+    data.location.forEach((locate) => {
+      transFormedData.push(`Location:${locate}`)
+    })
+  }
+  if(data.tags && data.tags.length){
+    data.tags.forEach((tag) => {
+      transFormedData.push(`Tag:${tag}`)
+    })
+  }
+   return transFormedData;
 }

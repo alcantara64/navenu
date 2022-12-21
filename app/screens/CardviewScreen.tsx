@@ -24,14 +24,13 @@ import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
-  observer(function CardviewScreen({ navigation }) {
+  observer(function CardviewScreen() {
     // Pull in one of our MST stores
     const { feedsStore, authenticationStore } = useStores()
     const queryClient = useQueryClient()
     const {
       catFilters,
       selectedFilterTypes,
-      savedFeeds,
       toggleSaveFeed,
       toggleHeaderState,
       showHeaderFilter,
@@ -101,7 +100,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     if (isMapMode)
       return (
         <AppMap
-          onSetErrorMessage={(e) => {
+          onSetErrorMessage={() => {
             // do something with error
           }}
           longitude={longitude}

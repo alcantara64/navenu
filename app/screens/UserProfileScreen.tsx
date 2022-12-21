@@ -90,7 +90,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       // If file selected then create FormData
       const fileToUpload = singleFile
       const data = new FormData()
-      data.append("avatar", fileToUpload)
+      data.append("avatar", fileToUpload);
       // upload image file to server
       const userService = new UserService()
       const response = await userService.uploadAvatarImage(data)
