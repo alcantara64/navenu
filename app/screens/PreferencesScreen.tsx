@@ -9,10 +9,15 @@ import { Dimensions, TextStyle, ViewStyle } from "react-native"
 import DO from "../../assets/icons/preferences/bigDo.svg"
 import DOW from "../../assets/icons/preferences/bigDoW.svg"
 import Eat from "../../assets/icons/preferences/bigEat.svg"
+import EatW from "../../assets/icons/preferences/bigEatW.svg"
 import DRINK from "../../assets/icons/preferences/bigDrink.svg"
+import DRINKW from "../../assets/icons/preferences/bigDrinkW.svg"
 import STAY from "../../assets/icons/preferences/bigStay.svg"
+import STAYW from "../../assets/icons/preferences/bigStayW.svg"
 import SHOP from "../../assets/icons/preferences/bigShop.svg"
+import SHOPW from "../../assets/icons/preferences/bigShopW.svg"
 import FIT from "../../assets/icons/preferences/bigFit.svg"
+import FITW from "../../assets/icons/preferences/bigFitW.svg"
 import { Colors, spacing, typography } from "../theme"
 
 import { useNavigation } from "@react-navigation/native"
@@ -23,31 +28,37 @@ const PREFERENCE_CARDS = [
     image: DO,
     text: "DO",
     color: Colors.do,
+    imageWhite: DOW,
   },
   {
     image: Eat,
     text: "EAT",
     color: Colors.eat,
+    imageWhite: EatW,
   },
   {
     image: DRINK,
     text: "DRINK",
     color: Colors.drink,
+    imageWhite: DRINKW,
   },
   {
     image: STAY,
     text: "STAY",
     color: Colors.stay,
+    imageWhite: STAYW,
   },
   {
     image: SHOP,
     text: "SHOP",
     color: Colors.shop,
+    imageWhite: SHOPW,
   },
   {
     image: FIT,
     text: "FIT",
     color: Colors.fit,
+    imageWhite: FITW,
   },
 ]
 
@@ -88,52 +99,54 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
           items: ["NATURE", "GALLERIES", "SIGHTSEEING", "MUSEUMS", "TASTINGS", "ADVENTURE"],
           type: "DO",
           image: DOW,
-          
         },
         {
           items: ["VEGAN", "GLUTEN FREE", "HEALTHY", "THAI", "PIZZA", "MEAT", "SUSHI", "BRUNCH"],
           type: "EAT",
-          image: DOW,
+          image: EatW,
         },
         {
           items: ["BAR", "PUB", "COCKTAIL", "BEER", "MUSIC"],
           type: "DRINK",
-          image: DOW,
+          image: DRINKW,
         },
         {
           items: ["HOTEL", "HOSTEL", "APARTMENTS", "VILLAS", "SHARED", "BOUTIQUE"],
           type: "STAY",
-          image: DOW,
+          image: STAYW,
         },
         {
           items: ["VINTAGE", "FLEA MARKET", "HIGH END", "LUXURY", "FASHION", "GIFT"],
           type: "SHOP",
-          image: DOW,
+          image: SHOPW,
         },
         {
           items: ["GYM", "FOOTBALL", "GOLF", "YOGA", "TENNIS", "RUNNING"],
           type: "FIT",
-          image: DOW,
+          image: FITW,
         },
       ],
       [],
     )
-    const onSelectAll  = (type) => {
-     const categoryItemSelected = Pages.find((page) => page.type )
-     if(categoryItemSelected){
-      setSelectedCategorySubItem([...selectedCategorySubItem, ...categoryItemSelected.items] )
-     }
+    const onSelectAll = (type) => {
+      const categoryItemSelected = Pages.find((page) => page.type === type)
+      if (categoryItemSelected) {
+        setSelectedCategorySubItem([...selectedCategorySubItem, ...categoryItemSelected.items])
+      }
     }
     const filterSelectedPreference = () => {
-      return Pages.filter((page) => 
-        selectedPreference[page.type.toLowerCase()] === true
-       )
+      return Pages.filter((page) => selectedPreference[page.type.toLowerCase()] === true)
     }
-    function onToggleSubItem(item:string) {
-      if(selectedCategorySubItem.includes(item)){
+    function onToggleSubItem(item: string) {
+      if (selectedCategorySubItem.includes(item)) {
         setSelectedCategorySubItem(selectedCategorySubItem.filter((subItem) => subItem !== item))
-      }else{
+      } else {
         setSelectedCategorySubItem([...selectedCategorySubItem, item])
+      }
+    }
+    const onPagePress = (index: number) => {
+      if (carousel && carousel.current) {
+        carousel.current.goToPage(index, true)
       }
     }
     const CardsElementsScreen = () => (
@@ -141,11 +154,11 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         ref={carousel}
         containerStyle={$carouselContainer}
         loop
-        autoplay
         pageControlProps={{
           size: 10,
           color: Colors.white,
           inactiveColor: Colors.ash,
+          onPagePress,
           containerStyle: {
             alignSelf: "center",
             position: "absolute",
@@ -154,9 +167,8 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         }}
         pageControlPosition={Carousel.pageControlPositions.OVER}
       >
-        {filterSelectedPreference().map(({ items, type }, i) => {
+        {filterSelectedPreference().map(({ items, type, image }, i) => {
           const backgroundStyle = { backgroundColor: Colors[type.toLowerCase()] }
-
 
           return (
             <View padding-4 key={i} flex style={backgroundStyle}>
@@ -171,7 +183,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
               </View>
               <View center marginB-50>
                 <View marginB-20>
-                  <DOW />
+                  <Image source={image} />
                 </View>
                 <View>
                   <Text header white>
@@ -180,27 +192,64 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
                 </View>
               </View>
               <View>
-                <TouchableOpacity onPress={() => {onSelectAll(type)}}>
-                <View style={$preferenceItemSubItem}>
-                  <Text center header white style={$subItemText}>
-                    ALL
-                  </Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    onSelectAll(type)
+                  }}
+                >
+                  <View
+                    style={[
+                      $preferenceItemSubItem,
+                      {
+                        backgroundColor: items.every((item) =>
+                          selectedCategorySubItem.includes(item),
+                        )
+                          ? Colors.white
+                          : Colors[type.toLowerCase()],
+                      },
+                    ]}
+                  >
+                    <Text
+                      center
+                      header
+                      white={!items.every((item) => selectedCategorySubItem.includes(item))}
+                      style={$subItemText}
+                    >
+                      ALL
+                    </Text>
+                  </View>
                 </TouchableOpacity>
                 <View row marginT-10 style={$subCategoryItemContainer}>
-                   {items.map((item) => {
-                  const $selectedItem = {backgroundColor: !selectedCategorySubItem.includes(item)? Colors[type.toLowerCase()] : 'white' }
-                    return(
-                   <TouchableOpacity onPress={() => onToggleSubItem(item)} key={item} center marginT-10 style={[$preferenceItemSubItem, $subItem2Rows, $selectedItem]}>
-                    <Text header white={!selectedCategorySubItem.includes(item)} style={$subItemText}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>)})}
+                  {items.map((item) => {
+                    const $selectedItem = {
+                      backgroundColor: !selectedCategorySubItem.includes(item)
+                        ? Colors[type.toLowerCase()]
+                        : "white",
+                    }
+                    return (
+                      <TouchableOpacity
+                        onPress={() => onToggleSubItem(item)}
+                        key={item}
+                        center
+                        marginT-10
+                        style={[$preferenceItemSubItem, $subItem2Rows, $selectedItem]}
+                      >
+                        <Text
+                          header
+                          white={!selectedCategorySubItem.includes(item)}
+                          style={$subItemText}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  })}
                 </View>
               </View>
             </View>
           )
         })}
+        
       </Carousel>
     )
     const BigCardItemScreen = () => (
@@ -227,13 +276,33 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
                   { borderColor: item.color },
                   {
                     backgroundColor:
-                      selectedPreference[item.text.toLowerCase()] === true ? item.color : "white",
+                      selectedPreference[item.text.toLowerCase()] === true
+                        ? item.color
+                        : Colors.white,
                   },
                 ]}
               >
                 <View center margin-35 marginT-20>
-                  <Image source={item.image} />
-                  <Text style={[$preferenceTitle, { color: item.color }]}>{item.text}</Text>
+                  <Image
+                    source={
+                      selectedPreference[item.text.toLowerCase()] === true
+                        ? item.imageWhite
+                        : item.image
+                    }
+                  />
+                  <Text
+                    style={[
+                      $preferenceTitle,
+                      {
+                        color:
+                          selectedPreference[item.text.toLowerCase()] === true
+                            ? Colors.white
+                            : item.color,
+                      },
+                    ]}
+                  >
+                    {item.text}
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -296,4 +365,4 @@ const $subItemText: TextStyle = {
 const $subItem2Rows: ViewStyle = {
   flexBasis: "49%",
 }
-const $subCategoryItemContainer: ViewStyle ={ justifyContent: "space-between", flexWrap: "wrap" }
+const $subCategoryItemContainer: ViewStyle = { justifyContent: "space-between", flexWrap: "wrap" }

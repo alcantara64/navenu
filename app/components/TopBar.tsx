@@ -46,9 +46,6 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   const [StayStateButton, setStayStateButton] = useState(false)
   const [FitStateButton, setFitStateButton] = useState(false)
   const [filtervisible, setFilterVisible] = useState(false)
-  const [isDrop, setIsDrop] = useState(false)
-  const [isVenue, setIsVenue] = useState(false)
-  const [isEditorial, setIsEditorial] = useState(false)
 
   const navigation = useNavigation()
 
@@ -132,6 +129,21 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
+            <TouchableOpacity onPress={toggleEditorial} marginR-5>
+              <ImageBackground
+                source={require("../../assets/images/editorial.jpg")}
+                style={[
+                  $filterType,
+                  selectedFilterTypes.includes(FEED_TYPE.article) && $activeFilter,
+                ]}
+                imageStyle={$filterTypeImageStyle}
+                resizeMode={'cover'}
+              >
+                <Text  white center style={$CardTitles}>
+                  CURATORS
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
           </View>
           {/* </ScrollView> */}
 
@@ -169,10 +181,7 @@ const $container: ViewStyle = {
   },
   shadowOpacity: 0.36,
   shadowRadius: 6.68,
-
   elevation: 11,
-  //borderBottomColor: Colors.black,
-  // borderBottomWidth: 1,
 }
 const $logo: ImageStyle = {
   marginTop: 12,
@@ -180,20 +189,19 @@ const $logo: ImageStyle = {
   height: 13,
 }
 const $filterType: ImageStyle = {
-  paddingRight: 10,
+  paddingRight:16,
   paddingTop: 20,
   paddingLeft: 10,
   paddingBottom: 10,
   marginBottom: 5,
+  opacity:0.3,
   flexGrow: 1,
-  width: 120,
 }
 const $filterTypeImageStyle: ImageStyle = {
   borderRadius: 5,
 }
 const $activeFilter: ViewStyle = {
-  borderColor: Colors.black,
-  borderWidth: 2,
+  opacity: 1,
   borderRadius: 5,
 }
 const $CardTitles: TextStyle = {
@@ -201,8 +209,4 @@ const $CardTitles: TextStyle = {
   fontSize: spacing.medium,
   color: Colors.white,
   fontWeight: "900",
-}
-const $middleImage:ImageStyle ={
-   marginLeft: '1%',
-   marginRight: '1%',
 }

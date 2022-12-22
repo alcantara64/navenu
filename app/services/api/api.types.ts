@@ -1,7 +1,13 @@
 import { IDrop } from "../../interface/drops"
 import { FEED_TYPE, IFeed } from "../../interface/feed"
 import { IVenues } from "../../interface/venues"
-import { ISavedDeal, ISavedDeals, ISavedLocation, ISavedLocations, IUser, IUserList, IUserPreference, IUserPreferences} from "../../interface/user"
+import {
+  ISavedDeal,
+  ISavedLocation,
+  IUser,
+  IUserList,
+  IUserPreference,
+} from "../../interface/user"
 export interface ApiFeedResponse {
   status: boolean
   feed: {
@@ -107,15 +113,15 @@ export interface IDropsResponse {
   message: string
 }
 export interface UserResponse {
-  data:{
-    user: IUser, 
-    user_preferences: IUserPreference,
-    savedDeals: Array<ISavedDeal>,
-    savedLocations: Array<ISavedLocation>,
-    userLists: IUserList,
+  data: {
+    user: IUser
+    user_preferences: IUserPreference
+    savedDeals: Array<ISavedDeal>
+    savedLocations: Array<ISavedLocation>
+    userLists: IUserList
   }
-  status:boolean
-  message:string
+  status: boolean
+  message: string
 }
 export interface IVenueResponse {
   data: Array<IVenues>
@@ -123,14 +129,26 @@ export interface IVenueResponse {
   message: string
 }
 export interface IUserListResponse {
-  data: IUserList,
-  status: number,
+  data: IUserList
+  status: number
 }
 export interface ICreateUserListResponse {
   data: {
-    user_list_id: string,
-    listname: string,
-  },
-  status: number,
+    user_list_id: string
+    listname: string
+  }
+  status: number
 }
- export type AddListItemPayload = {user_list_id: string, type:FEED_TYPE, id:number }
+export type AddListItemPayload = { user_list_id: string; type: FEED_TYPE; id: number }
+
+export interface AutoCompleteResponse {
+  data: IAutoComplete
+  status
+}
+
+export interface IAutoComplete {
+  location : Array<string>,
+  borough: Array<string>,
+  tags: Array<string>,
+  cats: Array<string>
+}

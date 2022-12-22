@@ -66,7 +66,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         return
       }
       const location = await Location.getLastKnownPositionAsync({})
-      console.log("location ==>", location)
       if (location) {
         setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
       } else {

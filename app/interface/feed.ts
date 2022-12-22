@@ -21,5 +21,12 @@ export interface IFeed {
 export enum FEED_TYPE{
   article =  "article",
   location =  "location",
-  drop =  "drop",
+   drop =  "drop",
+   curators = 'curator',
+
+}
+export interface IAutoCompletePayload{
+  term : string,
+  type: FEED_TYPE,
+  selected:[]
 }
