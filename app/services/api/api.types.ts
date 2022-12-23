@@ -49,7 +49,11 @@ export interface ApiConfig {
 
 export interface LoginResponse {
   token: string
-  userId?: string
+  refresh_token: string,
+  savedDeals: Array<any>,
+  user:IUser,
+  userLists: Record<string, unknown>
+  user_preferences: IUserPreference
 }
 
 /*

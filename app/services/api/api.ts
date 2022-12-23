@@ -62,7 +62,7 @@ export class Api {
   
 
 
-  async login(payload:{password:string, email:string}):Promise<{ kind: "ok"; token:string } | GeneralApiProblem>{
+  async login(payload:{password:string, email:string}):Promise<({ kind: "ok"} & LoginResponse) | GeneralApiProblem>{
     
     const response: ApiResponse<LoginResponse> = await this.apisauce.post(
       `/Authentication/login`,
@@ -72,9 +72,8 @@ export class Api {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
-    const rawData = response.data;
-
-   return {kind: 'ok', token: rawData.token}
+    const rawData = response.data.data;
+   return {kind: 'ok', ...rawData}
   }
 
   async get(url:string, params?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){

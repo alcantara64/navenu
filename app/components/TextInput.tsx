@@ -1,84 +1,77 @@
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { StyleProp, TextStyle, View, ViewStyle, TextInput as RNTextInput  } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Ionicons } from "@expo/vector-icons"
-import { Colors, colors, typography } from "../theme"
-import { View, Incubator, Text } from "react-native-ui-lib"
-import { TouchableOpacity } from "react-native-gesture-handler"
-const { TextField } = Incubator
+import {MIcon as Icon} from './MIcon'
+import { AppButton } from "./AppButton"
+import { Colors } from "../theme"
 
-export interface TextInputProps {
+export interface TextInputProps  {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  onSelectItem?: (item: any) => any
-  knowledgeItems?: Array<any>
-  isLoading?: boolean
-  hasAutoComplete?: boolean
-  onTextChange: (text:string) => void
-  onBlur?: any
+  width?: number | string
+  leftIconName: any
+  rightIcon : any,
+  handlePasswordVisibility,
 }
 
 /**
  * Describe your component here
  */
 export const TextInput = observer(function TextInput(props: TextInputProps) {
-  const { style, onSelectItem, knowledgeItems, isLoading, hasAutoComplete, onTextChange, onBlur } = props
-  const $styles = [$container]
+  const {  width, leftIconName, rightIcon, handlePasswordVisibility,   ...otherProps  } = props
+ 
 
   return (
-    <View style={$styles}>
-      <TextField
-        containerStyle={$textInputContainerStyle}
-        placeholder="What are you looking for?"
-        trailingAccessory={<Ionicons name="search" size={24} color="grey" />}
-        onChangeText={onTextChange}
-        onBlur={onBlur}
+    <View
+      style={{...$container, width}}
+    >
+      {leftIconName ? (
+        <Icon
+          name={leftIconName}
+          size={22}
+          color={Colors.mediumGray}
+          style={$iconStyle}
+        />
+      ) : null}
+      <RNTextInput
+        style={$textInputStyle}
+        placeholderTextColor={Colors.mediumGray}
+        {...otherProps}
       />
-      <View style={$autoCompleteContainer}>
-      {hasAutoComplete && (
-        <View style={$listContainer}>
-          {isLoading && <Text>loading...</Text>}
-          {!isLoading &&
-            knowledgeItems?.length > 0 &&
-            knowledgeItems.map((item) => (
-              <TouchableOpacity  onPress={() => onSelectItem(item)} key={item}>
-                <Text style={$autoCompleteText}>{item}</Text>
-              </TouchableOpacity>
-            ))}
-        </View> 
-      )}
-      </View>
+      {rightIcon ? (
+        <AppButton onPress={handlePasswordVisibility}>
+          <Icon
+            name={rightIcon}
+            size={22}
+            color={Colors.mediumGray}
+            
+            style={$iconStyle}
+          />
+        </AppButton>
+      ) : null}
     </View>
-  )
+  );
 })
 
 const $container: ViewStyle = {
-zIndex:1
-}
-const $autoCompleteContainer:ViewStyle ={
-  position: "relative",
-  zIndex:99
-}
-const $textInputContainerStyle: ViewStyle = {
-  // borderWidth: 1,
-  borderRadius: 5,
   backgroundColor: Colors.white,
-  padding: 15,
-}
-const $listContainer: ViewStyle = {
-  position: "absolute",
-  top: 5,
-  zIndex:100,
-  backgroundColor:Colors.white,
-  width: '100%'
+  borderRadius: 8,
+  flexDirection: 'row',
+  padding: 12,
+  marginVertical: 12,
+  
+  borderWidth: 1,
+  borderColor: Colors.mediumGray
 }
 
-const $autoCompleteText: TextStyle ={
-  fontFamily: 'Inter-Regular',
-  fontSize: 12,
-  fontWeight:"500",
-  color: '#333333',
-  padding: 4,
+const $iconStyle:ViewStyle = {
+  marginRight: 10
+}
+const $textInputStyle: TextStyle ={
+  flex: 1,
+  width: '100%',
+  fontSize: 18,
+  color: Colors.black
 }

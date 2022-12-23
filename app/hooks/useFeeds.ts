@@ -46,3 +46,17 @@ const getAutoCompleteSuggestions = async ({queryKey}) => {
 export const useAutoCompleteFeedsSuggestion = (payload:IAutoCompletePayload) =>{
    return useQuery(['auto-complete', payload],getAutoCompleteSuggestions);
 }
+
+
+const getSearchItem = async ({queryKey}) => { 
+  const payload = queryKey[1]
+   const feedsService = new FeedService();
+   const response = await feedsService.search(payload)
+   if(response.kind !== 'ok'){
+     throw new Error( response.message || 'error in feeds');
+   }
+   return response.results;
+ }
+ export const useFeedsSearch = (payload:IAutoCompletePayload) =>{
+    return useQuery(['search', payload],getSearchItem);
+ }
