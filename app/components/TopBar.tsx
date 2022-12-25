@@ -71,6 +71,10 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
     const isToggle = selectedFilterTypes.includes(FEED_TYPE.article)
     isToggle ? removeFilterType(FEED_TYPE.article) : addFilterType(FEED_TYPE.article)
   }
+  const toggleCurator = () => {
+    const isToggle = selectedFilterTypes.includes(FEED_TYPE.curators)
+    isToggle ? removeFilterType(FEED_TYPE.curators) : addFilterType(FEED_TYPE.curators)
+  }
   
 
   return (
@@ -129,12 +133,12 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleEditorial} marginR-5>
+            <TouchableOpacity onPress={toggleCurator} marginR-5>
               <ImageBackground
-                source={require("../../assets/images/editorial.jpg")}
+                source={require("../../assets/images/curator.jpg")}
                 style={[
                   $filterType,
-                  selectedFilterTypes.includes(FEED_TYPE.article) && $activeFilter,
+                  selectedFilterTypes.includes(FEED_TYPE.curators) && $activeFilter,
                 ]}
                 imageStyle={$filterTypeImageStyle}
                 resizeMode={'cover'}

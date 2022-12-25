@@ -106,9 +106,10 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
           latitude={latitude}
           onSetLatitude={setLatitude}
           onSetLongitude={setLongitude}
-          item={filterFeeds(data.pages.flat(), selectedFilterTypes, catFilters) as any}
+          item={filterFeeds(data?.pages.flat(), selectedFilterTypes, catFilters) as any}
         />
       )
+   const filteredData =filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters);
     return (
       <View margin-8 >
         {showListModal && (
@@ -161,7 +162,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
           <CardList
             onTouchEnd={onTouchEnd}
             onTouchStart={onTouchStart}
-            data={filterFeeds(data?.pages?.flat(), selectedFilterTypes, catFilters)}
+            data={filteredData}
             getMoreData={getMoreDate}
             isFetchingNextPage={isFetchingNextPage}
             onBookMark={onBookMark}

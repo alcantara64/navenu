@@ -34,7 +34,6 @@ export class FeedService {
       "/feed/autocomplete",
       formData,
     )
-    console.log(response.data)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -42,4 +41,28 @@ export class FeedService {
     const rawData = response.data.data
     return { kind: "ok", results: rawData }
   }
+
+  async search(payload: IAutoCompletePayload) {
+    const formData = new FormData()
+    formData.append("term", payload.term)
+    formData.append("type", payload.type)
+    if (!payload.selected.length) {
+      formData.append("selected[parentCategory][]", "")
+    } else {
+      payload.selected.forEach((category) => {
+        formData.append("selected[parentCategory][]", category)
+      })
+    }
+    const response: ApiResponse<FeedResponse> = await this.httpClient.post(
+      "/feed/searchByType",
+      formData,
+    )
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data.data
+    return { kind: "ok", results: rawData }
+  }
+  
 }

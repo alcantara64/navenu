@@ -29,6 +29,7 @@ import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons"
 import DocumentPicker from "react-native-document-picker"
 import { launchImageLibrary } from 'react-native-image-picker';
 import { UserService } from "../services/userService"
+import { useNavigation } from "@react-navigation/native"
 const { TextField } = Incubator
 
 const RadioButton = ({ color, selected, onPress }) => {
@@ -59,6 +60,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
   function UserProfileScreen() {
     const { authenticationStore } = useStores()
     const { userStore } = useStores()
+    const navigation = useNavigation()
     const { 
       isLoading, 
       error, 
@@ -174,6 +176,9 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
      setShowBottomSheet(false) 
      setSelectedListItem(listItem);
      setShowUserListModal(true)
+    }
+    const openPreferenceScreen = () =>{
+      navigation.navigate('PreferencesScreen');
     }
 
     const shareLink = () => {

@@ -28,8 +28,8 @@ const authImage = require("../../assets/images/auth/auth-login-image.png")
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const navigation = useNavigation()
-  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
+
+
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState("")
@@ -208,18 +208,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             title={"Forgot Password"}
             //onPress={() => navigation.navigate("ForgotPassword")}
           />
-          {/* <Button
-        testID="login-button"
-        tx="loginScreen.tapToSignIn"
-        style={$tapButton}
-        preset="reversed"
-        onPress={onLogin}
-      /> */}
 
           {isLoading && <LoadingIndicator />}
         </View>
       </View>
-      {/* //</Screen> */}
     </ImageBackground>
   )
 })

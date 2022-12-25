@@ -1,7 +1,7 @@
 import { ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
 import { IAutoComplete } from "../services/api"
-import { categoryColorType, Colors } from "../theme"
+import { categoryColorType } from "../theme"
 
 export const getInitials = function (string) {
   const names = string.split(" ")
