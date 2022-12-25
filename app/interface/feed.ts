@@ -28,5 +28,10 @@ export enum FEED_TYPE{
 export interface IAutoCompletePayload{
   term : string,
   type: FEED_TYPE,
-  selected:[]
+  selected:Array<string>
+}
+export interface ISearchPayLoad {
+categories?: Array<{display: string, type:string}>
+selected:Array<string>
+type: FEED_TYPE,
 }

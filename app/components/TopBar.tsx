@@ -22,6 +22,7 @@ import { horizontalScale } from "../utils/metrics"
 export interface TopBarProps {
   style?: StyleProp<ViewStyle>
   navigation: any,
+  isSearchMode?: boolean,
 }
 
 export const TopBar = observer(function TopBar(props: TopBarProps) {
@@ -37,6 +38,8 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       showHeaderFilter,
       setMapMode,
       isMapMode,
+      setSearchFilterType,
+      searchFilterType,
     },
   } = useStores()
   const [DoStateButton, setDoStateButton] = useState(false)
@@ -51,32 +54,41 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
 
   const showFilter = () => {
     setFilterVisible(!filtervisible)
-    toggleHeaderState();
+    toggleHeaderState()
   }
-  const { style, } = props
+  const { style, isSearchMode } = props
   const $styles = [$container, style]
   const navigateToMap = () => {
     // navigation.navigate('MapScreen')
-    setMapMode(!isMapMode);
+    setMapMode(!isMapMode)
   }
   const toggleDrop = () => {
-    const isToggle = selectedFilterTypes.includes(FEED_TYPE.drop)
-    isToggle ? removeFilterType(FEED_TYPE.drop) : addFilterType(FEED_TYPE.drop)
+    if (isSearchMode) {
+      setSearchFilterType(FEED_TYPE.drop + "s")
+    } else {
+      const isToggle = selectedFilterTypes.includes(FEED_TYPE.drop)
+      isToggle ? removeFilterType(FEED_TYPE.drop) : addFilterType(FEED_TYPE.drop)
+    }
   }
   const toggleVenue = () => {
-    const isToggle = selectedFilterTypes.includes(FEED_TYPE.location)
-    isToggle ? removeFilterType(FEED_TYPE.location) : addFilterType(FEED_TYPE.location)
+    if (isSearchMode) {
+      setSearchFilterType(FEED_TYPE.location + "s")
+    } else {
+      const isToggle = selectedFilterTypes.includes(FEED_TYPE.location)
+      isToggle ? removeFilterType(FEED_TYPE.location) : addFilterType(FEED_TYPE.location)
+    }
   }
   const toggleEditorial = () => {
-    const isToggle = selectedFilterTypes.includes(FEED_TYPE.article)
-    isToggle ? removeFilterType(FEED_TYPE.article) : addFilterType(FEED_TYPE.article)
+    if (isSearchMode) {
+      setSearchFilterType(FEED_TYPE.article + "s")
+    } else {
+      const isToggle = selectedFilterTypes.includes(FEED_TYPE.article)
+      isToggle ? removeFilterType(FEED_TYPE.article) : addFilterType(FEED_TYPE.article)
+    }
   }
   const toggleCurator = () => {
-    const isToggle = selectedFilterTypes.includes(FEED_TYPE.curators)
-    isToggle ? removeFilterType(FEED_TYPE.curators) : addFilterType(FEED_TYPE.curators)
+    setSearchFilterType(FEED_TYPE.curators + "s")
   }
-  
-
   return (
     <View marginT-45 marginB-15 marginL-4 marginR-5>
       <View style={$styles}>
@@ -91,11 +103,17 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
       {showHeaderFilter && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
-          <View marginT-5 row  style={{justifyContent:'space-between'}}>
+          <View marginT-5 row spread>
             <TouchableOpacity onPress={toggleDrop} flex-1>
               <ImageBackground
                 source={require("../../assets/images/drops-background.jpg")}
-                style={[$filterType, selectedFilterTypes.includes(FEED_TYPE.drop) && $activeFilter]}
+                style={[
+                  $filterType,
+                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.drop)) ||
+                    (isSearchMode && searchFilterType === FEED_TYPE.drop + "s")) &&
+                    $activeFilter,
+                  isSearchMode && $searchMode,
+                ]}
                 imageStyle={$filterTypeImageStyle}
                 resizeMode="cover"
               >
@@ -104,12 +122,15 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleVenue} >
+            <TouchableOpacity onPress={toggleVenue}>
               <ImageBackground
                 source={require("../../assets/images/venue.png")}
                 style={[
                   $filterType,
-                  selectedFilterTypes.includes(FEED_TYPE.location) && $activeFilter,
+                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.location)) ||
+                    (isSearchMode && searchFilterType === FEED_TYPE.location + "s")) &&
+                    $activeFilter,
+                  isSearchMode && $searchMode,
                 ]}
                 imageStyle={$filterTypeImageStyle}
               >
@@ -123,31 +144,37 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 source={require("../../assets/images/editorial.jpg")}
                 style={[
                   $filterType,
-                  selectedFilterTypes.includes(FEED_TYPE.article) && $activeFilter,
+                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.article)) ||
+                    (isSearchMode && searchFilterType === FEED_TYPE.article + "s")) &&
+                    $activeFilter,
+                  isSearchMode && $searchMode,
                 ]}
                 imageStyle={$filterTypeImageStyle}
-                resizeMode={'cover'}
+                resizeMode={"cover"}
               >
-                <Text  white center style={$CardTitles}>
+                <Text white center style={$CardTitles}>
                   EDITORIAL
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleCurator} marginR-5>
-              <ImageBackground
-                source={require("../../assets/images/curator.jpg")}
-                style={[
-                  $filterType,
-                  selectedFilterTypes.includes(FEED_TYPE.curators) && $activeFilter,
-                ]}
-                imageStyle={$filterTypeImageStyle}
-                resizeMode={'cover'}
-              >
-                <Text  white center style={$CardTitles}>
-                  CURATORS
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
+            {isSearchMode && (
+              <TouchableOpacity onPress={toggleCurator} marginR-5>
+                <ImageBackground
+                  source={require("../../assets/images/curator.jpg")}
+                  style={[
+                    $filterType,
+                    searchFilterType === FEED_TYPE.curators + "s" && $activeFilter,
+                    $searchMode,
+                  ]}
+                  imageStyle={$filterTypeImageStyle}
+                  resizeMode={"cover"}
+                >
+                  <Text white center style={$CardTitles}>
+                    CURATORS
+                  </Text>
+                </ImageBackground>
+              </TouchableOpacity>
+            )}
           </View>
           {/* </ScrollView> */}
 
@@ -193,13 +220,17 @@ const $logo: ImageStyle = {
   height: 13,
 }
 const $filterType: ImageStyle = {
-  paddingRight:16,
+  paddingRight: 20,
   paddingTop: 20,
-  paddingLeft: 10,
+  paddingLeft: 38,
   paddingBottom: 10,
   marginBottom: 5,
-  opacity:0.3,
+  opacity: 0.3,
   flexGrow: 1,
+}
+const $searchMode: ImageStyle = {
+  paddingRight: 16,
+  paddingLeft: 10,
 }
 const $filterTypeImageStyle: ImageStyle = {
   borderRadius: 5,
