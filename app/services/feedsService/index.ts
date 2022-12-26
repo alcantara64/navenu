@@ -56,7 +56,6 @@ export class FeedService {
         formData.append("selected[parentCategory][]", parentCategory)
       })
     }
-    console.log(JSON.stringify(formData));
     const response: ApiResponse<FeedResponse> = await this.httpClient.post(
       "/feed/searchByType",
       formData,

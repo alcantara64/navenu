@@ -167,8 +167,7 @@ export class UserService {
     const formData = new FormData()
     formData.append(`user_preferences`, JSON.stringify(payload))
 
-    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences}`, formData)
-    console.log(response.data)
+    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -176,4 +175,18 @@ export class UserService {
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
   }
+
+  async refreshToken(payload: {refresh_token:string}) {
+    const formData = new FormData()
+    formData.append(`refresh_token`, payload.refresh_token)
+
+    const response: ApiResponse<{data:{refresh_token:string, token:string}}> = await this.httpClient.post(`/Authentication/refresh`, formData);
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data
+    return { kind: "ok", data: rawData.data }
+  }
+
 }
