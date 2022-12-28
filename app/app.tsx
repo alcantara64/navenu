@@ -25,7 +25,9 @@ import Config from "./config"
 import { CloudMessaging } from './services/cloudMessagingService';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { configureDesignSystem } from './utils/designSystem';
+import {enableLatestRenderer} from 'react-native-maps';
 
+enableLatestRenderer();
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
 setupReactotron({

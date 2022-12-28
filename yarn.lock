@@ -4120,6 +4120,11 @@ babel-plugin-transform-inline-environment-variables@^0.0.2:
   resolved "https://registry.npmjs.org/babel-plugin-transform-inline-environment-variables/-/babel-plugin-transform-inline-environment-variables-0.0.2.tgz"
   integrity sha512-8gobU7uuTIjz62aXTEZOH5yhuIPojNVAgLK0xnepdGS19aqOEphy7FVWBsojPa14yrQGM/w63uDox4thYcHCnA==
 
+babel-plugin-transform-inline-environment-variables@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-inline-environment-variables/-/babel-plugin-transform-inline-environment-variables-0.4.4.tgz#974245008b3cbbd646bd81707af147aea3acca43"
+  integrity sha512-bJILBtn5a11SmtR2j/3mBOjX4K3weC6cq+NNZ7hG22wCAqpc3qtj/iN7dSe9HDiS46lgp1nHsQgeYrea/RUe+g==
+
 babel-preset-current-node-syntax@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/babel-preset-current-node-syntax/-/babel-preset-current-node-syntax-1.0.1.tgz"
@@ -6282,6 +6287,11 @@ dot-prop@^5.2.0:
   integrity sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==
   dependencies:
     is-obj "^2.0.0"
+
+dotenv@^16.0.3:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
 dtrace-provider@~0.8:
   version "0.8.8"
@@ -13531,6 +13541,13 @@ react-native-document-picker@^8.1.3:
   dependencies:
     invariant "^2.2.4"
 
+react-native-dotenv@^3.4.6:
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.6.tgz#7860f9b4543789f661765a0e7c3f40914133fa4e"
+  integrity sha512-OS+XdceNZmfFTIobQg8J5ZT6979Dr3j5GTgsIzu1JDdKV2IjIfYBTryTT3hJ8VMwdj5WiaredmZEVWwrRIwdtg==
+  dependencies:
+    dotenv "^16.0.3"
+
 react-native-fast-image@^8.6.1:
   version "8.6.1"
   resolved "https://registry.npmjs.org/react-native-fast-image/-/react-native-fast-image-8.6.1.tgz"
@@ -13571,6 +13588,14 @@ react-native-linear-gradient@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz#56598a76832724b2afa7889747635b5c80948f38"
   integrity sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ==
+
+react-native-maps-directions@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps-directions/-/react-native-maps-directions-1.9.0.tgz#63ae8e8b36499042a658e43cd4836ac89aab8b7d"
+  integrity sha512-68SrMOUg4WQ5PmpS9sNOTZaYtdyVYJnnjQOOhABrgiKnb5BXCZRU2gDoS11gYf23hjUBjq8JXzgfn37WcINLwA==
+  dependencies:
+    lodash.isequal "^4.5.0"
+    prop-types "^15.6.0"
 
 react-native-maps@0.31.1:
   version "0.31.1"
