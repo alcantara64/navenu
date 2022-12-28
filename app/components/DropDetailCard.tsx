@@ -38,9 +38,9 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
     setBookmark(!bookmark)
   }
   const onVenuePress = (venue) => {
- navigation.navigate('VenueDetailScreen', {
-  venue
- })
+    navigation.navigate('VenueDetailScreen', {
+      venue
+    })
   } 
 
   return (

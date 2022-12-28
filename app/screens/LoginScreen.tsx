@@ -65,7 +65,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         setErrorMsg("Permission to access location was denied")
         return
       }
-      const location = await Location.getLastKnownPositionAsync({})
+      const location = await Location.getCurrentPositionAsync({})
       if (location) {
         setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
       } else {
@@ -206,7 +206,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             style={$borderlessButtonContainer}
             borderless
             title={"Forgot Password"}
-            //onPress={() => navigation.navigate("ForgotPassword")}
+            // onPress={() => navigation.navigate("ForgotPassword")}
           />
 
           {isLoading && <LoadingIndicator />}
