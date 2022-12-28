@@ -1,5 +1,6 @@
 import { ApiResponse } from "apisauce"
-import { IAutoCompletePayload } from "../../interface/feed"
+import { IAutoCompletePayload, ISearchPayLoad } from "../../interface/feed"
+import { makeTitleCase } from "../../utils/transform"
 import { Api, AutoCompleteResponse, FeedResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem"
 
@@ -22,7 +23,7 @@ export class FeedService {
   async getAutoCompleteSuggestions(payload: IAutoCompletePayload) {
     const formData = new FormData()
     formData.append("term", payload.term)
-    formData.append("type", payload.type)
+    formData.append("type", makeTitleCase(payload.type))
     if (!payload.selected.length) {
       formData.append("selected[parentCategory][]", "")
     } else {
@@ -42,15 +43,17 @@ export class FeedService {
     return { kind: "ok", results: rawData }
   }
 
-  async search(payload: IAutoCompletePayload) {
+  async search(payload: ISearchPayLoad) {
     const formData = new FormData()
-    formData.append("term", payload.term)
-    formData.append("type", payload.type)
-    if (!payload.selected.length) {
-      formData.append("selected[parentCategory][]", "")
-    } else {
-      payload.selected.forEach((category) => {
-        formData.append("selected[parentCategory][]", category)
+    formData.append("type", makeTitleCase(payload.type))
+    if(payload.categories.length){
+      payload.categories.forEach((category) => {
+      formData.append(`selected[${category.type.toLowerCase()}][]`, category.display.split(':')[1].toLowerCase() )
+      })
+    }
+    if (payload.selected.length) {
+      payload.selected.forEach((parentCategory) => {
+        formData.append("selected[parentCategory][]", parentCategory)
       })
     }
     const response: ApiResponse<FeedResponse> = await this.httpClient.post(

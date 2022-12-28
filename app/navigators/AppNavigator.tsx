@@ -4,7 +4,6 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,15 +14,12 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
-import { NavenuButton, TopBar, TopBarLogoOnly } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
   LocationScreen,
   LoginScreen,
   PreferencesScreen,
-  SearchScreen,
   WelcomeScreen,
 } from "../screens"
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
@@ -71,7 +67,6 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = StackScreen
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<AppStackParamList>()
-const BottomTab = createBottomTabNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
@@ -98,47 +93,6 @@ const AppStack = observer(function AppStack() {
   )
 })
 
-export const TabStack = observer(function TabStack() {
-  return (
-    <BottomTab.Navigator
-      initialRouteName="Feed"
-      screenOptions={{
-        tabBarActiveTintColor: "#000000",
-
-        header: ({ navigation }) => <TopBar navigation={navigation} />,
-      }}
-    >
-      <BottomTab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <FontAwesome5 name="search" color={color} size={size} />,
-          header: () => <TopBarLogoOnly />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Feed"
-        component={AppStack}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: () => <NavenuButton />,
-          headerShown: false,
-          //   header: false, //() => <TopBar />
-        }}
-      />
-      <BottomTab.Screen
-        name="PreferencesScreen"
-        component={PreferencesScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <FontAwesome5 name="user" color={color} size={size} />,
-          header: () => <TopBarLogoOnly />,
-        }}
-      />
-    </BottomTab.Navigator>
-  )
-})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 

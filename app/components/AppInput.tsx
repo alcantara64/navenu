@@ -18,13 +18,14 @@ export interface AppInputProps {
   hasAutoComplete?: boolean
   onTextChange: (text:string) => void
   onBlur?: any
+  [x:string]: any
 }
 
 /**
  * Describe your component here
  */
 export const AppInput = observer(function AppInput(props: AppInputProps) {
-  const {onSelectItem, knowledgeItems, isLoading, hasAutoComplete, onTextChange, onBlur } = props
+  const {onSelectItem, knowledgeItems, isLoading, hasAutoComplete, onTextChange, onBlur ,...textFieldProps } = props
   const $styles = [$container]
 
   return (
@@ -32,9 +33,10 @@ export const AppInput = observer(function AppInput(props: AppInputProps) {
       <TextField
         containerStyle={$textInputContainerStyle}
         placeholder="What are you looking for?"
-        trailingAccessory={<Ionicons name="search" size={24} color="grey" />}
+      
         onChangeText={onTextChange}
         onBlur={onBlur}
+        {...textFieldProps}
       />
       <View style={$autoCompleteContainer}>
       {hasAutoComplete && (
@@ -43,8 +45,8 @@ export const AppInput = observer(function AppInput(props: AppInputProps) {
           {!isLoading &&
             knowledgeItems?.length > 0 &&
             knowledgeItems.map((item) => (
-              <TouchableOpacity  onPress={() => onSelectItem(item)} key={item}>
-                <Text style={$autoCompleteText}>{item}</Text>
+              <TouchableOpacity  onPress={() => onSelectItem(item)} key={item.display}>
+                <Text style={$autoCompleteText}>{item.display}</Text>
               </TouchableOpacity>
             ))}
         </View> 

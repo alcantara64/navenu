@@ -69,26 +69,31 @@ export const getDropsByID = (id: Array<string>, items: Array<any>) => {
 }
 // transform the result of the category data into a sing array
 export const transformAutoCompleteResponseToASingleArray = (data:IAutoComplete) => {
-  const transFormedData = [];
+  const transFormedData:Array<{type:string,display:string }> = [];
   if(data.borough && data.borough.length){
    data.borough.forEach((borough) => {
-    transFormedData.push(`Borough:${borough}`)
+    transFormedData.push({type:'Boroughs', display:`Borough:${borough}`})
    })
   }
   if(data.cats && data.cats.length){
     data.cats.forEach((cat) => {
-      transFormedData.push(`Cats:${cat}`)
+      transFormedData.push({type:'Cats', display:`Cat: ${cat}` })
     })
   }
   if(data.location && data.location.length){
     data.location.forEach((locate) => {
-      transFormedData.push(`Location:${locate}`)
+      transFormedData.push({type:'Locations', display:`Location:${locate}`})
     })
   }
   if(data.tags && data.tags.length){
     data.tags.forEach((tag) => {
-      transFormedData.push(`Tag:${tag}`)
+      transFormedData.push({type:'Tags', display :`Tag:${tag}`})
     })
   }
    return transFormedData;
 }
+/**  
+ * Takes a sentence and covert it to a title case for  john to John
+ @param sentence
+ **/
+export const makeTitleCase = (sentence:string) => sentence.split(" ").map(([firstChar,...rest])=>firstChar.toUpperCase()+rest.join("").toLowerCase()).join(" ")

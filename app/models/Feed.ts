@@ -1,12 +1,11 @@
 import { SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
-import _ from 'lodash';
-import { FeedService } from "../services/feedsService";
-import { FEED_TYPE } from "../interface/feed";
+import _ from "lodash"
+import { FEED_TYPE } from "../interface/feed"
 
 /**
  * Model description here for TypeScript hints.
  */
- const Feed = types.model({
+const Feed = types.model({
   id: types.identifier,
   title: types.maybe(types.string),
   description: types.maybe(types.string),
@@ -33,89 +32,65 @@ export const FeedStore = types
     feeds: types.optional(types.array(Feed), []),
     pages: types.optional(types.number, 0),
     pageParams: types.maybe(types.number),
-    catFilters:types.optional(types.array(types.string), []),
-    error: types.optional(ErrorModel, {message: '', isError: false}),
+    catFilters: types.optional(types.array(types.string), []),
+    error: types.optional(ErrorModel, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
-    isFetchingNextPage:types.maybe(types.boolean),
-    selectedFilterTypes:types.optional(types.array(types.string), []),
+    isFetchingNextPage: types.maybe(types.boolean),
+    selectedFilterTypes: types.optional(types.array(types.string), []),
     showHeaderFilter: types.maybe(types.boolean),
     savedFeeds: types.optional(types.array(Feed), []),
     isMapMode: types.maybe(types.boolean),
-
+    isSearchMode: types.maybe(types.boolean),
+    searchFilterType: types.maybe(
+     types.string
+    ),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
-    addCartFilter(value){
-     self.catFilters.push(value)
-  
+    addCartFilter(value) {
+      self.catFilters.push(value)
     },
-    removeCartFilter(filter){
-      self.catFilters =  _.without(self.catFilters, filter);
+    removeCartFilter(filter) {
+      self.catFilters = _.without(self.catFilters, filter)
     },
-    setFeeds(feeds){
-     self.feeds = feeds;
+    setFeeds(feeds) {
+      self.feeds = feeds
     },
-    setFeedsError(error:any){
-      self.error = error;
+    setFeedsError(error: any) {
+      self.error = error
     },
-    setIsLoading(status:boolean){
-     self.isLoading = status
-    },
-    async getFeeds(pageNumber?:number){
-      this.setIsLoading(true)
-      this.setFeedsError({isError:false, message: ''})
-      const  feedsService = new FeedService();
-     const  result = await feedsService.getFeeds(pageNumber);
-     if(result.kind === 'ok'){
-
-      this.setFeeds(result.feeds)
-     }else{
-      console.log('error', result)
-      this.setFeedsError({isError:true, message:'error getting feeds'})
-     }
-     this.setIsLoading(false)
-
-    },
-    async refetch(){
-      this.getFeeds(self.pageParams)
-    },
-    async setMapMode(status: boolean){
-    self.isMapMode = status;
+    setIsLoading(status: boolean) {
+      self.isLoading = status
     },
 
-    async fetchNextPage(){
-      const nextPageNumber =self.pageParams + 1; 
-      this.setIsFetchingNextPage(true)
-      await this.getFeeds(nextPageNumber)
-      this.setCurrentPageNumber(nextPageNumber);
-      this.setIsFetchingNextPage(false)
-      
+    async setMapMode(status: boolean) {
+      self.isMapMode = status
     },
-     setCurrentPageNumber(pageNumber:number){
-     self.pageParams = pageNumber;
-    },
-    setIsFetchingNextPage(value:boolean){
-    self.isFetchingNextPage = value;
-    },
-    addFilterType(filter:FEED_TYPE){
+
+    addFilterType(filter: FEED_TYPE) {
       self.selectedFilterTypes.push(filter)
     },
-    removeFilterType(filter:FEED_TYPE){
-      self.selectedFilterTypes = _.without(self.selectedFilterTypes, filter);
+    removeFilterType(filter: FEED_TYPE) {
+      self.selectedFilterTypes = _.without(self.selectedFilterTypes, filter)
     },
-    toggleHeaderState(){
-     self.showHeaderFilter = !self.showHeaderFilter;
+    toggleHeaderState() {
+      self.showHeaderFilter = !self.showHeaderFilter
     },
-  toggleSaveFeed(item:any){
-  const isFeedAvailable = self.savedFeeds.find((feed) => feed.id === item.id);
-  if(isFeedAvailable){
-   self.savedFeeds =  self.savedFeeds.filter((feed) => feed.id !== item.id );
-  }else{
-    self.savedFeeds = [...self.savedFeeds, item]
-  }
-
-  }
-  })) 
+    toggleSaveFeed(item: any) {
+      const isFeedAvailable = self.savedFeeds.find((feed) => feed.id === item.id)
+      if (isFeedAvailable) {
+        self.savedFeeds = self.savedFeeds.filter((feed) => feed.id !== item.id)
+      } else {
+        self.savedFeeds = [...self.savedFeeds, item]
+      }
+    },
+    setIsSearchMode(status: boolean) {
+      self.isSearchMode = status
+    },
+    setSearchFilterType(filterType: any) {
+      self.searchFilterType = filterType
+    },
+  }))
 
 export interface FeedSnapshotOut extends SnapshotOut<typeof FeedStore> {}
 export interface FeedSnapshotIn extends SnapshotIn<typeof FeedStore> {}

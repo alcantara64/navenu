@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextStyle, ViewStyle, Dimensions } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -35,6 +35,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       toggleHeaderState,
       showHeaderFilter,
       isMapMode,
+      setIsSearchMode,
     } = feedsStore
 
     const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
@@ -50,6 +51,9 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const createListNameMutation = useMutation({
       mutationFn: createUserListName,
     })
+    useEffect(() => {
+      setIsSearchMode(false);
+    }, [])
     const addItemToListMutation = useMutation({
       mutationFn: addItemToUserList,
       onSuccess: () => {

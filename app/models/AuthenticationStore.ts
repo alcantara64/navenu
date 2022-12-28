@@ -11,7 +11,8 @@ export const AuthenticationStoreModel = types
     isLoading: types.optional(types.boolean, false),
     longitude: types.optional(types.number, 0),
     latitude: types.optional(types.number, 0),
-    errorMessage: types.optional(types.string, '')
+    errorMessage: types.optional(types.string, ''),
+    refreshToken: types.optional(types.string, ''),
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -47,6 +48,9 @@ export const AuthenticationStoreModel = types
     setAuthPassword(value: string) {
       store.authPassword = value.replace(/ /g, "")
     },
+    setRefreshToken(value:string){
+      store.refreshToken = value;
+    },
     logout() {
       store.authToken = undefined
       store.authEmail = ""
@@ -62,6 +66,7 @@ export const AuthenticationStoreModel = types
       const result =  await api.login(formData);
       if (result.kind === "ok") {
         this.setAuthToken(result.token);
+        this.setRefreshToken(result.refresh_token);
       }else{
        this.setErrorMessage('incorrect username or password')
       }

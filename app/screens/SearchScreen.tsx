@@ -15,8 +15,8 @@ import { Ionicons } from "@expo/vector-icons"
 interface SearchScreenProps extends AppStackScreenProps<"Search"> {}
 export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScreen() {
   const { feedsStore } = useStores()
-  const { catFilters, toggleSaveFeed } = feedsStore
-  const [selectedSearchItems, setSelectedSearchItems] = useState([])
+  const { catFilters, toggleSaveFeed, searchFilterType } = feedsStore
+  const [selectedSearchItems, setSelectedSearchItems] = useState<Array<{display:string, type:string}>>([])
   const [searchText, setSearchText] = useState("")
   const [isInputTouched, setIsInputTouched] = useState(false)
   // const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useFeeds(catFilters)
@@ -26,25 +26,26 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
     isLoading: isLoadingAutocomplete,
   } = useAutoCompleteFeedsSuggestion({
     term: searchText.toLowerCase(),
-    type: "Locations",
-    selected: catFilters,
+    type: searchFilterType as any,
+    selected: catFilters as any,
   })
   const {
     data: searchResults,
     isLoading,
     isError,
     refetch,
-  } = useFeedsSearch({ term: searchText.toLowerCase(), type: "locations", selected: catFilters })
+  } = useFeedsSearch({ type:searchFilterType as any, selected: catFilters as any, categories:selectedSearchItems  })
 
   const onItemSelected = (item: any) => {
+    setSearchText('');
     if (!selectedSearchItems.includes(item)) {
       setSelectedSearchItems([...selectedSearchItems, item])
       setIsInputTouched(false)
     }
   }
-  const onRemoveSelectedSearchItem = (selectedItem: string) => {
+  const onRemoveSelectedSearchItem = (selectedItem: any) => {
     if (selectedItem) {
-      setSelectedSearchItems(selectedSearchItems.filter((item) => item !== selectedItem))
+      setSelectedSearchItems(selectedSearchItems.filter((item) => item.display !== selectedItem.display))
     }
   }
   const { onTouchStart, onTouchEnd } = useSwipe(undefined, undefined, onSwipeUp, onSwipeDown, 6)
@@ -63,6 +64,7 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
     setIsInputTouched(true)
   }
 
+
   return (
     <View style={$root}>
       <View margin-8>
@@ -70,11 +72,11 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
           {selectedSearchItems.length > 0 && (
             <View row style={$chipItemContainer}>
               {selectedSearchItems.map((item, i) => (
-                <View marginL-5 marginT-5 style={$tagContainer} key={item} row spread>
-                  <Text  center red>{item}</Text>
+                <View marginL-5 marginT-5 style={$tagContainer} key={item.display} row spread>
+                  <Text  center red>{item.display}</Text>
                   <TouchableOpacity onPress={() => {
                     onRemoveSelectedSearchItem(item);
-                  }} center key={item}>
+                  }} center>
                     <Ionicons name="close" size={18} color="black" />
                   </TouchableOpacity>
                 </View>
@@ -88,6 +90,8 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
           knowledgeItems={transformAutoCompleteResponseToASingleArray(
             autoCompleteError || isLoadingAutocomplete ? [] : autoCompleteData,
           )}
+          value={searchText}
+          trailingAccessory={<Ionicons name="search" size={24} color="grey" />}
           onTextChange={handleTextChange}
           onSelectItem={onItemSelected}
           isLoading={isLoadingAutocomplete}

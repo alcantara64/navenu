@@ -19,6 +19,7 @@ import {_rootStore } from "../../models"
 import { getSnapshot } from "mobx-state-tree"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { AxiosRequestConfig } from "axios"
+import { renewToken } from "../../utils/credentials"
 
 /**
  * Configuring the apisauce instance.
@@ -53,10 +54,11 @@ export class Api {
       },
     })
 
-   this.apisauce.addRequestTransform((request) =>{
+   this.apisauce.addRequestTransform( async (request) =>{
+   const token =  await renewToken(rootStore?.authenticationStore?.authToken, rootStore?.authenticationStore?.refreshToken);
     request.headers.lat = rootStore?.authenticationStore?.latitude;
     request.headers.lng = rootStore?.authenticationStore?.longitude;
-    request.headers.Authorization = rootStore?.authenticationStore?.authToken; 
+    request.headers.Authorization = token; 
    })
   }
   

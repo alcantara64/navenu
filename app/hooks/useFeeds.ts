@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "react-query"
-import { IAutoCompletePayload } from "../interface/feed"
+import { IAutoCompletePayload, ISearchPayLoad } from "../interface/feed"
 import { FeedService } from "../services/feedsService"
 
 const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
@@ -57,6 +57,6 @@ const getSearchItem = async ({queryKey}) => {
    }
    return response.results;
  }
- export const useFeedsSearch = (payload:IAutoCompletePayload) =>{
-    return useQuery(['search', payload],getSearchItem);
+ export const useFeedsSearch = (payload:ISearchPayLoad) =>{
+    return useQuery(['feeds-search', payload],getSearchItem);
  }
