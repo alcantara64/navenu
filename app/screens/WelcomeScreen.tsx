@@ -3,7 +3,11 @@ import { StatusBar } from "expo-status-bar"
 import _ from "lodash"
 import { observer } from "mobx-react-lite"
 import React, { FC, useMemo } from "react"
-import { ViewStyle, Dimensions, ImageBackground, TextStyle, SafeAreaView } from "react-native"
+import { 
+  ViewStyle, 
+  ImageBackground, 
+  TextStyle, 
+} from "react-native"
 import { Carousel, View, Text, Button, Image } from "react-native-ui-lib"
 
 import { typography, Colors } from "../theme"
@@ -52,7 +56,7 @@ export const WelcomeScreen: FC = observer(function WelcomeScreen() {
   }
 
   return (
-    <SafeAreaView>
+    <View>
       <StatusBar translucent />
       <Carousel
         ref={carousel}
@@ -117,7 +121,7 @@ export const WelcomeScreen: FC = observer(function WelcomeScreen() {
           },
         )}
       </Carousel>
-    </SafeAreaView>
+    </View>
   )
 })
 
@@ -141,7 +145,7 @@ const $bottomTextSmall: TextStyle = {
   lineHeight: 23,
 }
 const $carouselContainer: ViewStyle = {
-  height: Dimensions.get("screen").height,
+  height: "100%",
 }
 const $buttonLabelStyle: TextStyle = {
   paddingTop: 6,
