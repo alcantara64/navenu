@@ -22,6 +22,10 @@ export const WelcomeScreen: FC = observer(function WelcomeScreen() {
     navigation.navigate("Login")
   }
 
+  const goToSignupScreen = () => {
+    navigation.navigate("SignUp")
+  }
+
   const Pages = useMemo(
     () => [
       {
@@ -102,6 +106,7 @@ export const WelcomeScreen: FC = observer(function WelcomeScreen() {
                           borderRadius={15}
                           labelStyle={$buttonLabelStyle}
                           label={"SIGN UP"}
+                          onPress={goToSignupScreen}
                         />
                         <Button
                           onPress={gotoLoginScreen}

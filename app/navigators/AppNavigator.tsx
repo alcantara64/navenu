@@ -19,9 +19,11 @@ import { useStores } from "../models" // @demo remove-current-line
 import {
   LocationScreen,
   LoginScreen,
+  SignUpScreen,
   PreferencesScreen,
   WelcomeScreen,
 } from "../screens"
+
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 
@@ -41,6 +43,7 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 export type AppStackParamList = {
   Welcome: undefined
   Login: undefined
+  SignUp: undefined
   Search: undefined
   Feed: undefined
   Settings: undefined
@@ -86,6 +89,7 @@ const AppStack = observer(function AppStack() {
         <>
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen}  />
+          <Stack.Screen name="SignUp" component={SignUpScreen}  />
       
         </>
       )}
