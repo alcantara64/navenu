@@ -23,7 +23,7 @@ export const WelcomeScreen: FC = observer(function WelcomeScreen() {
   }
 
   const goToSignupScreen = () => {
-    navigation.navigate("SignUp")
+    navigation.navigate("SignUpStart")
   }
 
   const Pages = useMemo(

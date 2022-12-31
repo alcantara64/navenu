@@ -7,11 +7,16 @@ import { FontAwesome5 } from "@expo/vector-icons"
 import { AppStackScreenProps } from "../../navigators"
 import { typography, Colors } from "../../theme"
 import { AppButton } from '../../components/AppButton';
+import { useNavigation } from '@react-navigation/native';
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
-interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
-export const SignUpScreen: FC<SignUpScreenProps> = observer(function LoginScreen(_props) {
+interface SignUpStartScreenProps extends AppStackScreenProps<"SignUpStart"> {}
+export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function SignUpStartScreen(_props) {
+  const navigation = useNavigation();
+  const goToFormPage = () => {
+    navigation.navigate("SignUpForm")
+  }
   return (
     <>
       <View>  
@@ -29,15 +34,15 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function LoginScreen
           </View>
           <View style={$buttonContainer}>
             <AppButton style={$button}>
-              <FontAwesome5 name="google" size={27} color="#FFFFFF" />
-              <Text style={$buttonText}>Continue google</Text>
+              <FontAwesome5 name="google" size={24} color="#FFFFFF" />
+              <Text style={$buttonText}>Continue with google</Text>
             </AppButton>
             <AppButton style={$button}>
-              <FontAwesome5 name="apple" size={27} color="#FFFFFF" />
-              <Text style={$buttonText}>Continue Apple</Text>
+              <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
+              <Text style={$buttonText}>Continue with Apple</Text>
             </AppButton>
-            <AppButton style={$button}>
-              <FontAwesome5 solid name="envelope" size={27} color="#FFFFFF" />
+            <AppButton style={$button} onPress={goToFormPage}>
+              <FontAwesome5 solid name="envelope" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with email</Text>
             </AppButton>
           </View>
