@@ -62,7 +62,6 @@ export const BottomNavigationNavigator = () => {
           tabBarShowLabel: false,
           tabBarBadge: 3,
           tabBarIcon: ({ color, size, route }) => {
-            console.log({color})
             return(
             <Ionicons name="notifications-outline"  size={size} color={color} />
           )},
