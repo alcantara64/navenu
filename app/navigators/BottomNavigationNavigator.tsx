@@ -1,5 +1,5 @@
 import React from "react"
-import { SavedDropsScreen, UserProfileScreen } from "../screens"
+import { NotificationScreen, SavedDropsScreen, UserProfileScreen } from "../screens"
 import { FontAwesome5, Foundation, Ionicons } from "@expo/vector-icons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { TopBarLogoOnly } from "../components/TopBarLogoOnly"
@@ -7,6 +7,7 @@ import { MainStack, SearchStack } from "./MainNavigationNavigator"
 import { ProfileButton } from "../components/ProfileButton"
 import { TopBar } from "../components/TopBar"
 import { BottomTabLogo } from "../components"
+import { Colors } from "../theme"
 
 export type BottomNavigationNavigatorParamList = {
   Demo: undefined
@@ -23,7 +24,7 @@ export const BottomNavigationNavigator = () => {
   return (
     <BottomTab.Navigator
       initialRouteName="Feed"
-      screenOptions={{ tabBarActiveTintColor: "#000000" }}
+      screenOptions={{ tabBarActiveTintColor: Colors.black,  }}
     >
       <BottomTab.Screen
         name="Feed"
@@ -56,12 +57,15 @@ export const BottomNavigationNavigator = () => {
       />
       <BottomTab.Screen
         name="Notification"
-        component={SavedDropsScreen}
+        component={NotificationScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="notifications-outline" size={size} color={color} />
-          ),
+          tabBarBadge: 3,
+          tabBarIcon: ({ color, size, route }) => {
+            console.log({color})
+            return(
+            <Ionicons name="notifications-outline"  size={size} color={color} />
+          )},
           header: () => <TopBarLogoOnly />,
         }}
       />
