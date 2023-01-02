@@ -77,3 +77,7 @@ export interface ICurator {
 export interface IUserList {
     userlist: Record<string, IDrop | IVenue| IArticle >
 }
+export interface IUserRegistration {
+  email: string,
+  password: string
+}

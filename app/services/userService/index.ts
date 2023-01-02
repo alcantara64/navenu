@@ -189,4 +189,18 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
+  async register(payload: {email:string, password:string}) {
+    const formData = new FormData()
+    formData.append(`email`, payload.email)
+    formData.append(`password`, payload.password)
+    
+    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/register`, formData)
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data
+    return { kind: "ok", data: rawData.data }
+  }
+
 }
