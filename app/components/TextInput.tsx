@@ -46,7 +46,6 @@ export const TextInput = observer(function TextInput(props: TextInputProps) {
             name={rightIcon}
             size={22}
             color={Colors.mediumGray}
-            
             style={$iconStyle}
           />
         </AppButton>
@@ -57,13 +56,10 @@ export const TextInput = observer(function TextInput(props: TextInputProps) {
 
 const $container: ViewStyle = {
   backgroundColor: Colors.white,
-  borderRadius: 8,
+  borderRadius: 16,
   flexDirection: 'row',
   padding: 12,
-  marginVertical: 12,
-  
-  borderWidth: 1,
-  borderColor: Colors.mediumGray
+  marginVertical: 8,
 }
 
 const $iconStyle:ViewStyle = {
@@ -72,6 +68,6 @@ const $iconStyle:ViewStyle = {
 const $textInputStyle: TextStyle ={
   flex: 1,
   width: '100%',
-  fontSize: 18,
-  color: Colors.black
+  color: Colors.black,
+  padding: 0,
 }
