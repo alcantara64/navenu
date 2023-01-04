@@ -86,7 +86,7 @@ const $button: ViewStyle = {
   width: "100%",
   alignItems: "center",
   justifyContent: "center",
-  marginTop: 8,
+  marginVertical: 8,
   backgroundColor: Colors.ash,
   padding: 10,
   borderRadius: 16,

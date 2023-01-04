@@ -86,6 +86,9 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
                       color="black"
                       placeholderTextColor={Colors.gray}
                       placeholder={"your@email.com"}
+                      autoCorrect={false}
+                      spellCheck={false}
+                      autoCapitalize="none"
                     />
                   </View>
                   <FormErrorMessage error={errors.email} visible={touched.email} />
@@ -99,6 +102,8 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
                       placeholderTextColor={Colors.gray}
                       placeholder={"Password"}
                       secureTextEntry={true}
+                      autoCorrect={false}
+                      spellCheck={false}
                     />
                     <Icon name="eye" size={22} color={Colors.mediumGray} />
                   </View>
@@ -156,7 +161,7 @@ const $button: ViewStyle = {
   width: "100%",
   alignItems: "center",
   justifyContent: "center",
-  marginTop: 8,
+  marginVertical: 8,
   backgroundColor: Colors.ash,
   padding: 10,
   borderRadius: 16,
