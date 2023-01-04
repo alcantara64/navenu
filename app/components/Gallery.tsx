@@ -1,10 +1,9 @@
 import * as React from "react"
-import { Dimensions, StyleProp, TextStyle, ViewStyle } from "react-native"
+import { Dimensions, StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
 import { IGallery } from "../interface/venues"
 import Carousel from "react-native-reanimated-carousel"
-import { View, Text, Image } from "react-native-ui-lib"
+import { View, Image } from "react-native-ui-lib"
 
 export interface GalleryProps {
   /**
@@ -24,7 +23,7 @@ export const Gallery = observer(function Gallery(props: GalleryProps) {
   return (
     <View >
     <Carousel<IGallery>
-    width={Dimensions.get('screen').width -40 }
+    width={Dimensions.get('screen').width}
     height={150}
     style={$styles}
     loop

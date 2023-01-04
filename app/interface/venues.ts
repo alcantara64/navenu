@@ -35,6 +35,7 @@ export interface IVenue {
   curators?: Array<ICurators>
   articles?: Array<IArticle>
   drops?: Array<IDrop>
+  subscribed: boolean
 }
 
 interface INearby {

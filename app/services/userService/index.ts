@@ -1,4 +1,5 @@
 import { ApiResponse } from "apisauce"
+import { FEED_TYPE } from "../../interface/feed"
 import { IUserPreference } from "../../interface/user"
 import {
   AddListItemPayload,
@@ -187,6 +188,23 @@ export class UserService {
     }
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
+  }
+
+  async subScribeToNotification(payload: {type: FEED_TYPE, id: string}) {
+    const formData = new FormData()
+    formData.append("type", payload.type)
+    formData.append('id',payload.id);
+    
+    const response: ApiResponse<any> = await this.httpClient.post(
+      "/users/subscription",
+      formData,
+    )
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data.data
+    return { kind: "ok", results: rawData }
   }
 
 }

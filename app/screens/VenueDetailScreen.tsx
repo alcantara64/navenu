@@ -31,7 +31,6 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
         <View style={$container}>
       
         <VenueDetailCard venue={data}></VenueDetailCard>
-        {data?.images?.length > 0 && <Gallery items={data.images} />}
         <NearByVenues venues={data?.nearby} />
   
     </View>
