@@ -161,8 +161,8 @@ export const UserStoreModel = types
         // FIll UserModel with API Data
         self.currentUser = response.data.user
         // Fill UserListModel with API DATA
-        self.usersList = response.data.userLists;
-        self.userDrops = response.data.savedDeals;
+        self.usersList = response.data.userLists || [];
+        self.userDrops = response.data.savedDeals || [];
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }

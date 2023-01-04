@@ -21,7 +21,7 @@ export interface UserProfileProps {
   userDrops: Array<IDrop>
   userList: Record<string, never>
   locations?: Array<ISavedLocation>
-  showSetting: (value:boolean) => void
+  showSetting: (value: boolean) => void
   onSetSelectedList: (value: any) => void
 }
 
@@ -30,23 +30,24 @@ export interface UserProfileProps {
  */
 export const UserProfile = observer(function UserProfile(props: UserProfileProps) {
   const { user, userDrops, userList, showSetting, onSetSelectedList } = props
-  const navigation = useNavigation();
-  const userListNames = Object.keys(userList || {}); 
+  const navigation = useNavigation()
+  const userListNames = Object.keys(userList || {})
   const [dropListCount, setDropListCount] = useState(3)
   const [userListCount, setUserListCount] = useState(3)
   const goBack = () => {
     navigation.goBack()
   }
-  const onSelectedListItemPressed = (listName:string) => {
-     onSetSelectedList({...userList[listName] as any, userListName:listName})
+  const onSelectedListItemPressed = (listName: string) => {
+    onSetSelectedList({ ...(userList[listName] as any), userListName: listName })
   }
+
+  const londonImage = require("../../assets/images/preferences/london.png")
+  // need to check if the user has a profile picture or not, if not use a default one
+  const userAvatar = user?.avatar ? { uri: user?.avatar } : londonImage
+
   return (
     <>
-      <ImageBackground
-        source={{uri:user?.avatar }}
-        resizeMode="cover"
-        style={$imagetop}
-      >
+      <ImageBackground source={userAvatar} resizeMode="cover" style={$imagetop}>
         <View marginT-10 style={$closeBtn}>
           <TouchableOpacity onPress={goBack}>
             <FontAwesome5 solid name="times-circle" size={27} color="#FFFFFF" />
@@ -79,42 +80,59 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
           <View marginT-10>
             <View style={$dropsContainer}>
               <Text header>MY Drops</Text>
+              {userDrops.length === 0 && (
+                <View marginT-20>
+                  <Text center white black bottom underline belowHeaderText>
+                    You have no drops yet
+                  </Text>
+                </View>
+              )}
               <View marginT-20>
                 <DropList drops={[...userDrops].splice(0, dropListCount)} />
               </View>
-              {userDrops.length > 3 && dropListCount < userDrops.length  && (
+              {userDrops.length > 3 && dropListCount < userDrops.length ? (
                 <View>
                   <LinearGradient
                     colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
                     style={$fadedContainer}
                   />
-                  <TouchableOpacity marginT-10 onPress={() => {
-                    setDropListCount(userDrops.length);
-                  }}>
+                  <TouchableOpacity
+                    marginT-10
+                    onPress={() => {
+                      setDropListCount(userDrops.length)
+                    }}
+                  >
                     <Text center white black bottom underline belowHeaderText>
                       LOAD MORE
                     </Text>
                   </TouchableOpacity>
                 </View>
-              )}
+              ) : null}
             </View>
 
             <View style={$dropsContainer}>
               <Text header>My List</Text>
               <View marginT-20>
-                {userListNames.slice(0,userListCount).map((name) => (
-                  <UserListCard onListPress={onSelectedListItemPressed} key={name} image="" name={name} />
-))}
+                {userListNames.slice(0, userListCount).map((name) => (
+                  <UserListCard
+                    onListPress={onSelectedListItemPressed}
+                    key={name}
+                    image=""
+                    name={name}
+                  />
+                ))}
               </View>
-              {userListNames.length > 3 && userListCount < userListNames.length  && (
+              {userListNames.length > 3 && userListCount < userListNames.length && (
                 <View>
                   <LinearGradient
                     colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
                     style={$fadedContainer}
                   />
-                  <TouchableOpacity onPress = {() => {
-                    setUserListCount(userListNames.length);
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setUserListCount(userListNames.length)
+                    }}
+                  >
                     <Text center white black bottom underline belowHeaderText>
                       LOAD MORE
                     </Text>

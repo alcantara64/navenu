@@ -2,8 +2,8 @@ import { IDrop } from "./drops"
 import { IArticle, IVenue } from "./venues"
 
 export interface IUser{
-   ID:number
-   social_id:number | null
+   ID: string
+   social_id:string | null
    user_login:string 
    user_nicename:string 
    user_email:string 
