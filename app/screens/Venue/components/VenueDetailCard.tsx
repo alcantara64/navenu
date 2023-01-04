@@ -52,7 +52,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
 
   const queryClient = useQueryClient()
   
-  const {mutate} = useSubscribeToNotification()
+  const {mutate, isLoading:isSavingSubscription} = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props
   const navigation = useNavigation()
   const goBack = () => {
@@ -66,7 +66,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   }
   const $lineDivider = [$horizontalLine, $bigDivider];
   const onSubscribeToNotification = () => {
-    mutate({type:FEED_TYPE.location+ 's', id: venue.id}, {
+    mutate({type:'venue', id: venue.id}, {
     onSuccess() {
       queryClient.invalidateQueries('venue');
       // Todo show a pop up
@@ -148,7 +148,10 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification} >
+               {/* todo show spinner while is loading */}
+             {/* { isSavingSubscription? <Text white>loading...</Text> : */}
               <Ionicons name={venue.subscribed? "notifications":  "notifications-outline"} solid size={30} color="#FFFFFF" />
+              {/* } */}
             </TouchableOpacity>
             <TouchableOpacity marginV-5>
               <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />

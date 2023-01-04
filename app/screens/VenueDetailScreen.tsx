@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { ErrorMessage, Gallery, LoadingIndicator, NearByVenues, Screen, VenueDetailCard } from "../components"
+import { ErrorMessage, LoadingIndicator, NearByVenues, Screen, } from "../components"
 import { View } from "react-native-ui-lib"
 import { useVenue } from "../hooks/useVenue"
 // import { useNavigation } from "@react-navigation/native"
@@ -30,7 +30,6 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     <Screen style={$root} preset="auto">
         <View style={$container}>
       
-        <VenueDetailCard venue={data}></VenueDetailCard>
         <NearByVenues venues={data?.nearby} />
   
     </View>

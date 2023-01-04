@@ -196,7 +196,7 @@ export class UserService {
     formData.append('id',payload.id);
     
     const response: ApiResponse<any> = await this.httpClient.post(
-      "/users/subscription",
+      "/users/subscribe",
       formData,
     )
     if (!response.ok) {
