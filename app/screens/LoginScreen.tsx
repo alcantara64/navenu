@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { TextStyle, ViewStyle, ImageBackground, Dimensions } from "react-native"
+import { TextStyle, ViewStyle, ImageBackground, Dimensions, KeyboardAvoidingView } from "react-native"
 import * as Location from "expo-location"
 import {
   AppButton,
@@ -23,19 +23,19 @@ import { Formik } from "formik"
 import { loginValidationSchema } from "../utils/validations"
 import { useTogglePasswordVisibility } from "../hooks"
 import { useNavigation } from "@react-navigation/native"
+import { typography } from "../theme/typography"
 const authImage = require("../../assets/images/auth/auth-login-image.png")
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-
-
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState("")
   const [userInfo, setUserInfo] = useState<any>(null)
   const [errorState, setErrorState] = useState("")
   const [loading, setLoading] = useState(false)
+  const navigation = useNavigation()
   const {
     authenticationStore: {
       setAuthEmail,
@@ -45,7 +45,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       isLoading,
       setLongitudeAndLatitude,
       errorMessage,
-      setErrorMessage
+      setErrorMessage,
     },
   } = useStores()
   const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
@@ -65,7 +65,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         setErrorMsg("Permission to access location was denied")
         return
       }
-      const location = await Location.getLastKnownPositionAsync({})
+      const location = await Location.getCurrentPositionAsync({})
       if (location) {
         setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
       } else {
@@ -131,36 +131,38 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   const clearErrorMessage = () => {
     setErrorMsg("")
-    setErrorMessage('')
+    setErrorMessage("")
   }
 
   return (
-    <ImageBackground
-      imageStyle={{ height: Dimensions.get("window").height }}
-      source={authImage}
-    >
-      <ToastLoader
-        isLoading={isLoading}
-        hasError={!!errorMsg || !!errorMessage}
-        errorMessage={errorMsg || errorMessage}
-        clearError={clearErrorMessage}
-      />
-      <View bottom style={$container}>
-        <View>
-          <Formik
-            initialValues={{
-              email: "navenuteam@navenu.com",
-              password: "Gonavenu",
-            }}
-            validationSchema={loginValidationSchema}
-            onSubmit={(values) => onLogin(values)}
-          >
-            {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
-              <>
-                {/* Input fields */}
+    <KeyboardAvoidingView>
+      <ImageBackground
+        source={authImage}
+        style={{
+          height: Dimensions.get("window").height,
+        }}
+      >
+        <ToastLoader
+          isLoading={isLoading}
+          hasError={!!errorMsg || !!errorMessage}
+          errorMessage={errorMsg || errorMessage}
+          clearError={clearErrorMessage}
+        />
+
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          validationSchema={loginValidationSchema}
+          onSubmit={(values) => onLogin(values)}
+        >
+          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+            <View style={$formContainer}>
+              {/* Input fields */}
+              <View>
                 <TextInput
                   name="email"
-                  leftIconName="email"
                   placeholder="Enter email"
                   autoCapitalize="none"
                   keyboardType="email-address"
@@ -173,7 +175,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                 <FormErrorMessage error={errors.email} visible={touched.email} />
                 <TextInput
                   name="password"
-                  leftIconName="key-variant"
                   placeholder="Enter password"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -186,45 +187,46 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                   onBlur={handleBlur("password")}
                 />
                 <FormErrorMessage error={errors.password} visible={touched.password} />
+              </View>
 
-                {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              <View style={$buttonContainer}>
                 <AppButton style={$button} onPress={handleSubmit} disabled={true}>
                   <Text style={$buttonText}>Login</Text>
                 </AppButton>
-              </>
-            )}
-          </Formik>
+                <AppButton
+                  style={$borderlessButtonContainer}
+                  borderless
+                  title={"Create a new account?"}
+                  onPress={() => navigation.navigate("SignUpStart")}
+                />
+                <AppButton
+                  style={$borderlessButtonContainer}
+                  borderless
+                  title={"Forgot Password"}
+                  onPress={() => navigation.navigate("ForgotPassword")}
+                />
+              </View>
+            </View>
+          )}
+        </Formik>
 
-          {<GoogleSigninButton size={1} style={$googleButton} onPress={googleSignIn} />}
-          <AppButton
-            style={$borderlessButtonContainer}
-            borderless
-            title={"Create a new account?"}
-            // onPress={() => navigation.navigate("Signup")}
-          />
-          <AppButton
-            style={$borderlessButtonContainer}
-            borderless
-            title={"Forgot Password"}
-            //onPress={() => navigation.navigate("ForgotPassword")}
-          />
-
-          {isLoading && <LoadingIndicator />}
-        </View>
-      </View>
-    </ImageBackground>
+        {isLoading && <LoadingIndicator />}
+      </ImageBackground>
+    </KeyboardAvoidingView>
   )
 })
 
-
-const $container: ViewStyle = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  // alignItems: 'center',
-  marginTop: '70%',
-
+const $formContainer: ViewStyle = {
+  flex: 1,
+  marginTop: '60%',
   padding: 24,
+}
+
+const $buttonContainer: ViewStyle = {
+  justifyContent: 'flex-end',
+  alignContent: 'flex-end',
+  flex: 1,
 }
 
 const $button: ViewStyle = {
@@ -238,9 +240,10 @@ const $button: ViewStyle = {
 }
 
 const $buttonText: TextStyle = {
+  fontFamily: typography.fonts.bourtonbase.medium,
+  textTransform: "uppercase",
   fontSize: 20,
   color: Colors.white,
-  fontWeight: "700",
 }
 
 const $borderlessButtonContainer: TextStyle = {
@@ -249,7 +252,4 @@ const $borderlessButtonContainer: TextStyle = {
   alignItems: "center",
   justifyContent: "center",
 }
-const $googleButton: ViewStyle = {
-  width: "100%",
-  alignSelf: "center",
-}
+

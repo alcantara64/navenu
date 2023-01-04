@@ -1,6 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
 import { api } from "../services/api"
+import { UserService } from "../services/userService"
 
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
@@ -69,6 +70,23 @@ export const AuthenticationStoreModel = types
         this.setRefreshToken(result.refresh_token);
       }else{
        this.setErrorMessage('incorrect username or password')
+      }
+      this.setLoading(false);
+    },
+    async register() {
+      this.setErrorMessage('');
+      this.setLoading(true)
+      const formData = new FormData()
+      formData.append("email", store.authEmail)
+      formData.append("password", store.authPassword)
+      // @ts-ignore
+      const api = new UserService();
+      const result = await api.register({email: store.authEmail, password: store.authPassword});
+      if (result.kind === "ok") {
+        this.setAuthToken(result.data.token);
+        this.setRefreshToken(result.data.refresh_token);
+      } else {
+       this.setErrorMessage('Something went wrong')
       }
       this.setLoading(false);
     },

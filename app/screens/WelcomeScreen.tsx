@@ -1,28 +1,20 @@
 import { useNavigation } from "@react-navigation/native"
+import { StatusBar } from "expo-status-bar"
 import _ from "lodash"
 import { observer } from "mobx-react-lite"
 import React, { FC, useMemo } from "react"
-import { ViewStyle, Dimensions, ImageBackground, TextStyle } from "react-native"
+import { 
+  ViewStyle, 
+  ImageBackground, 
+  TextStyle, 
+} from "react-native"
 import { Carousel, View, Text, Button, Image } from "react-native-ui-lib"
 
-
-import { colors, typography, Colors } from "../theme"
+import { typography, Colors } from "../theme"
 
 const welcomeLogo = require("../../assets/NavenuWhite.png")
 
-// const slider01 = {
-//   uri: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider01.jpg",
-// }
-// const slider02 = {
-//   uri: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider02.jpg",
-// }
-// const slider03 = {
-//   uri: "https://media.navenu.com/skins/front/default/images/onboarding/slider/slider03.jpg",
-// }
-// const slider04 = {
-//   uri: "https://media.navenu.com/skins/front/default/images/onboarding/slider/login.jpg",
-// }
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen() {
+export const WelcomeScreen: FC = observer(function WelcomeScreen() {
   const carousel = React.createRef<typeof Carousel>()
   const navigation = useNavigation()
 
@@ -30,24 +22,28 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     navigation.navigate("Login")
   }
 
+  const goToSignupScreen = () => {
+    navigation.navigate("SignUpStart")
+  }
+
   const Pages = useMemo(
     () => [
       {
-        image: require('../../assets/images/slider01.jpeg'),
+        image: require("../../assets/images/slider01.jpeg"),
         bottomTextHeader: "CONNECT",
         bottomTextFirst: "WITH THE VERY BEST LOCATIONS",
         bottomTextSecond: "LIFESTYLES AND COMMUNITY LEADERS.",
         showAuthButtons: false,
       },
       {
-        image: require('../../assets/images/slider02.jpeg'),
+        image: require("../../assets/images/slider02.jpeg"),
         bottomTextHeader: "DISCOVER",
         bottomTextFirst: "YOUR PICK OF TRUSTED INSIDER",
         bottomTextSecond: "RECOMMENDATIONS, ON-DEMAND..",
         showAuthButtons: false,
       },
       {
-        image: require('../../assets/images/slider03.jpeg'),
+        image: require("../../assets/images/slider03.jpeg"),
         bottomTextHeader: "TAKE ADVANTAGE",
         bottomTextFirst: "OF DYNAMIC WEEKLY DROPS",
         bottomTextSecond: "EVENTS. EXPERIENCES. ITEMS.",
@@ -64,98 +60,76 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   }
 
   return (
-    <View flex-1 style={$container}>
-      <View paddingH-page>
-        <View style={$sliderContainer}>
-          <Carousel
-            ref={carousel}
-            containerStyle={$carouselContainer}
-            loop
-            autoplay
-            pageControlProps={{
-              size: 10,
-              onPagePress,
-              color: Colors.white,
-              inactiveColor: Colors.ash,
-              containerStyle: {
-                alignSelf: "center",
-                position: "absolute",
-                bottom: 30,
-              },
-            }}
-            pageControlPosition={Carousel.pageControlPositions.OVER}
-          >
-            {Pages.map(
-              (
-                { image, bottomTextHeader, bottomTextFirst, bottomTextSecond, showAuthButtons },
-                i,
-              ) => {
-                return (
-                  <View flex centerV key={i}>
-                    <ImageBackground
-                      style={{ flex: 1 }}
-                      source={ image}
-                    >
-                      <View marginT-50 center>
-                        <Image white source={welcomeLogo} />
-                      </View>
-                      <View style={$buttomTextContainer}>
-                        <Text style={$bottomTextHeader} center>
-                          {bottomTextHeader}
-                        </Text>
-                        <Text style={$bottomTextSmall} center>
-                          {bottomTextFirst}{" "}
-                        </Text>
-                        <Text style={$bottomTextSmall} center>
-                          {bottomTextSecond}{" "}
-                        </Text>
-                        {showAuthButtons && (
-                          <View row center>
-                            <Button
-                              marginR-5
-                              backgroundColor={Colors.ash}
-                              borderRadius={15}
-                              labelStyle={$buttonLabelStyle}
-                              label={"SIGN UP"}
-                            />
-                            <Button
-                              onPress={gotoLoginScreen}
-                              marginL-5
-                              size={Button.sizes.large}
-                              borderRadius={15}
-                              backgroundColor={Colors.ash}
-                              label={"LOGIN"}
-                              labelStyle={$buttonLabelStyle}
-                            />
-                          </View>
-                        )}
-                      </View>
-                    </ImageBackground>
+    <View>
+      <StatusBar translucent />
+      <Carousel
+        ref={carousel}
+        containerStyle={$carouselContainer}
+        loop
+        autoplay
+        pageControlProps={{
+          size: 10,
+          onPagePress,
+          color: Colors.white,
+          inactiveColor: Colors.ash,
+          containerStyle: {
+            alignSelf: "center",
+            position: "absolute",
+            bottom: 30,
+          },
+        }}
+        pageControlPosition={Carousel.pageControlPositions.OVER}
+      >
+        {Pages.map(
+          ({ image, bottomTextHeader, bottomTextFirst, bottomTextSecond, showAuthButtons }, i) => {
+            return (
+              <View flex centerV key={i}>
+                <ImageBackground style={{ flex: 1 }} source={image}>
+                  <View marginT-50 center>
+                    <Image white source={welcomeLogo} />
                   </View>
-                )
-              },
-            )}
-          </Carousel>
-        </View>
-      </View>
+                  <View style={$buttomTextContainer}>
+                    <Text style={$bottomTextHeader} center>
+                      {bottomTextHeader}
+                    </Text>
+                    <Text style={$bottomTextSmall} center>
+                      {bottomTextFirst}{" "}
+                    </Text>
+                    <Text style={$bottomTextSmall} center>
+                      {bottomTextSecond}{" "}
+                    </Text>
+                    {showAuthButtons && (
+                      <View row center>
+                        <Button
+                          marginR-5
+                          backgroundColor={Colors.ash}
+                          borderRadius={15}
+                          labelStyle={$buttonLabelStyle}
+                          label={"SIGN UP"}
+                          onPress={goToSignupScreen}
+                        />
+                        <Button
+                          onPress={gotoLoginScreen}
+                          marginL-5
+                          size={Button.sizes.large}
+                          borderRadius={15}
+                          backgroundColor={Colors.ash}
+                          label={"LOGIN"}
+                          labelStyle={$buttonLabelStyle}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </ImageBackground>
+              </View>
+            )
+          },
+        )}
+      </Carousel>
     </View>
   )
 })
 
-const $container: ViewStyle = {
-  flex: 1,
-  backgroundColor: colors.background,
-  height: "100%",
-}
-
-const $sliderContainer: ViewStyle = {
-  position: "absolute",
-  bottom: 0,
-  top: 0,
-  left: 0,
-  right: 0,
-  zIndex: -1,
-}
 const $buttomTextContainer: ViewStyle = {
   position: "absolute",
   bottom: 60,
@@ -176,9 +150,7 @@ const $bottomTextSmall: TextStyle = {
   lineHeight: 23,
 }
 const $carouselContainer: ViewStyle = {
-  height: Dimensions.get("window").height,
-  position: "absolute",
-  zIndex: -1,
+  height: "100%",
 }
 const $buttonLabelStyle: TextStyle = {
   paddingTop: 6,

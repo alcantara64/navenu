@@ -22,10 +22,10 @@
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.navenu.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
-        "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png",
-        "googleServicesFile": "./google-services.json"
+        "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
       },
       "splash": {
         "image": "./assets/images/splash-logo-android-universal.png",

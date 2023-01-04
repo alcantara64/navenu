@@ -29,7 +29,7 @@ export interface IVenue {
   country: string
   postal_code: string
   tags: Array<string>
-  nearby: Array<INearby>
+  nearby: Array<IVenue>
   images?: Array<IGallery>
   menu?: Array<IMenu>
   curators?: Array<ICurators>
@@ -38,16 +38,6 @@ export interface IVenue {
   subscribed: boolean
 }
 
-interface INearby {
-  type: "location"
-  id: number
-  name: string
-  lat: number
-  distance: string | null
-  category: any
-  lng: number
-  image: string
-}
 interface ICurators {
   id: number
   name: string

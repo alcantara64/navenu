@@ -25,10 +25,8 @@ export const SlimVenueCard = observer(function SlimVenueCard(props: SlimVenueCar
   return (
     <TouchableOpacity
       key={venue.id}
-      onPress={() => navigation.push('VenueDetailScreen', venue)}
-      activeOpacity="0.9"
-      //on Press of any selector sending the selector value to
-      // setSections function which will expand the Accordion accordingly
+      onPress={() => navigation.navigate('VenueDetailScreen', {venue})}
+      activeOpacity={0.9}
     >
       <Card key={venue.id} style={$card}>
         <ImageBackground

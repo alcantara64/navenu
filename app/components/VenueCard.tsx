@@ -15,6 +15,7 @@ import { Colors, typography } from "../theme"
 import { IFeed } from "../interface/feed"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
+import { IVenue } from "../interface/venues"
 
 export interface VenueCardProps {
   /**
@@ -22,7 +23,7 @@ export interface VenueCardProps {
    */
   style?: StyleProp<ViewStyle>
   onPress?: (item: any) => void
-  item: { image: string; category: string; name: string; distance: number, id: number, address: string },
+  item: IVenue,
   isFeed?: boolean
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
@@ -50,8 +51,6 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
       key={item.id}
       onPress={() => onPressVenue(item)}
       activeOpacity={0.1}
-      //on Press of any selector sending the selector value to
-      // setSections function which will expand the Accordion accordingly
     >
       <FastImage
         source={{ uri: item.image, priority: FastImage.priority.high }}

@@ -1,10 +1,11 @@
 import * as React from "react"
+import MapViewDirections from "react-native-maps-directions"
 import { Dimensions, FlatList, StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { mapStyle } from "../theme"
 import { useEffect, useState } from "react"
 import * as Location from "expo-location"
-import MapView, { Marker } from "react-native-maps"
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import { IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
 import { Images } from "../theme/images"
@@ -16,6 +17,7 @@ import { DropCard } from "./DropCard"
 import { View } from "react-native-ui-lib"
 import { Text } from "./Text"
 import { getDropsByID } from "../utils/transform"
+import { GOOGLE_MAPS_API_KEY } from "@env"
 
 export interface AppMapProps {
   /**
@@ -27,6 +29,16 @@ export interface AppMapProps {
   onSetLongitude: (value: number) => void
   latitude: number
   longitude: number
+  directions?: {
+    origin: {
+      latitude: number
+      longitude: number
+    }
+    destination: {
+      latitude: number
+      longitude: number
+    }
+  }
   item: Array<IVenue> | Array<IDrop>
   showBottomSheet?: boolean
   ExternalMakers?: React.ReactNode
@@ -47,10 +59,12 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     item,
     useExternalMarkers,
     ExternalMakers,
+    directions
   } = props
   const $styles = [$container, style]
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
+  const mapRef = React.useRef<MapView>(null)
 
   useEffect(() => {
     ;(async () => {
@@ -68,22 +82,41 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const handleBottomSheetClose = () => {
     setShowBottomSheet(false)
   }
+
   const handleMarkerPressed = (feed: IDrop | IVenue) => {
     setCurrentFeed(feed)
     setShowBottomSheet(true)
   }
 
+  React.useEffect(() => {
+    if(directions){
+      mapRef.current?.fitToCoordinates(
+        [
+          { latitude: directions.origin.latitude, longitude: directions.origin.longitude },
+          { latitude: directions.destination.latitude, longitude: directions.destination.longitude },
+        ],
+        {
+          edgePadding: { top: 300, right: 300, bottom: 300, left: 300 },
+          animated: true,
+        },
+      )
+    }
+  }, [directions])
+
   return (
     <>
       <MapView
+        ref={mapRef}
         style={$styles}
         initialRegion={{
           latitude,
           longitude,
           // todo work on longitude delta, important for zooming
-          latitudeDelta: 10,
-          longitudeDelta: 5,
+          latitudeDelta: 0.28,
+          longitudeDelta: 0.28 * (Dimensions.get("window").width / Dimensions.get("window").height),
         }}
+        zoomTapEnabled
+        zoomEnabled
         customMapStyle={mapStyle}
       >
         <Marker
@@ -101,7 +134,17 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
             <ISuckMapMarker onMarkerPressed={handleMarkerPressed} key={index} venue={venue} />
           ))}
         {!useExternalMarkers && ExternalMakers}
+        {directions && directions.origin && directions.destination ? (
+          <MapViewDirections 
+            origin={{ latitude: directions.origin.latitude, longitude: directions.origin.longitude }} 
+            destination={{ latitude: directions.destination.latitude, longitude: directions.destination.longitude }} 
+            strokeWidth={5}
+            strokeColor="hotpink"
+            apikey={GOOGLE_MAPS_API_KEY}
+          />
+        ) : null}
       </MapView>
+      
       {showBottomSheet && (
         <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}

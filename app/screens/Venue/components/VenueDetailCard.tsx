@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, {useState} from "react"
 import {
   ImageBackground,
   StyleProp,
@@ -16,34 +16,45 @@ import {
   AntDesign,
   SimpleLineIcons,
 } from "@expo/vector-icons"
-import { IVenue } from "../interface/venues"
+import { IVenue } from "../../../interface/venues"
 import { useNavigation } from "@react-navigation/native"
-import { Colors, typography } from "../theme"
-import { getInitials, getStyleByCategory } from "../utils/transform"
-import { openLinkInBrowser } from "../utils/openLinkInBrowser"
-import { DropCard } from "./DropCard"
-import { Gallery } from "./Gallery"
-import { useSubscribeToNotification } from "../hooks/useUser"
-import { FEED_TYPE } from "../interface/feed"
 import { useQueryClient } from "react-query"
+
+import { BottomSheet } from "../../../components/BottomSheet"
+import { useSubscribeToNotification } from "../../../hooks/useUser"
+import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
+import { FEED_TYPE } from "../../../interface/feed"
+import { Colors, typography } from "../../../theme"
+import { getInitials, getStyleByCategory } from "../../../utils/transform"
+import { DropCard, Gallery } from "../../../components"
 
 export interface VenueDetailCardProps {
   /**
    * An optional style override useful for padding & margin.
    */
   venue: IVenue
+  setDestinationDirections: (destination: any) => void
+  createUberUrl: () => string
   style?: StyleProp<ViewStyle>
+}
+
+// create a enum for the different types of bottom sheet
+enum BottomSheetType {
+  operatingHours = "operatingHours",
+  menu = "menu",
+  book = "book",
 }
 
 /**
  * Describe your component here
  */
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
-  const { venue } = props
-  const navigation = useNavigation();
+
   const queryClient = useQueryClient()
   
   const {mutate} = useSubscribeToNotification()
+  const { venue, setDestinationDirections, createUberUrl } = props
+  const navigation = useNavigation()
   const goBack = () => {
     navigation.goBack()
   }
@@ -66,6 +77,48 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
 
 
  
+
+  const [bottomSheet, setBottomSheet] = useState(false)
+  const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
+  const operatingHours = venue.operating_hours.split(",")
+
+  const renderBottomSheetContent = () => {
+    switch(bottomSheetCurrentContent) {
+      case BottomSheetType.operatingHours:
+        return renderOperatingHours()
+      case BottomSheetType.menu:
+        return renderMenu()
+      default: 
+        return null
+      }
+    }
+
+  const renderOperatingHours = () => {
+    return (
+      <View padding-15>
+        <Text text60M>Opening Hours</Text>
+        <View marginT-15>
+          {operatingHours.map((item, key) => (
+            <View row spread marginT-10 key={key}>
+              <Text text70>{item}</Text>
+            </View>
+          ) )}
+        </View>
+      </View>
+    )
+  }
+
+  const renderMenu = () => {
+    return (
+      <View padding-15>
+        <Text text60M>Menu</Text>
+        <View marginT-15>
+          <Text text70>{venue.menu}</Text>
+        </View>
+      </View>
+    )
+  }
+
   return (
     <>
       <ImageBackground source={{ uri: venue.image }} resizeMode="cover" style={$imagetop}>
@@ -125,7 +178,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 CALL
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              setBottomSheet(true)
+              setBottomSheetCurrentContent(BottomSheetType.operatingHours)
+              }
+            }>
               <View padding-15 style={$boxContainer}>
                 <AntDesign name="clockcircleo" size={24} color="white" />
               </View>
@@ -134,7 +191,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 HOUR
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              setBottomSheet(true)
+              setBottomSheetCurrentContent(BottomSheetType.menu)
+              }
+            }>
               <View padding-15 style={$boxContainer}>
                 <SimpleLineIcons name="book-open" size={24} color="white" />
               </View>
@@ -143,7 +204,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MENU
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => {
+              setBottomSheet(true)
+              setBottomSheetCurrentContent(BottomSheetType.book)
+              }
+            }>
               <View padding-15 style={$boxContainer}>
                 <AntDesign name="calendar" size={24} color="white" />
               </View>
@@ -151,8 +216,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 {" "}
                 BOOK
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
+            </TouchableOpacity> */}
+            <TouchableOpacity onPress={() => setDestinationDirections({
+              latitude: venue.lat,
+              longitude: venue.lng
+            })}>
               <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
               </View>
@@ -161,7 +229,10 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MAP
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              const url = createUberUrl()
+              Linking.openURL(url).catch((error) => console.error(error));
+            }}>
               <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="taxi" size={24} color="white" />
               </View>
@@ -227,6 +298,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         {venue?.images?.length > 0 && <Gallery items={venue.images} />}
         </View>
       </View>
+      <BottomSheet show={bottomSheet} onClose={() => {setBottomSheet(!bottomSheet)}}>
+        <View padding-15>
+          {renderBottomSheetContent()}
+        </View>
+      </BottomSheet>
     </>
   )
 })
