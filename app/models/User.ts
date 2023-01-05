@@ -78,6 +78,15 @@ export const UsersListModel = types
     },
   }))
 
+  const UserPreferenceModel = types.model({
+    DO : types.optional(types.array(types.string), []),
+    EAT : types.optional(types.array(types.string), []),
+    DRINK : types.optional(types.array(types.string), []),
+    STAY : types.optional(types.array(types.string), []),
+    SHOP : types.optional(types.array(types.string), []),
+    FIT : types.optional(types.array(types.string), []),
+  })
+
 // User Model stores User info
 const UserModel = types
   .model({
@@ -141,6 +150,7 @@ export const UserStoreModel = types
     userDrops: types.optional(types.array(DropModel), []),
     error: types.optional(ErrorModel, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
+    userPreference: types.maybe(UserPreferenceModel)
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
@@ -150,19 +160,22 @@ export const UserStoreModel = types
     setIsLoading(status: boolean) {
       self.isLoading = status
     },
+    setUserPreferences(preferences: any){
+      self.userPreference = preferences;
+    },
     // Attempting to load User data from api into current user model
     getUser: flow(function* () {
       self.isLoading = true
       self.error = { isError: false, message: "" }
       const userService = new UserService()
       const response = yield userService.getUsers();
-      
       if (response.kind === "ok") {
         // FIll UserModel with API Data
         self.currentUser = response.data.user
         // Fill UserListModel with API DATA
         self.usersList = response.data.userLists;
         self.userDrops = response.data.savedDeals;
+        self.userPreference = response.data.user_preferences;
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }

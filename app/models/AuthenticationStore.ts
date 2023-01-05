@@ -1,7 +1,8 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 
 import { api } from "../services/api"
 import { UserService } from "../services/userService"
+import { getRootStore } from "./helpers/getRootStore"
 
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
@@ -57,22 +58,24 @@ export const AuthenticationStoreModel = types
       store.authEmail = ""
       store.authPassword = ""
     },
-     async login() {
-      this.setErrorMessage('');
-      this.setLoading(true)
+      login: flow(function *() {
+      store.errorMessage = '';
+      store.isLoading = true
       const formData = new FormData()
       formData.append("email", store.authEmail)
       formData.append("password", store.authPassword)
+     const rootStore = getRootStore(store);
       // @ts-ignore
-      const result =  await api.login(formData);
+      const result =  yield api.login(formData);
       if (result.kind === "ok") {
-        this.setAuthToken(result.token);
-        this.setRefreshToken(result.refresh_token);
-      }else{
-       this.setErrorMessage('incorrect username or password')
+        store.authToken = result.token;
+        store.refreshToken = result.refresh_token;
+        rootStore.userStore.setUserPreferences(result.user_preferences);
+      }else{   
+        store.errorMessage = 'incorrect username or password'
       }
-      this.setLoading(false);
-    },
+      store.isLoading = false
+    }),
     async register() {
       this.setErrorMessage('');
       this.setLoading(true)

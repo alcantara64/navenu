@@ -21,8 +21,8 @@ import { horizontalScale } from "../utils/metrics"
 
 export interface TopBarProps {
   style?: StyleProp<ViewStyle>
-  navigation: any,
-  isSearchMode?: boolean,
+  navigation: any
+  isSearchMode?: boolean
 }
 
 export const TopBar = observer(function TopBar(props: TopBarProps) {
@@ -91,15 +91,17 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   }
   return (
     <View marginT-45 marginB-15 marginL-4 marginR-5>
-      <View style={$styles}>
-        <TouchableOpacity onPress={navigateToMap}>
-          <FontAwesome5 name="map-marker-alt" size={27} color="#000000" />
-        </TouchableOpacity>
-        <Image source={require("../../assets/icon-navenu.png")} style={$logo} />
-        <TouchableOpacity onPress={showFilter}>
-          <FontAwesome5 name="filter" size={27} color="#000000" />
-        </TouchableOpacity>
-      </View>
+      {!isSearchMode && (
+        <View style={$styles}>
+          <TouchableOpacity onPress={navigateToMap}>
+            <FontAwesome5 name="map-marker-alt" size={27} color="#000000" />
+          </TouchableOpacity>
+          <Image source={require("../../assets/icon-navenu.png")} style={$logo} />
+          <TouchableOpacity onPress={showFilter}>
+            <FontAwesome5 name="filter" size={27} color="#000000" />
+          </TouchableOpacity>
+        </View>
+      )}
       {showHeaderFilter && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
@@ -177,24 +179,27 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
             )}
           </View>
           {/* </ScrollView> */}
-
-          <CategoryFilterBar
-            addCat={addCartFilter}
-            removeCat={removeCartFilter}
-            DoStateButton={DoStateButton}
-            EatStateButton={EatStateButton}
-            DrinkStateButton={DrinkStateButton}
-            ShopStateButton={ShopStateButton}
-            StayStateButton={StayStateButton}
-            FitStateButton={FitStateButton}
-            setDoStateButton={setDoStateButton}
-            setEatStateButton={setEatStateButton}
-            setDrinkStateButton={setDrinkStateButton}
-            setShopStateButton={setShopStateButton}
-            setStayStateButton={setStayStateButton}
-            setFitStateButton={setFitStateButton}
-            catFilters={catFilters}
-          />
+          {(!isSearchMode ||
+            searchFilterType === FEED_TYPE.location + "s" ||
+            searchFilterType === FEED_TYPE.drop + "s") && (
+            <CategoryFilterBar
+              addCat={addCartFilter}
+              removeCat={removeCartFilter}
+              DoStateButton={DoStateButton}
+              EatStateButton={EatStateButton}
+              DrinkStateButton={DrinkStateButton}
+              ShopStateButton={ShopStateButton}
+              StayStateButton={StayStateButton}
+              FitStateButton={FitStateButton}
+              setDoStateButton={setDoStateButton}
+              setEatStateButton={setEatStateButton}
+              setDrinkStateButton={setDrinkStateButton}
+              setShopStateButton={setShopStateButton}
+              setStayStateButton={setStayStateButton}
+              setFitStateButton={setFitStateButton}
+              catFilters={catFilters}
+            />
+          )}
         </View>
       )}
     </View>

@@ -80,7 +80,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
 
   const [bottomSheet, setBottomSheet] = useState(false)
   const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
-  const operatingHours = venue.operating_hours.split(",")
+  const operatingHours = venue.operating_hours?.split(",")
 
   const renderBottomSheetContent = () => {
     switch(bottomSheetCurrentContent) {

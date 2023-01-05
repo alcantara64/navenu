@@ -69,7 +69,8 @@ export class Api {
     const response: ApiResponse<LoginResponse> = await this.apisauce.post(
       `/Authentication/login`,
       payload
-    )
+    );
+    console.log('response data', response.data);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
