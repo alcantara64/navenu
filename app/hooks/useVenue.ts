@@ -1,14 +1,16 @@
 import {useQuery} from 'react-query';
-import { Api } from '../services/api';
-import { IVenue } from '../interface/venues';
-import { ApiResponse } from 'apisauce';
+import { VenuesService } from '../services/venuesService';
 
 const getVenueById = async (venueId: string) => {
-  const api = new Api()
-  const { data } : ApiResponse<{data:IVenue}> = await api.get(
-    `venues/${venueId}`,
-  );
-  return data.data;
+ const  venueService = new VenuesService();
+ const response = await venueService.getVenueDetail(venueId);
+ if(response.kind === 'ok'){
+  return response.data.data
+ }else{
+  throw new Error('Failed to fetch Venue Detail')
+ }
+
+ 
 };
 
 export const useVenue = (venueId: string) => {

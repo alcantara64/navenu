@@ -18,11 +18,15 @@ import {
 } from "@expo/vector-icons"
 import { IVenue } from "../../../interface/venues"
 import { useNavigation } from "@react-navigation/native"
+import { useQueryClient } from "react-query"
+
+import { BottomSheet } from "../../../components/BottomSheet"
+import { useSubscribeToNotification } from "../../../hooks/useUser"
+import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
+import { FEED_TYPE } from "../../../interface/feed"
 import { Colors, typography } from "../../../theme"
 import { getInitials, getStyleByCategory } from "../../../utils/transform"
-import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
-import { DropCard } from "../../../components/DropCard"
-import { BottomSheet } from "../../../components/BottomSheet"
+import { DropCard, Gallery } from "../../../components"
 
 export interface VenueDetailCardProps {
   /**
@@ -45,6 +49,10 @@ enum BottomSheetType {
  * Describe your component here
  */
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
+
+  const queryClient = useQueryClient()
+  
+  const {mutate, isLoading:isSavingSubscription} = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props
   const navigation = useNavigation()
   const goBack = () => {
@@ -56,6 +64,19 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const onLinkPress = () => {
     openLinkInBrowser(venue.website)
   }
+  const $lineDivider = [$horizontalLine, $bigDivider];
+  const onSubscribeToNotification = () => {
+    mutate({type:'venue', id: venue.id}, {
+    onSuccess() {
+      queryClient.invalidateQueries('venue');
+      // Todo show a pop up
+    },
+
+    })
+  }
+
+
+ 
 
   const [bottomSheet, setBottomSheet] = useState(false)
   const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
@@ -98,7 +119,6 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     )
   }
 
-  const $lineDivider = [$horizontalLine, $bigDivider]
   return (
     <>
       <ImageBackground source={{ uri: venue.image }} resizeMode="cover" style={$imagetop}>
@@ -122,13 +142,18 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
             <TouchableOpacity
-              style={{ marginVertical: 10 }}
+              marginV-10
               onPress={() => console.log("Button 1")}
             >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
-            
-            <TouchableOpacity style={{ marginVertical: 5 }}>
+            <TouchableOpacity marginV-5 onPress={onSubscribeToNotification} >
+               {/* todo show spinner while is loading */}
+             {/* { isSavingSubscription? <Text white>loading...</Text> : */}
+              <Ionicons name={venue.subscribed? "notifications":  "notifications-outline"} solid size={30} color="#FFFFFF" />
+              {/* } */}
+            </TouchableOpacity>
+            <TouchableOpacity marginV-5>
               <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
@@ -268,9 +293,12 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             <Text sectionHeader >DROPS</Text>
 
             <View marginT-15>
-           { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} onPress={() => {}} />))}   
+           { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} />))}   
             </View>
           </View>}
+        </View>
+        <View>
+        {venue?.images?.length > 0 && <Gallery items={venue.images} />}
         </View>
       </View>
       <BottomSheet show={bottomSheet} onClose={() => {setBottomSheet(!bottomSheet)}}>
