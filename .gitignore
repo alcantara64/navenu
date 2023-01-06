@@ -84,3 +84,4 @@ web-build/
 # Configurations
 !env.js
 navenuRN.code-workspace
+.env

@@ -34,7 +34,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [errorMsg, setErrorMsg] = useState("")
   const [userInfo, setUserInfo] = useState<any>(null)
   const [errorState, setErrorState] = useState("")
-  const [loading, setLoading] = useState(false)
+ // const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const {
     authenticationStore: {
@@ -43,6 +43,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       validationErrors,
       login,
       isLoading,
+      setLoading,
       setLongitudeAndLatitude,
       errorMessage,
       setErrorMessage,
@@ -52,6 +53,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   useEffect(() => {
     // todo refactor this
+    setLoading(false);
     // GoogleSignin.configure({
     //   webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     //   forceCodeForRefreshToken: true,
@@ -132,8 +134,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const clearErrorMessage = () => {
     setErrorMsg("")
     setErrorMessage("")
-  }
-
+  };
   return (
     <KeyboardAvoidingView>
       <ImageBackground

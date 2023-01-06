@@ -10,7 +10,7 @@ export class VenuesService {
 
 
 
-  async getVenueDetail(id:number) {
+  async getVenueDetail(id:string) {
     const response: ApiResponse<IVenueResponse> =
       await this.httpClient.get(`/Venues/${id}`)
     if (!response.ok) {

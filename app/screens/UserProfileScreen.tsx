@@ -83,8 +83,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       location: false,
       logout: false,
     })
-
-    const [selectedOption, setSelectedOption] = useState('');
     const [singleFile, setSingleFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
     const [loading, setLoading] = useState(false)
@@ -382,6 +380,11 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                       fieldStyle={$withUnderline}
                     />
                   </ExpandableSection>
+                </View>
+                <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={openPreferenceScreen}>
+                    <Text style={$labelStyle}>Preference</Text>
+                  </TouchableOpacity>
                 </View>
                 {/* 
                 SAME AS COLOR SECTION, COMMMENTING FOR NOW

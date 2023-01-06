@@ -11,10 +11,11 @@ import {
   Screen,
 } from "../components"
 import { useStores } from "../models"
-import { View, Text, Image, TouchableOpacity } from "react-native-ui-lib"
+import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors } from "../theme"
 import { getStyleByCategory } from "../utils/transform"
 import CategoryIcons from '../../assets/icons/drops/claim-icons.svg'
+import { useDrop } from "../hooks/useDrops"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -29,22 +30,23 @@ import CategoryIcons from '../../assets/icons/drops/claim-icons.svg'
 // @ts-ignore
 export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = observer(
   function DropScreen({ route, navigation }) {
-    const { dropStore } = useStores()
-    const { isLoading, error, currentDrop, getDropDetail, showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
+    const { dropStore } = useStores();
+    const currentDropId = route.params.venue.id;
+    const {isLoading, data, error} = useDrop(currentDropId);
+    const {  showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
 
     useEffect(() => {
       setShowClaimModal(false);
-      getDropDetail(route.params.venue.id)
     }, [route.params.venue.id])
 
-    if (error.isError || (!currentDrop && !isLoading)) {
-      return <ErrorMessage message={error.message} />
+    if (error) {
+      return <ErrorMessage message={error as string} />
     }
     if (isLoading) {
       return <LoadingIndicator></LoadingIndicator>
     }
    const claimCode = () => {
-     claimDropCode(currentDrop.id);
+     claimDropCode(currentDropId);
    } 
    const closeClaimModal = () => {
     setShowClaimModal(false)
@@ -57,7 +59,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
           body={
 
             <TouchableOpacity style={$centeredView} onPressOut={closeClaimModal}>
-              <View style={{...$modalView, ...getStyleByCategory(currentDrop.category, false, true)}}>
+              <View style={{...$modalView, ...getStyleByCategory(data.category, false, true)}}>
               <TouchableWithoutFeedback>
                 <>
                 <View row  center>
@@ -65,10 +67,10 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
                 <CategoryIcons/>
                 </View>
                 <Text largeDarkHeader style={$headerText}>CODE CLAIMED!</Text>
-                <View style={{...$codeClaimedBox, ...getStyleByCategory(currentDrop.category, false, true) }}><Text bigTextDark center>{claimedCode}</Text></View>
+                <View style={{...$codeClaimedBox, ...getStyleByCategory(data.category, false, true) }}><Text bigTextDark center>{claimedCode}</Text></View>
                 <View row>
                 <Text text80>Codes are Automatically saved on your </Text>
-                <Text style={getStyleByCategory(currentDrop.category, true, true)}>profile</Text>
+                <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
                 </View>
                 </>
                 </TouchableWithoutFeedback>
@@ -77,7 +79,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
           }
         />}
 
-        <DropDropDetailCard onClaimCode={claimCode} drop={currentDrop} navigation={navigation}></DropDropDetailCard>
+        <DropDropDetailCard onClaimCode={claimCode} drop={data} navigation={navigation}></DropDropDetailCard>
       </Screen>
     )
   },

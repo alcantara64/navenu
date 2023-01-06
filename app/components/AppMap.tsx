@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite"
 import { mapStyle } from "../theme"
 import { useEffect, useState } from "react"
 import * as Location from "expo-location"
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import MapView, { Marker } from "react-native-maps"
 import { IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
 import { Images } from "../theme/images"
@@ -17,6 +17,8 @@ import { DropCard } from "./DropCard"
 import { View } from "react-native-ui-lib"
 import { Text } from "./Text"
 import { getDropsByID } from "../utils/transform"
+// Todo Check with Ariel why this typescript error
+// @ts-ignore 
 import { GOOGLE_MAPS_API_KEY } from "@env"
 
 export interface AppMapProps {

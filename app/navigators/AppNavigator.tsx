@@ -20,6 +20,7 @@ import { useStores } from "../models" // @demo remove-current-line
 import {
   LocationScreen,
   LoginScreen,
+  NotificationScreen,
   SignUpStartScreen,
   SignUpFormScreen,
   PreferencesScreen,
@@ -59,6 +60,7 @@ export type AppStackParamList = {
   CuratorProfileScreen: undefined
   Cardview: undefined,
   Location: undefined,
+  Notification: undefined,
 }
 
 /**
@@ -88,6 +90,7 @@ const AppStack = observer(function AppStack() {
         <Stack.Screen name="Home" component={BottomNavigationNavigator} />
         <Stack.Screen  name="PreferencesScreen" component={PreferencesScreen}  />
         <Stack.Screen name="Location" component={LocationScreen} />
+        <Stack.Screen name="Notification" component={NotificationScreen} />
         </>
       ) : (
         <>

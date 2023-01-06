@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react"
+import React, { FC, useEffect, useMemo, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { AppButton, Screen, ToastLoader } from "../components"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -23,6 +23,7 @@ import { Colors, spacing, typography } from "../theme"
 import { useNavigation } from "@react-navigation/native"
 import { UserService } from "../services/userService"
 import { IUserPreference } from "../interface/user"
+import { useStores } from "../models"
 // import { useStores } from "../models"
 
 const PREFERENCE_CARDS = [
@@ -67,6 +68,7 @@ const PREFERENCE_CARDS = [
 export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(
   function PreferencesScreen() {
     const [activeStage, setActiveStage] = useState(0)
+    const { userStore, } = useStores()
     const [selectedPreference, setSelectedPreference] = useState({
       do: false,
       eat: false,
@@ -79,26 +81,9 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       Array<{ type: any; id: string; name: string }>
     >([])
     const [loading, setLoading] = useState<boolean>(false)
-    const [errMessage, setErrMessage] = useState('');
+    const [errMessage, setErrMessage] = useState("")
     const navigation = useNavigation()
     const carousel = React.createRef<typeof Carousel>()
-
-    //
-    const onBackPress = () => {
-      navigation.goBack()
-    }
-    const onSelectedPreferenceType = (preferenceType: string) => {
-      setSelectedPreference({
-        ...selectedPreference,
-        [preferenceType.toLowerCase()]: !selectedPreference[preferenceType.toLowerCase()],
-      })
-    }
-    const onNextStage = () => {
-      setActiveStage(activeStage + 1)
-    }
-    const goBAckToPreviousPage = () => {
-      setActiveStage(activeStage - 1)
-    }
     const Pages = useMemo(
       () => [
         {
@@ -115,22 +100,22 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         },
         {
           items: [
-            { id: 270, name: "SUSHI" },
-            { id: 277, name: "GASTROPUB" },
-            { id: 268, name: "HEALTHY" },
-            { id: 274, name: "INDIAN" },
-            { id: 280, name: "SPANISH" },
-            { id: 272, name: "CHINESE" },
+            { id: "270", name: "SUSHI" },
+            { id: "277", name: "GASTROPUB" },
+            { id: "268", name: "HEALTHY" },
+            { id: "274", name: "INDIAN" },
+            { id: "280", name: "SPANISH" },
+            { id: "272", name: "CHINESE" },
           ],
           type: "EAT",
           image: EatW,
         },
         {
           items: [
-            { id: 328, name: "WINE" },
-            { id: 330, name: "JUICE" },
-            { id: 331, name: "BAR" },
-            { id: 329, name: "BREWERY" },
+            { id: "328", name: "WINE" },
+            { id: "330", name: "JUICE" },
+            { id: "331", name: "BAR" },
+            { id: "329", name: "BREWERY" },
           ],
           type: "DRINK",
           image: DRINKW,
@@ -170,10 +155,57 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       ],
       [],
     )
+
+    useEffect(() => {
+      setLoading(false);
+      const selectedPreferenceintial= {
+        do: false,
+        eat: false,
+        drink: false,
+        stay: false,
+        shop: false,
+        fit: false,
+      }
+      for (const key of Object.keys(selectedPreference)){
+        if (userStore?.userPreference[key.toUpperCase()].length > 0) {
+          selectedPreferenceintial[key] = true;
+          userStore?.userPreference[key.toUpperCase()].forEach((preferenceId) => {
+            Pages.forEach((subCategory) => {  
+            const foundSelectedItem = subCategory.items.find((item) => item.id === preferenceId)
+              if (foundSelectedItem) {
+            selectedCategorySubItem.push( { type: key.toUpperCase(), id: foundSelectedItem.id, name: foundSelectedItem.name })
+              }
+            })
+          })
+        }
+      }
+      setSelectedPreference(selectedPreferenceintial)
+    }, [])
+
+    //
+    const onBackPress = () => {
+      navigation.goBack()
+    }
+    const onSelectedPreferenceType = (preferenceType: string) => {
+      setSelectedPreference({
+        ...selectedPreference,
+        [preferenceType.toLowerCase()]: !selectedPreference[preferenceType.toLowerCase()],
+      })
+    }
+    const onNextStage = () => {
+      setActiveStage(activeStage + 1)
+    }
+    const goBAckToPreviousPage = () => {
+      setActiveStage(activeStage - 1)
+    }
+
     const onSelectAll = (type) => {
       const categoryItemSelected = Pages.find((page) => page.type === type)
       if (categoryItemSelected) {
-        const mappedCategoryItemWithType = categoryItemSelected.items.map((item) => ({...item, type:categoryItemSelected.type}) )
+        const mappedCategoryItemWithType = categoryItemSelected.items.map((item) => ({
+          ...item,
+          type: categoryItemSelected.type,
+        }))
         setSelectedCategorySubItem([...selectedCategorySubItem, ...mappedCategoryItemWithType])
       }
     }
@@ -210,18 +242,17 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         STAY: [],
         FIT: [],
       }
-      selectedCategorySubItem.forEach((subCategory)=> {
-       payload[subCategory.type].push(subCategory.id);
+      selectedCategorySubItem.forEach((subCategory) => {
+        payload[subCategory.type].push(subCategory.id)
       })
-     const response = await userService.saveUserPreference(payload);
-    console.log({payload})
-     if(response.kind === "ok"){
-      gotoFeedScreen()
-     }else{
-       setErrMessage('Failed to save preference Data')
-     }
-     setLoading(false)
-
+      const response = await userService.saveUserPreference(payload)
+      if (response.kind === "ok") {
+        await userStore.getUser();
+        gotoFeedScreen()
+      } else {
+        setErrMessage("Failed to save preference Data")
+      }
+      setLoading(false)
     }
     function onNextSLide(index: number) {
       if (filterSelectedPreference().length - 1 === index) {
@@ -231,7 +262,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       }
     }
     function gotoFeedScreen() {
-    navigation.navigate('Home');
+      navigation.navigate("Home")
     }
     const CardsElementsScreen = () => (
       <Carousel
@@ -264,7 +295,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
                   PREFERENCES
                 </Text>
                 <TouchableOpacity onPress={gotoFeedScreen}>
-                <Text white>Skip</Text>
+                  <Text white>Skip</Text>
                 </TouchableOpacity>
               </View>
               <View center marginB-50>
@@ -427,7 +458,12 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       activeStage === 0 && !Object.values(selectedPreference).some((item) => item === true)
     return (
       <Screen preset="auto">
-        <ToastLoader isLoading={loading} hasError={!loading && !!errMessage} errorMessage={errMessage}   clearError={() => setErrMessage('')}></ToastLoader>
+        <ToastLoader
+          isLoading={loading}
+          hasError={!loading && !!errMessage}
+          errorMessage={errMessage}
+          clearError={() => setErrMessage("")}
+        ></ToastLoader>
         {activeStage === 0 && BigCardItemScreen()}
         {activeStage === 1 && CardsElementsScreen()}
       </Screen>
@@ -483,5 +519,3 @@ const $nextButtonContainer: ViewStyle = {
   position: "absolute",
   width: "100%",
 }
-
-
