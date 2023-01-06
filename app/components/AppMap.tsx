@@ -17,8 +17,7 @@ import { DropCard } from "./DropCard"
 import { View } from "react-native-ui-lib"
 import { Text } from "./Text"
 import { getDropsByID } from "../utils/transform"
-// Todo Check with Ariel why this typescript error
-// @ts-ignore 
+
 import { GOOGLE_MAPS_API_KEY } from "@env"
 
 export interface AppMapProps {

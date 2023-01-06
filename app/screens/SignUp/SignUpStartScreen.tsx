@@ -6,20 +6,56 @@ import { FontAwesome5 } from "@expo/vector-icons"
 
 import { AppStackScreenProps } from "../../navigators"
 import { typography, Colors } from "../../theme"
-import { AppButton } from '../../components/AppButton';
-import { useNavigation } from '@react-navigation/native';
+import { AppButton } from "../../components/AppButton"
+import { useNavigation } from "@react-navigation/native"
+
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "@env"
+
+import * as WebBrowser from "expo-web-browser"
+import * as Google from "expo-auth-session/providers/google"
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
 interface SignUpStartScreenProps extends AppStackScreenProps<"SignUpStart"> {}
-export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function SignUpStartScreen(_props) {
-  const navigation = useNavigation();
+
+WebBrowser.maybeCompleteAuthSession()
+
+export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function SignUpStartScreen(
+  _props,
+) {
+  const navigation = useNavigation()
   const goToFormPage = () => {
     navigation.navigate("SignUpForm")
   }
+
+  const [accessToken, setAccessToken] = React.useState(null)
+  const [user, setUser] = React.useState(null)
+  const [_request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: GOOGLE_IOS_CLIENT_ID,
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+  })
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      setAccessToken(response.authentication.accessToken)
+      accessToken && fetchUserInfo()
+    }
+  }, [response, accessToken])
+
+  async function fetchUserInfo() {
+    const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    const useInfo = await response.json()
+    setUser(useInfo)
+
+    // todo: send user info to backend and register the user
+  }
+
+
   return (
     <>
-      <View>  
+      <View>
         <ImageBackground
           source={authImage}
           style={{
@@ -33,7 +69,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
             <Text style={$text}>The navenu world!</Text>
           </View>
           <View style={$buttonContainer}>
-            <AppButton style={$button}>
+            <AppButton
+              style={$button}
+              onPress={() => {
+                promptAsync()
+              }}
+            >
               <FontAwesome5 name="google" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with google</Text>
             </AppButton>
@@ -63,7 +104,6 @@ const $text: TextStyle = {
   textTransform: "uppercase",
   textAlign: "center",
   fontSize: 32,
-
 }
 
 const $buttonText: TextStyle = {
@@ -79,7 +119,7 @@ const $buttonContainer: ViewStyle = {
   alignItems: "center",
   justifyContent: "flex-end",
   bottom: 0,
-  padding: 8
+  padding: 8,
 }
 
 const $button: ViewStyle = {
