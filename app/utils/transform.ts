@@ -54,7 +54,7 @@ export const getStyleByCategory = (category, isText?: boolean, noBackground?: bo
   }
   const style:ViewStyle = {
     borderColor: categoryColorType[category] || "transparent",
-    backgroundColor :  categoryColorType[category] || "white",
+    backgroundColor :  categoryColorType[category] || "transparent",
     borderTopColor: categoryColorType[category],
   }
   if(noBackground){
