@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQuery } from "react-query"
 import { IAutoCompletePayload, ISearchPayLoad } from "../interface/feed"
 import { FeedService } from "../services/feedsService"
+import { NotificationService } from "../services/notificationService"
 
 const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
   let queryParams = pageParam
@@ -60,3 +61,19 @@ const getSearchItem = async ({queryKey}) => {
  export const useFeedsSearch = (payload:ISearchPayLoad) =>{
     return useQuery(['feeds-search', payload],getSearchItem);
  }
+
+ // notifications
+ const getNotifications = async () => {
+ 
+  const feedsService = new NotificationService();
+  
+  const response = await feedsService.getNotifications()
+  if(response.kind !== 'ok'){
+    throw new Error('error in feeds');
+  }
+  return response.notifications;
+}
+
+export const useNotifications = () =>{
+  return useQuery(['notifications'], getNotifications);
+}

@@ -60,7 +60,6 @@ export const BottomNavigationNavigator = () => {
         component={NotificationScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarBadge: 3,
           tabBarIcon: ({ color, size, route }) => {
             return(
             <Ionicons name="notifications-outline"  size={size} color={color} />
