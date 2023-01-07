@@ -1,10 +1,11 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { Dimensions, TextStyle, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { HorizontalLine, NotificationCard, Screen } from "../components"
-import { View, Text } from "react-native-ui-lib"
+import { CardList, ErrorMessage } from "../components"
+import { View, SkeletonView, Text } from "react-native-ui-lib"
+import { useNotifications } from "../hooks/useFeeds"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -12,42 +13,37 @@ export const NotificationScreen: FC<StackScreenProps<AppStackScreenProps, "Notif
   observer(function NotificationScreen() {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
+    const { error, data, isLoading } = useNotifications()
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
-    const notifiCations = [
-      {
-        title: "Catotaco has a new drop!",
-        subTitle: "Buy one get one free",
-        imageUri: "https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg",
-      },
-      {
-        title: "navenu has New curator",
-        subTitle: "Buy one get one free",
-        imageUri: "https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg",
-      },
-    ]
-    const onNavigationPressed = () => {}
+    if(error){
+      return <ErrorMessage></ErrorMessage>
+    }
+
     return (
-      <Screen style={$root} preset="scroll">
-        <View padding-5>
-          <Text header>YOU HAVE 3 New NOTIFICATIONS</Text>
+      <View margin-15>
+        <View marginB-10>
+          <Text header style={$notificationLabelStyle}>
+            WHAT'S NEW
+          </Text>
         </View>
-        {notifiCations.map((notifiCation) => (
-          <View key={notifiCation.title} marginB-15>
-            <NotificationCard
-              imageUri={notifiCation.imageUri}
-              title={notifiCation.title}
-              subTitle={notifiCation.subTitle}
-              onPress={onNavigationPressed}
-            />
-            <HorizontalLine color="black" />
-          </View>
-        ))}
-      </Screen>
+        <SkeletonView
+          height={110}
+          width={Dimensions.get("window").width - 16}
+          style={$skeletonViewStyle}
+          times={6}
+          borderRadius={8}
+          renderContent={() => <CardList data={data} />}
+          showContent={!isLoading}
+        />
+      </View>
     )
   })
 
-const $root: ViewStyle = {
-  flex: 1,
+const $notificationLabelStyle: TextStyle = {
+  fontSize: 18,
+}
+const $skeletonViewStyle: ViewStyle = {
+  marginVertical: 3,
 }
