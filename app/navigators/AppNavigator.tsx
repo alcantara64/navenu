@@ -14,6 +14,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
+import { Text, View } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
@@ -25,6 +26,7 @@ import {
   PreferencesScreen,
   WelcomeScreen,
 } from "../screens"
+import { typography } from "../theme"
 
 import { BottomNavigationNavigator } from "./BottomNavigationNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
@@ -93,10 +95,28 @@ const AppStack = observer(function AppStack() {
       ) : (
         <>
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen}  />
+          <Stack.Screen name="Login" component={LoginScreen}  
+            options={{ 
+              headerShown: true, 
+              headerTransparent: true,
+              headerTitle: 'LOGIN',
+              headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
+              headerBackTitleVisible: false,
+              headerTintColor: 'white',
+            }}
+          />
           <Stack.Screen name="SignUpStart" component={SignUpStartScreen}  />
-          <Stack.Screen name="SignUpForm" component={SignUpFormScreen}  />
-      
+          <Stack.Screen name="SignUpForm" component={SignUpFormScreen} 
+            options={{ 
+              headerShown: true, 
+              headerTransparent: true,
+              headerTitle: 'SIGNUP',
+              headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
+              headerBackTitleVisible: false,
+              headerBackTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal},
+              headerTintColor: 'white',
+            }}
+          />
         </>
       )}
     </Stack.Navigator>

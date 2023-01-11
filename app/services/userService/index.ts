@@ -222,4 +222,29 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
+  async socialRegister(payload: {
+    email: string,
+    authType: string,
+    socialId: string,
+    firstName?: string,
+    lastName?: string,
+    avatar?: string,
+  }){
+    const formData = new FormData()
+    formData.append(`email`, payload.email)
+    formData.append(`authType`, payload.authType)
+    formData.append(`sid`, payload.socialId)
+    formData.append(`firstName`, payload.firstName)
+    formData.append(`lastName`, payload.lastName)
+    formData.append(`avatar`, payload.avatar)
+
+    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/social`, formData)
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+ 
+    const rawData = response.data
+    return { kind: "ok", data: rawData.data }
+  }
 }

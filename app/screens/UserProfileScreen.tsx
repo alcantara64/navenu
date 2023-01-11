@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextStyle, ViewStyle,  Share } from "react-native"
+import { TextStyle, ViewStyle, Share } from "react-native"
 
 import {
   BottomSheet,

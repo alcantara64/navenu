@@ -58,7 +58,7 @@ export const AuthenticationStoreModel = types
       store.authEmail = ""
       store.authPassword = ""
     },
-      login: flow(function *() {
+    login: flow(function *() {
       store.errorMessage = '';
       store.isLoading = true
       const formData = new FormData()
@@ -85,6 +85,36 @@ export const AuthenticationStoreModel = types
       // @ts-ignore
       const api = new UserService();
       const result = await api.register({email: store.authEmail, password: store.authPassword});
+      if (result.kind === "ok") {
+        this.setAuthToken(result.data.token);
+        this.setRefreshToken(result.data.refresh_token);
+      } else {
+       this.setErrorMessage('Something went wrong')
+      }
+      this.setLoading(false);
+    },
+    async socialRegister({
+      email, 
+      socialId, 
+      authType,
+      firstName = '',
+      lastName = '',
+      avatar = ''
+    }) {
+      this.setAuthEmail(email);
+      this.setLoading(true)
+      const formData = new FormData()
+      
+      formData.append("email", email)
+      formData.append("sid", socialId)
+      formData.append("authtype", authType)
+      formData.append("firstname", firstName)
+      formData.append("lastname", lastName)
+      formData.append("avatar", avatar)
+
+      // @ts-ignore
+      const api = new UserService();
+      const result = await api.socialRegister({email, socialId, authType});
       if (result.kind === "ok") {
         this.setAuthToken(result.data.token);
         this.setRefreshToken(result.data.refresh_token);

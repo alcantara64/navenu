@@ -103,6 +103,7 @@
 		3B4392A12AC88292D35C810B /* Pods-Navenu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navenu.debug.xcconfig"; path = "Target Support Files/Pods-Navenu/Pods-Navenu.debug.xcconfig"; sourceTree = "<group>"; };
 		3BEC53B8EEC1489491C71C43 /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-MediumItalic.ttf"; path = "../assets/fonts/static/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; };
 		4CEEAE57DDA743A0A5AB3C80 /* Inter-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Thin.ttf"; path = "../assets/fonts/Inter-Thin.ttf"; sourceTree = "<group>"; };
+		4D5BB4C5296CA51F005122EE /* Navenu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Navenu.entitlements; path = Navenu/Navenu.entitlements; sourceTree = "<group>"; };
 		53BBC61455CA4C75902EEC77 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../assets/fonts/static/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Navenu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navenu.release.xcconfig"; path = "Target Support Files/Pods-Navenu/Pods-Navenu.release.xcconfig"; sourceTree = "<group>"; };
 		57EDF03AA15A49309C286F62 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -188,6 +189,7 @@
 		13B07FAE1A68108700A75B9A /* Navenu */ = {
 			isa = PBXGroup;
 			children = (
+				4D5BB4C5296CA51F005122EE /* Navenu.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -727,8 +729,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Navenu/Navenu.entitlements;
 				CURRENT_PROJECT_VERSION = 100;
-				DEVELOPMENT_TEAM = 8V4UDQA69U;
+				DEVELOPMENT_TEAM = 2M6V655X9X;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Navenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -742,7 +745,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.navenu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navenu.app;
 				PRODUCT_NAME = Navenu;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -756,8 +759,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Navenu/Navenu.entitlements;
 				CURRENT_PROJECT_VERSION = 100;
-				DEVELOPMENT_TEAM = 8V4UDQA69U;
+				DEVELOPMENT_TEAM = 2M6V655X9X;
 				INFOPLIST_FILE = Navenu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -770,7 +774,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.navenu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navenu.app;
 				PRODUCT_NAME = Navenu;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

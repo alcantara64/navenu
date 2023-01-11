@@ -10,6 +10,8 @@ PODS:
     - React-Core
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - EXAppleAuthentication (4.3.0):
+    - ExpoModulesCore
   - EXApplication (4.2.2):
     - ExpoModulesCore
   - EXConstants (13.2.4):
@@ -30,6 +32,8 @@ PODS:
     - ExpoModulesCore
     - GoogleSignIn
     - React-Core
+  - ExpoCrypto (11.0.0):
+    - ExpoModulesCore
   - ExpoKeepAwake (10.2.0):
     - ExpoModulesCore
   - ExpoLinearGradient (11.4.0):
@@ -39,6 +43,10 @@ PODS:
   - ExpoModulesCore (0.11.7):
     - React-Core
     - ReactCommon/turbomodule/core
+  - ExpoRandom (12.3.0):
+    - ExpoModulesCore
+  - ExpoWebBrowser (11.0.0):
+    - ExpoModulesCore
   - EXSplashScreen (0.16.2):
     - ExpoModulesCore
     - React-Core
@@ -511,6 +519,7 @@ DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXAppleAuthentication (from `../node_modules/expo-apple-authentication/ios`)
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXDevice (from `../node_modules/expo-device/ios`)
@@ -520,10 +529,13 @@ DEPENDENCIES:
   - EXLocation (from `../node_modules/expo-location/ios`)
   - Expo (from `../node_modules/expo`)
   - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/ios`)"
+  - ExpoCrypto (from `../node_modules/expo-crypto/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
+  - ExpoRandom (from `../node_modules/expo-random/ios`)
+  - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -634,6 +646,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXAppleAuthentication:
+    :path: "../node_modules/expo-apple-authentication/ios"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
   EXConstants:
@@ -652,6 +666,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoAdapterGoogleSignIn:
     :path: "../node_modules/@react-native-google-signin/google-signin/ios"
+  ExpoCrypto:
+    :path: "../node_modules/expo-crypto/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
@@ -660,6 +676,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core/ios"
+  ExpoRandom:
+    :path: "../node_modules/expo-random/ios"
+  ExpoWebBrowser:
+    :path: "../node_modules/expo-web-browser/ios"
   EXSplashScreen:
     :path: "../node_modules/expo-splash-screen/ios"
   FBLazyVector:
@@ -769,6 +789,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EXAppleAuthentication: b9e9d8fa9b0cc5277b2121eb809cf0f57c2496a7
   EXApplication: e418d737a036e788510f2c4ad6c10a7d54d18586
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXDevice: 7647ca9b1fd8b269dfd896a7643d659343358054
@@ -778,10 +799,13 @@ SPEC CHECKSUMS:
   EXLocation: b8cba3cb354bee6abb181c1dd245abe5aef22955
   Expo: 7e821e708a35d2720ef6baa658e224dd91c4821e
   ExpoAdapterGoogleSignIn: a3ff2197e97501d6b12d7c459f060ff8a6dc8317
+  ExpoCrypto: e534314db0e1a17ae12b5140d529bd0c5efcbc6a
   ExpoKeepAwake: 0e8f18142e71bbf2c7f6aa66ebed249ba1420320
   ExpoLinearGradient: 1a3af07c6dab3c612967a294836df9ae717431df
   ExpoLocalization: 63204f4b9d4f653469d266332ceaa6c6ac8a305d
   ExpoModulesCore: 2d60ec04c49641afb55fee3faac86fb108c68fe0
+  ExpoRandom: f9f1faa299a40733867f344d6b7bfa2d1f4ab04d
+  ExpoWebBrowser: 5804ac42a8269d0e534bc4461993005f72535649
   EXSplashScreen: 799bece80089219b2c989c1082d70f3b00995cda
   FBLazyVector: 0045cf98ca4a48af3bf7108d85b1c243740fa289
   FBReactNativeSpec: 82e74141263f8c962e288f5cd6b5d149cdc8afe1
