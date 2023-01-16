@@ -62,7 +62,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
 
         <View row style={$itemContainer}>
         <View flex-7 marginT-5 style={$cardtext}>
-          <Text style={$topText}>{item.id}</Text>
+          <Text style={$topText}>{item.name}</Text>
           <Text style={$belowText}>{item.category}</Text>
           <Text style={$address}>{item.address}</Text>
           <Text bottom style={$bottomText}>@ {item.name}</Text>
