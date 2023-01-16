@@ -1,6 +1,6 @@
 import { IDrop } from "../../interface/drops"
 import { FEED_TYPE, IFeed } from "../../interface/feed"
-import { IVenues } from "../../interface/venues"
+import { IVenue } from "../../interface/venues"
 import {
   ISavedDeal,
   ISavedLocation,
@@ -20,12 +20,12 @@ export interface ApiFeedResponse {
     phone: number
     parent_category: string
     category: string
-    distance: number //Below are for articles and drops
+    distance: number // Below are for articles and drops
     intro: string
     description: string
     owner: string
     tags: string
-    venue: string //Below are for drops only
+    venue: string // Below are for drops only
     venue_id: number
     expiration: Date
   }
@@ -127,11 +127,18 @@ export interface UserResponse {
   status: boolean
   message: string
 }
-export interface IVenueResponse {
-  data: Array<IVenues>
+export interface IVenueListResponse {
+  data: Array<IVenue>
   status: boolean
   message: string
 }
+
+export interface IVenueResponse {
+  data: IVenue
+  status: boolean
+  message: string
+}
+
 export interface IUserListResponse {
   data: IUserList
   status: number
