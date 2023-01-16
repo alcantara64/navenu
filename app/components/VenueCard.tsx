@@ -58,9 +58,11 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
         resizeMode="cover"
         style={$image}
       >
+        <View style={$imageFilter} />
+
         <View row style={$itemContainer}>
         <View flex-7 marginT-5 style={$cardtext}>
-          <Text style={$topText}>{item.name}</Text>
+          <Text style={$topText}>{item.id}</Text>
           <Text style={$belowText}>{item.category}</Text>
           <Text style={$address}>{item.address}</Text>
           <Text bottom style={$bottomText}>@ {item.name}</Text>
@@ -83,6 +85,14 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
 
 const $cardtext: ViewStyle = {
   alignItems: "baseline",
+}
+const $imageFilter: ViewStyle = {
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
 }
 const $address: TextStyle = {
   fontFamily: 'Inter-Regular',

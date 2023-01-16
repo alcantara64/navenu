@@ -1,12 +1,5 @@
-import React, {useState} from "react"
-import {
-  ImageBackground,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-  ImageStyle,
-  Linking,
-} from "react-native"
+import React, { useState } from "react"
+import { ImageBackground, StyleProp, TextStyle, ViewStyle, ImageStyle, Linking } from "react-native"
 import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, Avatar } from "react-native-ui-lib"
 import {
@@ -49,10 +42,9 @@ enum BottomSheetType {
  * Describe your component here
  */
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
-
   const queryClient = useQueryClient()
-  
-  const {mutate, isLoading:isSavingSubscription} = useSubscribeToNotification()
+
+  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props
   const navigation = useNavigation()
   const goBack = () => {
@@ -64,34 +56,33 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const onLinkPress = () => {
     openLinkInBrowser(venue.website)
   }
-  const $lineDivider = [$horizontalLine, $bigDivider];
+  const $lineDivider = [$horizontalLine, $bigDivider]
   const onSubscribeToNotification = () => {
-    mutate({type:'venue', id: venue.id}, {
-    onSuccess() {
-      queryClient.invalidateQueries('venue');
-      // Todo show a pop up
-    },
-
-    })
+    mutate(
+      { type: "venue", id: venue.id },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries("venue")
+          // Todo show a pop up
+        },
+      },
+    )
   }
-
-
- 
 
   const [bottomSheet, setBottomSheet] = useState(false)
   const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
   const operatingHours = venue.operating_hours?.split(",")
 
   const renderBottomSheetContent = () => {
-    switch(bottomSheetCurrentContent) {
+    switch (bottomSheetCurrentContent) {
       case BottomSheetType.operatingHours:
         return renderOperatingHours()
       case BottomSheetType.menu:
         return renderMenu()
-      default: 
+      default:
         return null
-      }
     }
+  }
 
   const renderOperatingHours = () => {
     return (
@@ -102,7 +93,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             <View row spread marginT-10 key={key}>
               <Text text70>{item}</Text>
             </View>
-          ) )}
+          ))}
         </View>
       </View>
     )
@@ -119,9 +110,36 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     )
   }
 
+  const renderPriceLevel = () => {
+    const priceLevel = venue.price_level
+    if (priceLevel) {
+      const priceLevelArray = priceLevel.split(" ")[0]
+      return (
+        <View row>
+          {Array(5)
+            .fill(0)
+            .map((_, index) => {
+              const isPriceLevel = index < priceLevelArray.length
+              return (
+                <FontAwesome5
+                  key={index}
+                  name="pound-sign"
+                  size={17}
+                  style={{ marginRight: 1 }}
+                  color={isPriceLevel ? Colors.white : Colors.mediumGray}
+                />
+              )
+            })}
+        </View>
+      )
+    }
+    return null
+  }
+
   return (
     <>
       <ImageBackground source={{ uri: venue.image }} resizeMode="cover" style={$imagetop}>
+        <View style={$imageFilter} />
         <View marginT-10 style={$closeBtn}>
           <TouchableOpacity onPress={goBack}>
             <FontAwesome5 solid name="times-circle" size={27} color="#FFFFFF" />
@@ -134,6 +152,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
           <Text text60BL white style={$venueNameText}>
             {venue.name}
           </Text>
+          {renderPriceLevel()}
           <View row style={$horizontalLine}></View>
           <Text text90 white marginB-5 style={$venueNameAddress}>
             {venue.address}
@@ -141,16 +160,18 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity
-              marginV-10
-              onPress={() => console.log("Button 1")}
-            >
+            <TouchableOpacity marginV-10 onPress={() => console.log("Button 1")}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
-            <TouchableOpacity marginV-5 onPress={onSubscribeToNotification} >
-               {/* todo show spinner while is loading */}
-             {/* { isSavingSubscription? <Text white>loading...</Text> : */}
-              <Ionicons name={venue.subscribed? "notifications":  "notifications-outline"} solid size={30} color="#FFFFFF" />
+            <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>
+              {/* todo show spinner while is loading */}
+              {/* { isSavingSubscription? <Text white>loading...</Text> : */}
+              <Ionicons
+                name={venue.subscribed ? "notifications" : "notifications-outline"}
+                solid
+                size={30}
+                color="#FFFFFF"
+              />
               {/* } */}
             </TouchableOpacity>
             <TouchableOpacity marginV-5>
@@ -159,11 +180,13 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
           </View>
         </View>
       </ImageBackground>
-      <View style={{...$contentContainer, ...getStyleByCategory(venue.category)}}>
+      <View style={{ ...$contentContainer, ...getStyleByCategory(venue.category) }}>
         <View flex padding-15 style={$venueContent}>
           <View marginT-5 padding-8>
             <Text header>HEADLINE</Text>
-            <Text belowHeaderText marginT-5 style={$longDescription}>{venue.long_description}</Text>
+            <Text belowHeaderText marginT-5 style={$longDescription}>
+              {venue.long_description}
+            </Text>
             <TouchableOpacity onPress={onLinkPress}>
               <Text style={$linkUrl} marginT-15>
                 VISIT SITE
@@ -181,11 +204,12 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 CALL
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              setBottomSheet(true)
-              setBottomSheetCurrentContent(BottomSheetType.operatingHours)
-              }
-            }>
+            <TouchableOpacity
+              onPress={() => {
+                setBottomSheet(true)
+                setBottomSheetCurrentContent(BottomSheetType.operatingHours)
+              }}
+            >
               <View padding-15 style={$boxContainer}>
                 <AntDesign name="clockcircleo" size={24} color="white" />
               </View>
@@ -194,11 +218,12 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 HOUR
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              setBottomSheet(true)
-              setBottomSheetCurrentContent(BottomSheetType.menu)
-              }
-            }>
+            <TouchableOpacity
+              onPress={() => {
+                setBottomSheet(true)
+                setBottomSheetCurrentContent(BottomSheetType.menu)
+              }}
+            >
               <View padding-15 style={$boxContainer}>
                 <SimpleLineIcons name="book-open" size={24} color="white" />
               </View>
@@ -220,10 +245,14 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 BOOK
               </Text>
             </TouchableOpacity> */}
-            <TouchableOpacity onPress={() => setDestinationDirections({
-              latitude: venue.lat,
-              longitude: venue.lng
-            })}>
+            <TouchableOpacity
+              onPress={() =>
+                setDestinationDirections({
+                  latitude: venue.lat,
+                  longitude: venue.lng,
+                })
+              }
+            >
               <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
               </View>
@@ -232,10 +261,12 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MAP
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              const url = createUberUrl()
-              Linking.openURL(url).catch((error) => console.error(error));
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                const url = createUberUrl()
+                Linking.openURL(url).catch((error) => console.error(error))
+              }}
+            >
               <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="taxi" size={24} color="white" />
               </View>
@@ -274,11 +305,15 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   )
                 })}
               </View>
-              <View flex-4 center row>
-                {venue.curators.slice(3).length > 0 && (
+              <View flex-4 right row>
+                {venue.curators.slice(3).length > 0 ? (
                   <Text style={$curatorTextColor} text20BL>
                     {" "}
                     + {venue.curators.slice(3).length}
+                  </Text>
+                ) : (
+                  <Text style={$curatorTextColor} text20BL>
+                    {venue.curators.length}
                   </Text>
                 )}
                 <View marginL-10>
@@ -289,22 +324,27 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </View>
             </View>
           )}
-         {venue.drops && venue.drops.length > 0 && <View  marginV-15> 
-            <Text sectionHeader >DROPS</Text>
+          {venue.drops && venue.drops.length > 0 && (
+            <View marginV-15>
+              <Text sectionHeader>DROPS</Text>
 
-            <View marginT-15>
-           { venue.drops.map((drop) =>(<DropCard key={drop.id} item={drop} />))}   
+              <View marginT-15>
+                {venue.drops.map((drop) => (
+                  <DropCard key={drop.id} item={drop} />
+                ))}
+              </View>
             </View>
-          </View>}
+          )}
         </View>
-        <View>
-        {venue?.images?.length > 0 && <Gallery items={venue.images} />}
-        </View>
+        <View>{venue?.images?.length > 0 && <Gallery items={venue.images} />}</View>
       </View>
-      <BottomSheet show={bottomSheet} onClose={() => {setBottomSheet(!bottomSheet)}}>
-        <View padding-15>
-          {renderBottomSheetContent()}
-        </View>
+      <BottomSheet
+        show={bottomSheet}
+        onClose={() => {
+          setBottomSheet(!bottomSheet)
+        }}
+      >
+        <View padding-15>{renderBottomSheetContent()}</View>
       </BottomSheet>
     </>
   )
@@ -338,7 +378,7 @@ const $categoryText: TextStyle = {
   color: "#FFFFFF",
   textTransform: "uppercase",
   fontFamily: typography.fonts.bourtonbase.normal,
-  fontSize:14
+  fontSize: 14,
 }
 const $venueNameText: TextStyle = {
   marginBottom: 15,
@@ -349,7 +389,7 @@ const $venueNameText: TextStyle = {
 const $horizontalLine: ViewStyle = {
   borderWidth: 1,
   borderColor: Colors.white,
-  margin: 5,
+  marginVertical: 5,
   width: "10%",
 }
 const $contentContainer: ViewStyle = {
@@ -383,7 +423,7 @@ const $boxContainer: ViewStyle = {
   padding: 18,
 }
 const $boxWrapper: ViewStyle = {
-  justifyContent: 'space-between',
+  justifyContent: "space-between",
   flexWrap: "wrap",
   flexShrink: 1,
   flexGrow: 1,
@@ -400,14 +440,22 @@ const $imageContainer: ViewStyle = {
 const $curatorTextColor: TextStyle = {
   color: Colors.orange,
 }
-const $venueNameAddress: TextStyle ={
-  fontFamily: 'inter',
-  fontWeight: '400',
-  fontStyle: 'normal',
+const $venueNameAddress: TextStyle = {
+  fontFamily: "inter",
+  fontWeight: "400",
+  fontStyle: "normal",
   marginBottom: 15,
 }
-const $longDescription : TextStyle ={
-  fontFamily: 'inter',
-  fontWeight: '400',
+const $longDescription: TextStyle = {
+  fontFamily: "inter",
+  fontWeight: "400",
   fontSize: 12,
+}
+const $imageFilter: ViewStyle = {
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
 }

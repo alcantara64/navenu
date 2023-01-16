@@ -54,6 +54,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
         resizeMode="cover"
         style={$image}
       >
+        <View style={$imageFilter} />
         <View paddingL-4 marginT-5>
           <View row style={$cardTextContainer}>
             <View flex-7>
@@ -97,6 +98,14 @@ const $dropCardContainer:ViewStyle = {
 }
 const $cardTextContainer: TextStyle = {
   marginHorizontal: 6,
+}
+const $imageFilter: ViewStyle = {
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
 }
 const $countdownText: TextStyle = {
   color: "#FFFFFF",
