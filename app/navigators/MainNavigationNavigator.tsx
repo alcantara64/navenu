@@ -5,8 +5,8 @@ import {
   CuratorProfileScreen,
   DropScreen,
   SearchScreen,
-  VenueDetailScreen,
 } from "../screens"
+import { VenueDetailScreen } from "../screens/Venue/VenueDetailScreen"
 import { TopBar } from "../components"
 import { ViewStyle } from "react-native"
 
