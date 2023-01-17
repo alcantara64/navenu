@@ -57,6 +57,7 @@ export const AuthenticationStoreModel = types
       store.authToken = undefined
       store.authEmail = ""
       store.authPassword = ""
+      store.refreshToken = ""
     },
     login: flow(function *() {
       store.errorMessage = '';

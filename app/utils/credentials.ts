@@ -5,7 +5,8 @@ import { UserService } from "../services/userService"
 
 export const isTokenExpired = (token) => {
   const decoded = jwtDecode<{ exp: number }>(token)
-  if (decoded.exp < Date.now() / 1000) {
+
+  if (!decoded.exp || decoded.exp < Date.now() / 1000 ) {
     return true
   } else {
     return false
@@ -14,7 +15,7 @@ export const isTokenExpired = (token) => {
 export const renewToken = async (accessToken, refreshToken) => {
   // check if they is an access token
   if (accessToken) {
-    if (!isTokenExpired(accessToken)) {
+    if (isTokenExpired(accessToken) === false) {
       return accessToken
     } else {
       // access has expired, checking refresh token for validity
@@ -28,13 +29,13 @@ export const renewToken = async (accessToken, refreshToken) => {
           return response.data.token;
         } else {
           _rootStore.authenticationStore.logout()
-          navigate("Login");
+         //navigate("Logout");
           return null
         }
       } else {
         //  "refresh expired, please login"
         _rootStore.authenticationStore.logout()
-        navigate("Login");
+       // navigate("Logout");
         return null
       }
     }
