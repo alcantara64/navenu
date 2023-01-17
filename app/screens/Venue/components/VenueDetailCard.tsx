@@ -60,12 +60,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const onSubscribeToNotification = () => {
     mutate(
       { type: "venue", id: venue.id },
-      {
-        onSuccess() {
-          queryClient.invalidateQueries("venue")
-          // Todo show a pop up
-        },
-      },
+  
     )
   }
 
