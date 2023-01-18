@@ -70,7 +70,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       userDrops, 
       updateUserName,
       updateUserDescription,
-
     } = userStore
 
     const [showBottomSheet, setShowBottomSheet] = useState(false)
@@ -130,6 +129,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         // upload image file to server
         const userService = new UserService()
         const response = await userService.uploadAvatarImage(data)
+
         if (response.kind !== "ok") {
           setErrorMessage("Image upload failed")
         }
@@ -148,17 +148,12 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         }, (response) => {
           if (response.didCancel) {
             console.log('User cancelled image picker');
-            return false
           } else if (response.errorCode) {
             console.log('ImagePicker Error: ', response.errorCode);
-            return false
           } 
-          return true
         });
-        if(!res.didCancel){
-          setSingleFile(res)
-        }
         
+        setSingleFile(res)
       } catch (err) {
         setSingleFile(null)
         // Handling any exception (If any)
@@ -172,7 +167,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         }
       }
     }
-
     const onCloseUserListModal = () => {
       setShowUserListModal(false)
     }

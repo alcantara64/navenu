@@ -1,20 +1,19 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle, TextInput as RNTextInput, TextInputProps as RNTextInputProps } from "react-native"
+import { StyleProp, TextStyle, View, ViewStyle, TextInput as RNTextInput  } from "react-native"
 import { observer } from "mobx-react-lite"
 import {MIcon as Icon} from './MIcon'
 import { AppButton } from "./AppButton"
 import { Colors } from "../theme"
 
-export interface TextInputProps extends RNTextInputProps {
+export interface TextInputProps  {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
   width?: number | string
-  leftIconName?: any
-  rightIcon?: any,
-  handlePasswordVisibility?: any,
-  placeholder?: string
+  leftIconName: any
+  rightIcon : any,
+  handlePasswordVisibility,
 }
 
 /**
@@ -23,6 +22,7 @@ export interface TextInputProps extends RNTextInputProps {
 export const TextInput = observer(function TextInput(props: TextInputProps) {
   const {  width, leftIconName, rightIcon, handlePasswordVisibility,   ...otherProps  } = props
  
+
   return (
     <View
       style={{...$container, width}}

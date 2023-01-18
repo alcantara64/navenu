@@ -224,9 +224,6 @@ export const UserStoreModel = types
         // self.userLists.listname=Object.keys(input.userLists)
       }
     },
-    changeAvatar: flow(function* (avatar: string) {
-      self.currentUser.avatar = avatar
-    }),
     // Method to toggle display of user settings bottom sheet in mockup
     togglePreferencesModal() {
       self.showPreferencesModal = !self.showPreferencesModal

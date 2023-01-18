@@ -1,19 +1,20 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { ImageBackground, View, Dimensions, ViewStyle, TextStyle } from "react-native"
-import { Text } from "react-native-ui-lib"
+import { Text, Incubator } from "react-native-ui-lib"
 
 import { AppStackScreenProps } from "../../navigators"
 import { typography, Colors } from "../../theme"
 import { AppButton } from "../../components/AppButton"
+import { MIcon as Icon } from "../../components/MIcon"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
-import { FormErrorMessage, ToastLoader, TextInput } from "../../components"
+import { FormErrorMessage, ToastLoader } from "../../components"
 import { Formik } from "formik"
 import { signupValidationSchema } from "../../utils/validations"
-import { useTogglePasswordVisibility } from "../../hooks"
 
 const authImage = require("../../../assets/images/auth/auth-form.png")
+const { TextField } = Incubator
 
 interface SignUpFormScreenProps extends AppStackScreenProps<"SignUpForm"> {}
 export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function SignUpFormScreen(
@@ -31,8 +32,8 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
     },
   } = useStores()
   const navigation = useNavigation()
-  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
-  const [errorState] = useState("")
+
+  console.log(errorMessage)
 
   const handleSignUp = async (values: { email: string; password: string }) => {
     const { email, password } = values
@@ -76,40 +77,38 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
             {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
               <>
                 <View style={$textContainer}>
-                  <View style={$formContainer}>
-                    {/* Input fields */}
-                    <View>
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder="Enter email"
-                        keyboardType="email-address"
-                        textContentType="emailAddress"
-                        autoFocus={true}
-                        value={values.email}
-                        onChangeText={handleChange("email")}
-                        onBlur={handleBlur("email")}
-                      />
-                      <FormErrorMessage error={errors.email} visible={touched.email} />
-                      <TextInput
-                        placeholder="Enter password"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        secureTextEntry={passwordVisibility}
-                        textContentType="password"
-                        rightIcon={rightIcon}
-                        handlePasswordVisibility={handlePasswordVisibility}
-                        value={values.password}
-                        onChangeText={handleChange("password")}
-                        onBlur={handleBlur("password")}
-                      />
-                      <FormErrorMessage error={errors.password} visible={touched.password} />
-                    </View>
-
-                    {errorState !== "" ? (
-                      <FormErrorMessage error={errorState} visible={true} />
-                    ) : null}
+                  <View style={$input}>
+                    <TextField
+                      name="email"
+                      value={values.email}
+                      onChangeText={handleChange("email")}
+                      onBlur={handleBlur("email")}
+                      color="black"
+                      placeholderTextColor={Colors.gray}
+                      placeholder={"your@email.com"}
+                      autoCorrect={false}
+                      spellCheck={false}
+                      autoCapitalize="none"
+                    />
                   </View>
+                  <FormErrorMessage error={errors.email} visible={touched.email} />
+                  <View style={$input}>
+                    <TextField
+                      name="password"
+                      value={values.password}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      color="black"
+                      placeholderTextColor={Colors.gray}
+                      placeholder={"Password"}
+                      secureTextEntry={true}
+                      autoCorrect={false}
+                      spellCheck={false}
+                    />
+                    <Icon name="eye" size={22} color={Colors.mediumGray} />
+                  </View>
+                  <FormErrorMessage error={errors.password} visible={touched.password} />
+                  
                 </View>
                 <View style={$buttonContainer}>
                   <AppButton style={$button} onPress={handleSubmit}>
@@ -169,7 +168,13 @@ const $button: ViewStyle = {
   flexDirection: "row",
 }
 
-const $formContainer: ViewStyle = {
+const $input: ViewStyle = {
+  backgroundColor: Colors.white,
+  borderRadius: 16,
+  flexDirection: "row",
+  padding: 16,
+  alignItems: "center",
   width: "100%",
-  padding: 24,
+  justifyContent: "space-between",
+  marginVertical: 6,
 }
