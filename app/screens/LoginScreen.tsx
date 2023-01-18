@@ -13,11 +13,6 @@ import {
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { Colors } from "../theme"
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from "@react-native-google-signin/google-signin"
 import { View } from "react-native-ui-lib"
 import { Formik } from "formik"
 import { loginValidationSchema } from "../utils/validations"
@@ -51,14 +46,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   } = useStores()
   const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
 
-  useEffect(() => {
-    // todo refactor this
-    setLoading(false);
-    // GoogleSignin.configure({
-    //   webClientId: '533893697678-ljabp27a97lgkbb9l4emj9gnkmjqu6qv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-    //   forceCodeForRefreshToken: true,
-    // });
-  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -83,23 +70,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setAuthPassword("Gonavenu")
   }, [])
 
-  const googleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices()
-      const userInfo = await GoogleSignin.signIn()
-      setUserInfo(userInfo)
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  }
 
   async function onLogin(values: { email: string; password: string }) {
     const { email, password } = values

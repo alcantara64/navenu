@@ -25,6 +25,7 @@ import {
   SignUpFormScreen,
   PreferencesScreen,
   WelcomeScreen,
+  LogoutScreen,
 } from "../screens"
 import { typography } from "../theme"
 
@@ -61,6 +62,7 @@ export type AppStackParamList = {
   Cardview: undefined,
   Location: undefined,
   Notification: undefined,
+  Logout: undefined,
 }
 
 /**
@@ -79,7 +81,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated },
+    authenticationStore: { isAuthenticated, logout },
   } = useStores();
   return (
     <Stack.Navigator
@@ -91,6 +93,7 @@ const AppStack = observer(function AppStack() {
         <Stack.Screen  name="PreferencesScreen" component={PreferencesScreen}  />
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="Logout" component={LogoutScreen} />
         </>
       ) : (
         <>

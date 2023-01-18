@@ -8,54 +8,73 @@ import {
   ViewStyle,
 } from "react-native"
 import { observer } from "mobx-react-lite"
- // todo replace hardcorded variables
+import { FontAwesome5 } from "@expo/vector-icons"
 
-import { Text } from "./Text"
-import { useState } from "react"
-import { View } from "react-native-ui-lib"
+import { View, Text } from "react-native-ui-lib"
+import { IArticle } from "../interface/venues"
+import { typography } from "../theme"
+import { useNavigation } from "@react-navigation/native"
 
 export interface ArticleCardProps {
   style?: StyleProp<ViewStyle>
-  item: any
+  item: IArticle
+  isFeed?: boolean
+  onBookMark?: (feed: any) => void
 }
 
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
-  const [articleVisible, setArticleVisible] = useState(true)
-  const toggleContent = () => {
-    setArticleVisible(!articleVisible)
+  const { item, isFeed, onBookMark } = props
+  const navigation = useNavigation()
+  const onCardPressed = () => {
+    navigation.navigate("Article", {
+      article: item,
+    })
   }
-  const { item } = props
+  const saveDrop = () => {
+    onBookMark(item)
+  }
 
   return (
     <TouchableOpacity
       key={item.id}
-      onPress={toggleContent}
+      onPress={onCardPressed}
+      style={$cardContainer}
       activeOpacity={0.1}
-      // on Press of any selector sending the selector value to
-      // setSections function which will expand the Accordion accordingly
     >
-      <ImageBackground source={{ uri: item.image }} imageStyle={$backgroundImage}  resizeMode="cover" style={$image}>
-        <View style={$overlay}></View>
-        <View margin-4 style={$cardtext}>
-          <Text style={$editorialText}>{item.intro}</Text>
-          <Text style={$nameText}>{item.category}</Text>
-          <Text style={$bottomTex}>{articleVisible ? null : item.description}</Text>
+      <ImageBackground
+        source={{ uri: item.image }}
+        imageStyle={$backgroundImage}
+        resizeMode="cover"
+        style={$image}
+      >
+        <View style={$imageFilter} />
+        <View paddingL-4>
+          <View row marginH-6>
+            <View flex-7>
+              <Text style={$topText}>{item.name}</Text>
+              <Text numberOfLines={1}  style={$belowText}>{item.intro}</Text>
+              <Text bottom style={$bottomText}>
+                {item.owner}
+              </Text>
+            </View>
+            {isFeed && (
+              <View flex-1 right>
+                <TouchableOpacity onPress={saveDrop}>
+                  <FontAwesome5 solid={false} name="bookmark" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         </View>
       </ImageBackground>
     </TouchableOpacity>
   )
 })
-const $backgroundImage:ImageStyle ={
+const $backgroundImage: ImageStyle = {
   borderRadius: 6,
 }
-const $overlay: ViewStyle = {
-  position: "absolute",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  backgroundColor: "black",
-  opacity: 0.5,
+const $cardContainer: ViewStyle = {
+  minHeight: 100,
 }
 const $imageFilter: ViewStyle = {
   backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -65,42 +84,32 @@ const $imageFilter: ViewStyle = {
   right: 0,
   bottom: 0,
 }
-
-const $cardtext: ViewStyle = {
-  alignItems: "baseline",
-  position: "absolute",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  backgroundColor: "black",
-  opacity: 0.3,
-  marginHorizontal: 6,
-}
-const $image: ViewStyle = {
-  flex: 1,
-  width: "100%",
-  height: 110,
-  marginBottom: 5,
-  justifyContent: "center",
-  borderRadius: 6,
-}
-const $bottomTex: TextStyle = {
-  marginTop: 0,
+const $topText: TextStyle = {
+  marginBottom: 4,
   color: "#FFFFFF",
-
-  fontSize: 12,
+  textTransform: "uppercase",
+  fontSize: 10,
+  lineHeight: 9,
+  fontFamily: typography.primary.normal,
 }
-const $nameText: TextStyle = {
-  marginBottom: 0,
+
+const $belowText: TextStyle = {
+  marginBottom: 4,
   color: "#FFFFFF",
+  textTransform: "uppercase",
   fontWeight: "bold",
 
   fontSize: 18,
 }
-const $editorialText: TextStyle = {
-  marginBottom: 0,
+const $image: ViewStyle = {
+  flex: 1,
+  width: "100%",
+  marginBottom: 5,
+  justifyContent: "center",
+  borderRadius: 6,
+}
+const $bottomText: TextStyle = {
+  marginTop: 0,
   color: "#FFFFFF",
-  fontWeight: "bold",
-  fontSize: 12,
+  fontSize: 11,
 }

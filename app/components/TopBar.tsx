@@ -102,7 +102,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
           </TouchableOpacity>
         </View>
       )}
-      {showHeaderFilter && (
+      {(showHeaderFilter || isSearchMode) && (
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
           <View marginT-5 row spread>
