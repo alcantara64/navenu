@@ -11,12 +11,9 @@ import {
 } from "@expo/vector-icons"
 import { IVenue } from "../../../interface/venues"
 import { useNavigation } from "@react-navigation/native"
-import { useQueryClient } from "react-query"
-
 import { BottomSheet } from "../../../components/BottomSheet"
 import { useSubscribeToNotification } from "../../../hooks/useUser"
 import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
-import { FEED_TYPE } from "../../../interface/feed"
 import { Colors, typography } from "../../../theme"
 import { getInitials, getStyleByCategory } from "../../../utils/transform"
 import { DropCard, Gallery } from "../../../components"
@@ -42,7 +39,7 @@ enum BottomSheetType {
  * Describe your component here
  */
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
-  const queryClient = useQueryClient()
+ 
 
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props

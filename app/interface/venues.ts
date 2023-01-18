@@ -52,6 +52,7 @@ export interface IArticle  {
   description: string
   category: any
   image: string
+  title: string,
 }
 export interface IGallery {
   id: number

@@ -53,7 +53,7 @@ export const CardList = observer(function CardList(props: CardListProps) {
       )
     }
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} />
+      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} />
     }
     if (item.type === FEED_TYPE.drop) {
       return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} />
