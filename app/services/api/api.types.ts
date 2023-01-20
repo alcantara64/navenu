@@ -1,6 +1,6 @@
 import { IDrop } from "../../interface/drops"
 import { FEED_TYPE, IFeed } from "../../interface/feed"
-import { IVenue } from "../../interface/venues"
+import { IArticle, IVenue } from "../../interface/venues"
 import {
   ISavedDeal,
   ISavedLocation,
@@ -135,6 +135,11 @@ export interface IVenueListResponse {
 
 export interface IVenueResponse {
   data: IVenue
+  status: boolean
+  message: string
+}
+export interface IArticleResponse {
+  data: IArticle
   status: boolean
   message: string
 }

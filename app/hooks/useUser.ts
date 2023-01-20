@@ -25,15 +25,13 @@ export const useUser = (userId: string) => {
 }
 
 export const useUserList = () => {
-  return useQuery(["userList"], getUserList, {
-    enabled: true,
-  })
+  return useQuery(["userList"], getUserList)
 }
 export const createUserListName = async (listName) => {
   const api = new UserService()
   const response = await api.createListName({ listname: listName })
   if (response.kind !== "ok") {
-    throw new Error(response.message || "an error occurred")
+    throw new Error(response.message || "Could not create list name")
   } else {
     return response.data
   }
@@ -41,8 +39,9 @@ export const createUserListName = async (listName) => {
 export const addItemToUserList = async (newList: AddListItemPayload) => {
   const api = new UserService()
   const response = await api.addItemToList(newList)
+  console.log({response})
   if (response.kind !== "ok") {
-    throw new Error(response.message || "an error occurred")
+    throw new Error(response.message || "Could not add item to list")
   } else {
     return response.data
   }
@@ -73,7 +72,6 @@ export const useSubscribeToNotification = () => {
       return { previousVenue }
     },
     onError: (err: any, newTodo, context: any) => {
-      console.log({context})
       queryClient.setQueryData(["venue",context.previousVenue.id], context.previousVenue)
       throw new Error(err)
     },

@@ -27,18 +27,18 @@ import {
 } from "react-native-ui-lib"
 import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons"
 import DocumentPicker from "react-native-document-picker"
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from "react-native-image-picker"
 import { UserService } from "../services/userService"
 import { useNavigation } from "@react-navigation/native"
 const { TextField } = Incubator
 
 const RadioButton = ({ color, selected, onPress }) => {
   const $colorSelectorContainer: ViewStyle = {
-    borderColor: selected ? 'black' : 'transparent',
+    borderColor: selected ? "black" : "transparent",
     borderWidth: selected ? 1 : 0,
     borderRadius: 50,
     padding: 2,
-    marginRight: 8
+    marginRight: 8,
   }
 
   const $colorSelector: ViewStyle = {
@@ -50,24 +50,23 @@ const RadioButton = ({ color, selected, onPress }) => {
 
   return (
     <TouchableOpacity style={$colorSelectorContainer} onPress={onPress}>
-      <View style={$colorSelector}/>
+      <View style={$colorSelector} />
     </TouchableOpacity>
-  );
-  
-};
+  )
+}
 
 export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserProfile">> = observer(
   function UserProfileScreen() {
     const { authenticationStore } = useStores()
     const { userStore } = useStores()
     const navigation = useNavigation()
-    const { 
-      isLoading, 
-      error, 
-      getUser, 
-      usersList, 
-      currentUser, 
-      userDrops, 
+    const {
+      isLoading,
+      error,
+      getUser,
+      usersList,
+      currentUser,
+      userDrops,
       updateUserName,
       updateUserDescription,
     } = userStore
@@ -96,8 +95,8 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       isTouched: false,
       value: currentUser?.description,
     })
-    
-    const [showUserListModal, setShowUserListModal] = useState(false);
+
+    const [showUserListModal, setShowUserListModal] = useState(false)
     const [selectedListItem, setSelectedListItem] = useState(null)
 
     useEffect(() => {
@@ -112,7 +111,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       setShowBottomSheet(false)
     }
     const openBottomSheet = () => {
-      setShowUserListModal(false);
+      setShowUserListModal(false)
       setShowBottomSheet(true)
     }
     const uploadImage = async () => {
@@ -124,7 +123,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         fileToUpload.assets[0].name = fileToUpload.assets[0].fileName
         fileToUpload.assets[0].size = fileToUpload.assets[0].fileSize
         // check if is IOS
-        const data = new FormData();
+        const data = new FormData()
         data.append("avatar", fileToUpload.assets[0])
         // upload image file to server
         const userService = new UserService()
@@ -143,16 +142,19 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     const selectFile = async () => {
       // Opening Document Picker to select one file
       try {
-        const res = await launchImageLibrary({
-          mediaType: 'photo',
-        }, (response) => {
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.errorCode) {
-            console.log('ImagePicker Error: ', response.errorCode);
-          } 
-        });
-        
+        const res = await launchImageLibrary(
+          {
+            mediaType: "photo",
+          },
+          (response) => {
+            if (response.didCancel) {
+              console.log("User cancelled image picker")
+            } else if (response.errorCode) {
+              console.log("ImagePicker Error: ", response.errorCode)
+            }
+          },
+        )
+
         setSingleFile(res)
       } catch (err) {
         setSingleFile(null)
@@ -171,20 +173,32 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       setShowUserListModal(false)
     }
     const setCurrentListItem = (listItem) => {
-     setShowBottomSheet(false) 
-     setSelectedListItem(listItem);
-     setShowUserListModal(true)
+      setShowBottomSheet(false)
+      setSelectedListItem(listItem)
+      setShowUserListModal(true)
     }
-    const openPreferenceScreen = () =>{
-      navigation.navigate('PreferencesScreen');
+    const openPreferenceScreen = () => {
+      navigation.navigate("PreferencesScreen")
     }
 
     const shareLink = () => {
       Share.share({
-        message: 'Check out Navenu',
+        message: "Check out Navenu",
         url: `https://www.navenu.com`,
-        title: 'Navenu',
+        title: "Navenu",
       })
+    }
+
+    const onDeleteList = async (id: string) => {
+      // todo show a modal before delete
+      const userService = new UserService()
+      const result = await userService.clearAllList(id)
+      if (result.kind !== "ok") {
+        setErrorMessage("Could not remove list, try again later")
+      } else {
+        onCloseUserListModal()
+        await getUser();
+      }
     }
 
     if (error.isError) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
@@ -244,7 +258,11 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                       value={userName.value}
                       onChangeText={(text) => setUserName({ ...userName, value: text })}
                       trailingAccessory={
-                        <TouchableOpacity onPress={() => {updateUserName(userName.value)}}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            updateUserName(userName.value)
+                          }}
+                        >
                           <Text style={$saveText} underline>
                             SAVE
                           </Text>
@@ -272,18 +290,19 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                     )}
                   >
                     <View row spread>
-                      <TouchableOpacity 
-                        onPress={selectFile}
-                        flex
-                        row
-                        centerV
-                      >
-                        <Image marginR-8 marginB-5 source={require("../../assets/icons/upload.png")} />
+                      <TouchableOpacity onPress={selectFile} flex row centerV>
+                        <Image
+                          marginR-8
+                          marginB-5
+                          source={require("../../assets/icons/upload.png")}
+                        />
                         <Text style={$selectFileButtonText}>
-                          {singleFile ? "Selected " + singleFile.assets[0].fileName.slice(0, 20) : "Select File"}
+                          {singleFile
+                            ? "Selected " + singleFile.assets[0].fileName.slice(0, 20)
+                            : "Select File"}
                         </Text>
                       </TouchableOpacity>
-                      
+
                       {singleFile && (
                         <TouchableOpacity center onPress={uploadImage}>
                           <Text style={$saveText} underline>
@@ -294,7 +313,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                     </View>
                   </ExpandableSection>
                 </View>
-                
+
                 {/* TODO: COLOR SECTION WILL NOT BE USED FOR NOW
                 <View marginT-10 style={$expandableContainer}>
                   <ExpandableSection
@@ -339,13 +358,8 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                       profileSectionExpandable.location,
                     )}
                   >
-                    <TouchableOpacity 
-                      marginV-10
-                      style={$locationButton} 
-                    >
-                      <Text style={$locationButtonText}>
-                        LONDON
-                      </Text>
+                    <TouchableOpacity marginV-10 style={$locationButton}>
+                      <Text style={$locationButtonText}>LONDON</Text>
                     </TouchableOpacity>
                   </ExpandableSection>
                 </View>
@@ -364,14 +378,20 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                   >
                     <TextField
                       value={userDescription.value}
-                      onChangeText={(text) => setUserDescription({ ...userDescription, value: text })}
+                      onChangeText={(text) =>
+                        setUserDescription({ ...userDescription, value: text })
+                      }
                       numberOfLines={5}
                       multiline
                       trailingAccessory={
                         <TouchableOpacity>
-                          <Text style={$saveText} underline onPress={() => {
-                            updateUserDescription(userDescription.value)
-                          }}>
+                          <Text
+                            style={$saveText}
+                            underline
+                            onPress={() => {
+                              updateUserDescription(userDescription.value)
+                            }}
+                          >
                             SAVE
                           </Text>
                         </TouchableOpacity>
@@ -428,10 +448,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                     }}
                     expanded={profileSectionExpandable.logout}
                     paddingB-10
-                    sectionHeader={expandableHeaders(
-                      "Logout",
-                      profileSectionExpandable.logout,
-                    )}
+                    sectionHeader={expandableHeaders("Logout", profileSectionExpandable.logout)}
                   >
                     <View row centerV spread>
                       <Text style={$logoutLabel}>DO YOU REALLY WANT TO LEAVE NAVENU?</Text>
@@ -439,11 +456,15 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                         <TouchableOpacity style={$logoutButton} onPress={logout}>
                           <Text style={$logoutButtonText}>YES</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={$logoutButton} onPress={() =>
-                          setProfileSectionExpandible({
-                            ...profileSectionExpandable,
-                            logout: !profileSectionExpandable.logout}
-                          )}>
+                        <TouchableOpacity
+                          style={$logoutButton}
+                          onPress={() =>
+                            setProfileSectionExpandible({
+                              ...profileSectionExpandable,
+                              logout: !profileSectionExpandable.logout,
+                            })
+                          }
+                        >
                           <Text style={$logoutButtonText}>NO</Text>
                         </TouchableOpacity>
                       </View>
@@ -454,31 +475,37 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
             </View>
 
             <View marginT-80>
-              <Button   
-                backgroundColor={'#333333'} 
-                fullWidth 
-                bottom 
-                label={"Share Navenu"} 
+              <Button
+                backgroundColor={"#333333"}
+                fullWidth
+                bottom
+                label={"Share Navenu"}
                 onPress={shareLink}
               />
             </View>
           </View>
         </BottomSheet>
-      
+
         <BottomSheet show={showUserListModal} onClose={onCloseUserListModal}>
           <View padding-8>
             <View row right marginB-5>
-              <TouchableOpacity>
-             <AntDesign name="delete" size={30} color="black" />
-             </TouchableOpacity>
-             <TouchableOpacity>
-             <MaterialIcons name="ios-share" size={30} color="#black" />
-             </TouchableOpacity>
-             </View>
+              <TouchableOpacity
+                onPress={() => {
+                  onDeleteList(selectedListItem?.user_list_id)
+                }}
+              >
+                <AntDesign name="delete" size={30} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={shareLink}>
+                <MaterialIcons name="ios-share" size={30} color="#black" />
+              </TouchableOpacity>
+            </View>
             <HorizontalLine color="black" />
-            <Text header marginT-10>{selectedListItem?.userListName}</Text>
+            <Text header marginT-10>
+              {selectedListItem?.userListName}
+            </Text>
             <View marginT-15>
-            <CardList data={selectedListItem?.cards || []} />
+              <CardList data={selectedListItem?.cards || []} />
             </View>
           </View>
         </BottomSheet>
@@ -521,7 +548,6 @@ const $expandableContainer: ViewStyle = {
   borderBottomColor: Colors.$outlineDisabledHeavy,
   borderBottomWidth: 1,
   marginBottom: 10,
-  
 }
 const $headerTextContainer: ViewStyle = {
   alignItems: "center",
@@ -532,7 +558,7 @@ const $selectFileButtonText: TextStyle = {
   textTransform: "uppercase",
   fontSize: 9,
   lineHeight: 12,
-  fontWeight: "700"
+  fontWeight: "700",
 }
 
 const $locationButton: ViewStyle = {
@@ -559,5 +585,5 @@ const $logoutButtonText: TextStyle = {
 }
 
 const $locationButtonText: TextStyle = {
-  ...$logoutButtonText
+  ...$logoutButtonText,
 }

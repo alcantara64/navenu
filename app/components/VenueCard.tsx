@@ -16,6 +16,8 @@ import { IFeed } from "../interface/feed"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { IVenue } from "../interface/venues"
+import { isItemInUserList } from "../utils/transform"
+import { IUserList } from "../interface/user"
 
 export interface VenueCardProps {
   /**
@@ -27,13 +29,14 @@ export interface VenueCardProps {
   isFeed?: boolean
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
+  userListData?:IUserList
 }
 
 /**
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { item, isFeed =true, onBookMark, savedFeeds } = props
+  const { item, isFeed =true, onBookMark, userListData } = props
   const navigation = useNavigation();
 
   const onPressVenue  = (venue) =>{
@@ -70,7 +73,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
         {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
                 <FontAwesome5
-                  solid={savedFeeds?.some((feed) => feed.id === item.id)}
+                  solid={isItemInUserList(item.id, userListData)}
                   name="bookmark"
                   size={20}
                   color="#FFFFFF"

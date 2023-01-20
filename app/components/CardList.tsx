@@ -10,6 +10,7 @@ import { ArticleCard } from "./ArticleCard"
 import { FEED_TYPE } from "../interface/feed"
 import { DropCard } from "./DropCard"
 import { LoadingIndicator } from "./LoadingIndicator"
+import { IUserList } from "../interface/user"
 
 export interface CardListProps {
   onTouchEnd?: (event: GestureResponderEvent) => void
@@ -26,6 +27,7 @@ export interface CardListProps {
   toggleSaveFeed?: (feeds: any) => void
   isFetchingNextPage?: boolean
   getMoreData?: () => void
+  userList?: IUserList
 }
 
 /**
@@ -44,19 +46,20 @@ export const CardList = observer(function CardList(props: CardListProps) {
     toggleSaveFeed,
     isFetchingNextPage,
     getMoreData,
+    userList
   } = props
 
   const renderItem = ({ item }) => {
     if (item.type === "location") {
       return (
-        <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} />
+        <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} />
       )
     }
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} />
+      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} userListData={userList} />
     }
     if (item.type === FEED_TYPE.drop) {
-      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} />
+      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} userListData={userList} />
     }
   }
   return (

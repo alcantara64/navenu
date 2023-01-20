@@ -1,5 +1,6 @@
 import { ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
+import { IUserList } from "../interface/user"
 import { IAutoComplete } from "../services/api"
 import { categoryColorType } from "../theme"
 
@@ -52,15 +53,15 @@ export const getStyleByCategory = (category, isText?: boolean, noBackground?: bo
       color: categoryColorType[category] || "transparent",
     }
   }
-  const style:ViewStyle = {
+  const style: ViewStyle = {
     borderColor: categoryColorType[category] || "transparent",
-    backgroundColor :  categoryColorType[category] || "transparent",
+    backgroundColor: categoryColorType[category] || "transparent",
     borderTopColor: categoryColorType[category],
   }
-  if(noBackground){
-   delete style.backgroundColor;
+  if (noBackground) {
+    delete style.backgroundColor
   }
-  return style;
+  return style
 }
 
 export const getDropsByID = (id: Array<string>, items: Array<any>) => {
@@ -68,32 +69,45 @@ export const getDropsByID = (id: Array<string>, items: Array<any>) => {
   return items.filter((item) => id.includes(item.id))
 }
 // transform the result of the category data into a sing array
-export const transformAutoCompleteResponseToASingleArray = (data:IAutoComplete) => {
-  const transFormedData:Array<{type:string,display:string }> = [];
-  if(data.borough && data.borough.length){
-   data.borough.forEach((borough) => {
-    transFormedData.push({type:'Boroughs', display:`Borough:${borough}`})
-   })
+export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete) => {
+  const transFormedData: Array<{ type: string; display: string }> = []
+  if (data.borough && data.borough.length) {
+    data.borough.forEach((borough) => {
+      transFormedData.push({ type: "Boroughs", display: `Borough:${borough}` })
+    })
   }
-  if(data.cats && data.cats.length){
+  if (data.cats && data.cats.length) {
     data.cats.forEach((cat) => {
-      transFormedData.push({type:'Cats', display:`Cat: ${cat}` })
+      transFormedData.push({ type: "Cats", display: `Cat: ${cat}` })
     })
   }
-  if(data.location && data.location.length){
+  if (data.location && data.location.length) {
     data.location.forEach((locate) => {
-      transFormedData.push({type:'Locations', display:`Location:${locate}`})
+      transFormedData.push({ type: "Locations", display: `Location:${locate}` })
     })
   }
-  if(data.tags && data.tags.length){
+  if (data.tags && data.tags.length) {
     data.tags.forEach((tag) => {
-      transFormedData.push({type:'Tags', display :`Tag:${tag}`})
+      transFormedData.push({ type: "Tags", display: `Tag:${tag}` })
     })
   }
-   return transFormedData;
+  return transFormedData
 }
 /**  
  * Takes a sentence and covert it to a title case for  john to John
  @param sentence
  **/
-export const makeTitleCase = (sentence:string) => sentence.split(" ").map(([firstChar,...rest])=>firstChar.toUpperCase()+rest.join("").toLowerCase()).join(" ")
+export const makeTitleCase = (sentence: string) =>
+  sentence
+    .split(" ")
+    .map(([firstChar, ...rest]) => firstChar.toUpperCase() + rest.join("").toLowerCase())
+    .join(" ")
+
+export const isItemInUserList = (id: any, DataListData: IUserList) => {
+  if(!DataListData) return false
+  return Object.keys(DataListData.userlist).some((key) => {
+    return DataListData.userlist[key].cards.some((card) => {
+      return card.id === id
+    })
+  })
+}
