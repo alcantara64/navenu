@@ -4,6 +4,7 @@ import { TextStyle, ViewStyle, Dimensions } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import {
+  AppInput,
   AppMap,
   CardList,
   ErrorMessage,
@@ -15,13 +16,14 @@ import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
 import { filterFeeds } from "../utils/transform"
-import { View, Text, TouchableOpacity, SkeletonView } from "react-native-ui-lib"
+import { View, Text, TouchableOpacity, SkeletonView, ExpandableSection } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
 import { useMutation, useQueryClient } from "react-query"
 import { useSwipe } from "../hooks/useSwipe"
 import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
+import { Entypo, Ionicons } from "@expo/vector-icons"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen() {
@@ -48,6 +50,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
 
     const [longitude, setLongitude] = useState<number>(authenticationStore.longitude)
     const [latitude, setLatitude] = useState<number>(authenticationStore.latitude)
+    const [selectedUserList, setSelectedUserList] = useState([])
     const createListNameMutation = useMutation({
       mutationFn: createUserListName,
     })
@@ -81,6 +84,16 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         toggleHeaderState()
       }
     }
+    const expandableHeaders = (title: string, targetChberon: boolean) => (
+      <View style={$headerTextContainer} row spread>
+        <View>
+          <Text style={$labelStyle}>{title}</Text>
+        </View>
+        <View center>
+          <Entypo name={targetChberon ? "chevron-up" : "chevron-down"} size={24} color="black" />
+        </View>
+      </View>
+    )
     const onBookMark = (item) => {
       userList.refetch()
       setSelectedFeedItem(item)
@@ -88,7 +101,9 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     }
     const addListName = () => {
       createListNameMutation.mutate(listName)
+      queryClient.invalidateQueries({ queryKey: ["userList"] })
       userList.refetch()
+      setShowListModal(false)
     }
     const onAddItemToUserList = (listItem) => {
       addItemToListMutation.mutate({
@@ -97,6 +112,9 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         id: selectedFeedItem?.id,
       })
       setShowListModal(false)
+    }
+    const checkUserListExpanded = (identifier) =>{
+      return selectedUserList.includes(identifier)
     }
 
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
@@ -122,34 +140,59 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             body={
               <View center flex style={$centeredView}>
                 <View style={$modalView}>
-                  <View row style={{ flexWrap: "wrap" }}>
+                  
+                  <View marginB-10  row spread width={'100%'}>
+                    <Text header >ADD TO LisT</Text>
+                    <TouchableOpacity onPress={() => {
+                      setShowListModal(false)
+                    }}>
+                  <Ionicons name="close-circle-sharp" size={24} color="black" />
+                  </TouchableOpacity>
+                  </View>
+                  <View width={"100%"} >
                     {userList?.data?.userlist &&
                       Object.entries(userList.data.userlist).map((key, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            onAddItemToUserList(key[1])
-                          }}
-                        >
-                          <Text left style={$listText}>
-                            {" "}
-                            {key[0]}{" "}
-                          </Text>
+                        key[0] &&  <ExpandableSection
+                        key={index}
+                        marginT-10
+                        onPress={() => {
+                          let newUserList = []
+                         if(checkUserListExpanded(key[0])){
+                         newUserList = selectedUserList.filter((item) => item !== key[0] );
+                         }else{
+                          newUserList = [...selectedUserList, key[0]]
+                         }
+                         setSelectedUserList(newUserList);
+                        }}
+                        expanded={checkUserListExpanded(key[0])}
+                        paddingB-10
+                        sectionHeader={expandableHeaders(
+                          `${key[0]} (${userList.data.userlist[key[0]]?.cards?.length})`,
+                          checkUserListExpanded(key[0]),
+                        )}
+                      >
+                        <TouchableOpacity marginV-10 right row onPress={() =>{
+                          onAddItemToUserList(userList.data.userlist[key[0]]);
+                        }}>
+                        <Entypo name="add-to-list" size={24} color="black" />
                         </TouchableOpacity>
+                      </ExpandableSection>
                       ))}
                   </View>
 
                   {userList.isLoading && <LoadingIndicator />}
                   {userList.error && <Text>an error occurred try again later</Text>}
                   <View style={{ width: "100%" }}>
-                    <TextInput
-                      onChangeText={(text) => {
+                    <View marginT-10>
+                    <AppInput  onTextChange={(text) => {
                         setListName(text)
                       }}
-                      leftIconName={null}
-                      rightIcon={"add-to-list"}
-                      handlePasswordVisibility={addListName}
-                    />
+                      trailingAccessory={
+                        <TouchableOpacity onPress={addListName}>
+                      <Entypo name="add-to-list" size={24} color="black" />
+                      </TouchableOpacity>
+                      } placeholder="add to a new list"/>
+                      </View>
                   </View>
                 </View>
               </View>
@@ -171,6 +214,8 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
             isFetchingNextPage={isFetchingNextPage}
             onBookMark={onBookMark}
             toggleSaveFeed={toggleSaveFeed}
+            isFeed={true}
+            userList={userList.data}
           />}
           showContent={!isLoading}
         />
@@ -186,7 +231,7 @@ const $listText: TextStyle = {
   fontFamily: typography.primary.medium,
 }
 const $modalView: ViewStyle = {
-  backgroundColor: "white",
+  backgroundColor: "#F2F2F2",
   borderTopLeftRadius: 8,
   borderTopRightRadius: 8,
   padding: 15,
@@ -204,4 +249,13 @@ const $modalView: ViewStyle = {
 }
 const $skeletonViewStyle: ViewStyle = {
   marginVertical: 3
+}
+const $labelStyle: TextStyle = {
+  fontFamily: "Inter-Regular",
+  fontStyle: "normal",
+  fontWeight: "600",
+  textTransform:'uppercase',
+}
+const $headerTextContainer: ViewStyle = {
+  alignItems: "center",
 }

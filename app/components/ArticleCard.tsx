@@ -14,16 +14,19 @@ import { View, Text } from "react-native-ui-lib"
 import { IArticle } from "../interface/venues"
 import { typography } from "../theme"
 import { useNavigation } from "@react-navigation/native"
+import { isItemInUserList } from "../utils/transform"
+import { IUserList } from "../interface/user"
 
 export interface ArticleCardProps {
   style?: StyleProp<ViewStyle>
   item: IArticle
   isFeed?: boolean
   onBookMark?: (feed: any) => void
+  userListData?: IUserList
 }
 
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
-  const { item, isFeed, onBookMark } = props
+  const { item, isFeed, onBookMark, userListData } = props
   const navigation = useNavigation()
   const onCardPressed = () => {
     navigation.navigate("Article", {
@@ -60,7 +63,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
             {isFeed && (
               <View flex-1 right>
                 <TouchableOpacity onPress={saveDrop}>
-                  <FontAwesome5 solid={false} name="bookmark" size={20} color="#FFFFFF" />
+                  <FontAwesome5 solid={isItemInUserList(item.id, userListData)} name="bookmark" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             )}
