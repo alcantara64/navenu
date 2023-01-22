@@ -88,7 +88,7 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
                 </View>
               )}
               <View marginT-20>
-                <DropList drops={[...userDrops].splice(0, dropListCount)} />
+                <DropList  hideBookmark drops={[...userDrops].splice(0, dropListCount)} />
               </View>
               {userDrops.length > 3 && dropListCount < userDrops.length ? (
                 <View>

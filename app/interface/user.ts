@@ -75,9 +75,14 @@ export interface ICurator {
     home_town: string,
 }
 export interface IUserList {
-    userlist: Record<string, IDrop | IVenue| IArticle >
+    userlist: Record<string,ListItem >
 }
 export interface IUserRegistration {
   email: string,
   password: string
+}
+type ListItem ={
+    user_list_id: string,
+    cards: Array<IDrop | IVenue| IArticle >
+
 }

@@ -16,7 +16,8 @@ import { Colors } from "../theme"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { IFeed } from "../interface/feed"
 import { useNavigation } from "@react-navigation/native"
-import { getStyleByCategory } from '../utils/transform'
+import { getStyleByCategory, isItemInUserList } from '../utils/transform'
+import { IUserList } from "../interface/user"
 
 export interface DropCardProps {
   /**
@@ -27,13 +28,14 @@ export interface DropCardProps {
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
   isFeed?: boolean,
+  userListData?: IUserList
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { item, onBookMark, savedFeeds, isFeed } = props
+  const { item, onBookMark, isFeed, userListData } = props
   const navigation = useNavigation();
 
 
@@ -65,7 +67,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
             {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
                 <FontAwesome5
-                  solid={savedFeeds?.some((feed) => feed.id === item.id)}
+                  solid={isItemInUserList(item.id, userListData)}
                   name="bookmark"
                   size={20}
                   color="#FFFFFF"

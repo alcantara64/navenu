@@ -12,10 +12,10 @@ import {
 import { IVenue } from "../../../interface/venues"
 import { useNavigation } from "@react-navigation/native"
 import { BottomSheet } from "../../../components/BottomSheet"
-import { useSubscribeToNotification } from "../../../hooks/useUser"
+import { useSubscribeToNotification, useUserList } from "../../../hooks/useUser"
 import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
 import { Colors, typography } from "../../../theme"
-import { getInitials, getStyleByCategory } from "../../../utils/transform"
+import { getInitials, getStyleByCategory, isItemInUserList } from "../../../utils/transform"
 import { DropCard, Gallery } from "../../../components"
 
 export interface VenueDetailCardProps {
@@ -39,7 +39,7 @@ enum BottomSheetType {
  * Describe your component here
  */
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
- 
+  const userList = useUserList()
 
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props
@@ -167,7 +167,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               {/* } */}
             </TouchableOpacity>
             <TouchableOpacity marginV-5>
-              <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
+              <FontAwesome5 name="bookmark" solid={isItemInUserList(venue.id, userList.data)} size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>

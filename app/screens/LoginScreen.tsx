@@ -64,10 +64,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   }, [])
 
   useEffect(() => {
-    // Here is where you could fetch credientials from keychain or storage
-    // and pre-fill the form fields.\
-    setAuthEmail("navenuteam@navenu.com")
-    setAuthPassword("Gonavenu")
+    setLoading(false)
   }, [])
 
 
