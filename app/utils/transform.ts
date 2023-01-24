@@ -97,11 +97,14 @@ export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete)
  * Takes a sentence and covert it to a title case for  john to John
  @param sentence
  **/
-export const makeTitleCase = (sentence: string) =>
-  sentence
+export const makeTitleCase = (sentence: string) =>{
+  if(!sentence)return '';
+ 
+ return sentence
     .split(" ")
     .map(([firstChar, ...rest]) => firstChar.toUpperCase() + rest.join("").toLowerCase())
     .join(" ")
+}
 
 export const isItemInUserList = (id: any, DataListData: IUserList) => {
   if(!DataListData) return false

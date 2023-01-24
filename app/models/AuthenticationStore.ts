@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
+import { navigate } from "../navigators"
 
 import { api } from "../services/api"
 import { UserService } from "../services/userService"
@@ -62,7 +63,7 @@ export const AuthenticationStoreModel = types
     login: flow(function *() {
       store.errorMessage = '';
       store.isLoading = true
-      const formData = new FormData()
+      const formData = new FormData();
       formData.append("email", store.authEmail)
       formData.append("password", store.authPassword)
      const rootStore = getRootStore(store);
@@ -72,6 +73,12 @@ export const AuthenticationStoreModel = types
         store.authToken = result.token;
         store.refreshToken = result.refresh_token;
         rootStore.userStore.setUserPreferences(result.user_preferences);
+        if(result.userLists){
+        rootStore.userStore.setUserLists(result.userLists);
+        }
+        if(!result.user_preferences || !result.user_preferences.DO){
+          navigate('PreferencesScreen')
+        }
       }else{   
         store.errorMessage = 'incorrect username or password'
       }
@@ -89,6 +96,13 @@ export const AuthenticationStoreModel = types
       if (result.kind === "ok") {
         this.setAuthToken(result.data.token);
         this.setRefreshToken(result.data.refresh_token);
+        const rootStore = getRootStore(store);
+        rootStore.userStore.setUserPreferences(result.data.user_preferences || []);
+        rootStore.userStore.setUserLists(result.data.userLists);
+        navigate('PreferencesScreen')
+
+ 
+
       } else {
        this.setErrorMessage('Something went wrong')
       }

@@ -16,6 +16,7 @@ import * as Google from "expo-auth-session/providers/google"
 import * as AppleAuthentication from "expo-apple-authentication"
 
 import { useStores } from "../../models"
+import { Platform } from "expo-modules-core"
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
@@ -118,10 +119,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
               <FontAwesome5 name="google" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with google</Text>
             </AppButton>
+           { Platform.OS === 'ios' && (
             <AppButton style={$button} onPress={handleAppleSignin}>
               <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with Apple</Text>
-            </AppButton>
+            </AppButton>)
+            }
             <AppButton style={$button} onPress={goToFormPage}>
               <FontAwesome5 solid name="envelope" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with email</Text>

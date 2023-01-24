@@ -132,6 +132,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         if (response.kind !== "ok") {
           setErrorMessage("Image upload failed")
         }
+        getUser()
         setSingleFile(null)
       } else {
         // If no file selected the show alert
@@ -297,7 +298,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                           source={require("../../assets/icons/upload.png")}
                         />
                         <Text style={$selectFileButtonText}>
-                          {singleFile
+                          {singleFile?.assets
                             ? "Selected " + singleFile.assets[0].fileName.slice(0, 20)
                             : "Select File"}
                         </Text>
