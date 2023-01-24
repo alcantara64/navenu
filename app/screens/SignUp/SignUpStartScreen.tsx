@@ -62,6 +62,8 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
         socialId: useInfo.id,
         authType: "google",
         avatar: useInfo.picture,
+      }).then(() => {
+        navigation.navigate("PreferencesScreen")
       })
     }
   }

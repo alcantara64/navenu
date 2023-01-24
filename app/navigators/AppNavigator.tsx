@@ -90,7 +90,7 @@ const AppStack = observer(function AppStack() {
     >
       {isAuthenticated ? (<>
         <Stack.Screen name="Home" component={BottomNavigationNavigator} />
-        <Stack.Screen  name="PreferencesScreen" component={PreferencesScreen}  />
+        <Stack.Screen name="PreferencesScreen" component={PreferencesScreen}  />
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Logout" component={LogoutScreen} />
