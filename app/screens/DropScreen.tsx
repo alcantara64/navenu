@@ -3,18 +3,12 @@ import { observer } from "mobx-react-lite"
 import { TextStyle, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import {
-  DropDropDetailCard,
-  ErrorMessage,
-  LoadingIndicator,
-  Modal,
-  Screen,
-} from "../components"
+import { DropDropDetailCard, ErrorMessage, LoadingIndicator, Modal, Screen } from "../components"
 import { useStores } from "../models"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { Colors } from "../theme"
 import { getStyleByCategory } from "../utils/transform"
-import CategoryIcons from '../../assets/icons/drops/claim-icons.svg'
+import CategoryIcons from "../../assets/icons/drops/claim-icons.svg"
 import { useDrop } from "../hooks/useDrops"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
@@ -30,13 +24,13 @@ import { useDrop } from "../hooks/useDrops"
 // @ts-ignore
 export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = observer(
   function DropScreen({ route, navigation }) {
-    const { dropStore } = useStores();
-    const currentDropId = route.params.venue.id;
-    const {isLoading, data, error} = useDrop(currentDropId);
-    const {  showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
+    const { dropStore } = useStores()
+    const currentDropId = route.params.venue.id
+    const { isLoading, data, error } = useDrop(currentDropId)
+    const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
 
     useEffect(() => {
-      setShowClaimModal(false);
+      setShowClaimModal(false)
     }, [route.params.venue.id])
 
     if (error) {
@@ -45,41 +39,56 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
     if (isLoading) {
       return <LoadingIndicator></LoadingIndicator>
     }
-   const claimCode = () => {
-     claimDropCode(currentDropId);
-   } 
-   const closeClaimModal = () => {
-    setShowClaimModal(false)
-   }
+    const claimCode = () => {
+      //  claimDropCode(currentDropId);
+    }
+    const closeClaimModal = () => {
+      setShowClaimModal(false)
+    }
     return (
       <Screen style={$root} preset="scroll">
-       { <Modal
-          show={showClaimedModal}
-          onRequestClose={closeClaimModal}
-          body={
-
-            <TouchableOpacity style={$centeredView} onPressOut={closeClaimModal}>
-              <View style={{...$modalView, ...getStyleByCategory(data.category, false, true)}}>
-              <TouchableWithoutFeedback>
-                <>
-                <View row  center>
-  
-                <CategoryIcons/>
+        {
+          <Modal
+            show={showClaimedModal}
+            onRequestClose={closeClaimModal}
+            body={
+              <TouchableOpacity style={$centeredView} onPressOut={closeClaimModal}>
+                <View style={{ ...$modalView, ...getStyleByCategory(data.category, false, true) }}>
+                  <TouchableWithoutFeedback>
+                    <>
+                      <View row center>
+                        <CategoryIcons />
+                      </View>
+                      <Text largeDarkHeader style={$headerText}>
+                        CODE CLAIMED!
+                      </Text>
+                      <View
+                        style={{
+                          ...$codeClaimedBox,
+                          ...getStyleByCategory(data.category, false, true),
+                        }}
+                      >
+                        <Text bigTextDark center>
+                          {claimedCode}
+                        </Text>
+                      </View>
+                      <View row>
+                        <Text text80>Codes are Automatically saved on your </Text>
+                        <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
+                      </View>
+                    </>
+                  </TouchableWithoutFeedback>
                 </View>
-                <Text largeDarkHeader style={$headerText}>CODE CLAIMED!</Text>
-                <View style={{...$codeClaimedBox, ...getStyleByCategory(data.category, false, true) }}><Text bigTextDark center>{claimedCode}</Text></View>
-                <View row>
-                <Text text80>Codes are Automatically saved on your </Text>
-                <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
-                </View>
-                </>
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableOpacity>
-          }
-        />}
+              </TouchableOpacity>
+            }
+          />
+        }
 
-        <DropDropDetailCard onClaimCode={claimCode} drop={data} navigation={navigation}></DropDropDetailCard>
+        <DropDropDetailCard
+          onClaimCode={claimCode}
+          drop={data}
+          navigation={navigation}
+        ></DropDropDetailCard>
       </Screen>
     )
   },
@@ -114,14 +123,14 @@ const $modalView: ViewStyle = {
   borderTopColor: Colors.orange,
 }
 const $headerText: TextStyle = {
-   marginTop: 15,
-   marginBottom: 15,
-} 
-const $codeClaimedBox:ViewStyle = {
+  marginTop: 15,
+  marginBottom: 15,
+}
+const $codeClaimedBox: ViewStyle = {
   borderWidth: 3,
   borderRadius: 10,
   padding: 15,
   width: "100%",
   borderColor: Colors.orange,
-  marginBottom: 15
+  marginBottom: 15,
 }
