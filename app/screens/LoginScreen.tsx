@@ -1,7 +1,18 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { TextStyle, ViewStyle, ImageBackground, Dimensions, KeyboardAvoidingView } from "react-native"
+import {
+  TextStyle,
+  ViewStyle,
+  ImageBackground,
+  Dimensions,
+  KeyboardAvoidingView,
+} from "react-native"
 import * as Location from "expo-location"
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "@env"
+import * as WebBrowser from "expo-web-browser"
+import * as Google from "expo-auth-session/providers/google"
+import * as AppleAuthentication from "expo-apple-authentication"
+
 import {
   AppButton,
   FormErrorMessage,
@@ -19,9 +30,11 @@ import { loginValidationSchema } from "../utils/validations"
 import { useTogglePasswordVisibility } from "../hooks"
 import { useNavigation } from "@react-navigation/native"
 import { typography } from "../theme/typography"
+import { FontAwesome5 } from "@expo/vector-icons"
 const authImage = require("../../assets/images/auth/auth-login-image.png")
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+WebBrowser.maybeCompleteAuthSession()
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -29,7 +42,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [errorMsg, setErrorMsg] = useState("")
   const [userInfo, setUserInfo] = useState<any>(null)
   const [errorState, setErrorState] = useState("")
- // const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const {
     authenticationStore: {
@@ -42,10 +55,69 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       setLongitudeAndLatitude,
       errorMessage,
       setErrorMessage,
+      socialRegister,
     },
   } = useStores()
   const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
 
+  const [accessToken, setAccessToken] = React.useState(null)
+  const [_request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: GOOGLE_IOS_CLIENT_ID,
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+  })
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      setAccessToken(response.authentication.accessToken)
+      accessToken && fetchUserInfo()
+    }
+  }, [response, accessToken])
+
+  async function fetchUserInfo() {
+    const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    const useInfo = await response.json()
+
+    if (useInfo) {
+      socialRegister({
+        email: useInfo.email,
+        firstName: useInfo.given_name,
+        lastName: useInfo.family_name,
+        socialId: useInfo.id,
+        authType: "google",
+        avatar: useInfo.picture,
+      }).then(() => {
+        navigation.navigate("PreferencesScreen")
+      })
+    }
+  }
+
+  const handleAppleSignin = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      })
+
+      if (credential) {
+        socialRegister({
+          email: credential.email,
+          firstName: credential.fullName.givenName,
+          lastName: credential.fullName.familyName,
+          socialId: credential.user,
+          authType: "apple",
+        })
+      }
+    } catch (e) {
+      console.log(e)
+      if (e.code === "ERR_CANCELED") {
+        Alert.alert("Sign in with Apple canceled")
+      }
+    }
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -66,7 +138,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   useEffect(() => {
     setLoading(false)
   }, [])
-
 
   async function onLogin(values: { email: string; password: string }) {
     const { email, password } = values
@@ -101,7 +172,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const clearErrorMessage = () => {
     setErrorMsg("")
     setErrorMessage("")
-  };
+  }
   return (
     <KeyboardAvoidingView>
       <ImageBackground
@@ -163,6 +234,20 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                   <Text style={$buttonText}>Login</Text>
                 </AppButton>
                 <AppButton
+                  style={$button}
+                  onPress={() => {
+                    promptAsync()
+                  }}
+                >
+                  <FontAwesome5 name="google" size={24} color="#FFFFFF" />
+                  <Text style={$buttonText}>Continue with google</Text>
+                </AppButton>
+                <AppButton style={$button} onPress={handleAppleSignin}>
+                  <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
+                  <Text style={$buttonText}>Continue with Apple</Text>
+                </AppButton>
+
+                <AppButton
                   style={$borderlessButtonContainer}
                   borderless
                   title={"Create a new account?"}
@@ -187,13 +272,13 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
 const $formContainer: ViewStyle = {
   flex: 1,
-  marginTop: '60%',
+  marginTop: "60%",
   padding: 24,
 }
 
 const $buttonContainer: ViewStyle = {
-  justifyContent: 'flex-end',
-  alignContent: 'flex-end',
+  justifyContent: "flex-end",
+  alignContent: "flex-end",
   flex: 1,
 }
 
@@ -205,6 +290,9 @@ const $button: ViewStyle = {
   backgroundColor: Colors.ash,
   padding: 10,
   borderRadius: 8,
+  flexDirection: "row",
+  marginVertical: 8,
+
 }
 
 const $buttonText: TextStyle = {
@@ -212,6 +300,7 @@ const $buttonText: TextStyle = {
   textTransform: "uppercase",
   fontSize: 20,
   color: Colors.white,
+  marginLeft: 8,
 }
 
 const $borderlessButtonContainer: TextStyle = {
@@ -220,4 +309,3 @@ const $borderlessButtonContainer: TextStyle = {
   alignItems: "center",
   justifyContent: "center",
 }
-
