@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Dimensions, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "../navigators"
@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons"
 interface SearchScreenProps extends AppStackScreenProps<"Search"> {}
 export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScreen() {
   const { feedsStore } = useStores()
-  const { catFilters, toggleSaveFeed, searchFilterType } = feedsStore
+  const { catFilters, toggleSaveFeed, searchFilterType,clearAllFilters } = feedsStore
   const [selectedSearchItems, setSelectedSearchItems] = useState<Array<{display:string, type:string}>>([])
   const [searchText, setSearchText] = useState("")
   const [isInputTouched, setIsInputTouched] = useState(false)
@@ -34,7 +34,11 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
     isLoading,
     isError,
     refetch,
-  } = useFeedsSearch({ type:searchFilterType as any, selected: catFilters as any, categories:selectedSearchItems  })
+  } = useFeedsSearch({ type:searchFilterType as any, selected: catFilters as any, categories:selectedSearchItems  });
+
+  // useEffect(() => {
+  //   clearAllFilters()
+  // })
 
   const onItemSelected = (item: any) => {
     setSearchText('');

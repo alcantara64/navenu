@@ -10,12 +10,11 @@ import {
   ErrorMessage,
   LoadingIndicator,
   Modal,
-  TextInput,
 } from "../components"
 import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
-import { filterFeeds } from "../utils/transform"
+import { filterFeeds, isItemInUserList } from "../utils/transform"
 import { View, Text, TouchableOpacity, SkeletonView, ExpandableSection } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
@@ -24,6 +23,7 @@ import { useSwipe } from "../hooks/useSwipe"
 import { IArticle, IVenue } from "../interface/venues"
 import { IDrop } from "../interface/drops"
 import { Entypo, Ionicons } from "@expo/vector-icons"
+import { UserService } from "../services/userService"
 
 export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">, undefined>> =
   observer(function CardviewScreen() {
@@ -38,6 +38,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       showHeaderFilter,
       isMapMode,
       setIsSearchMode,
+      clearAllFilters
     } = feedsStore
 
     const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
@@ -53,15 +54,16 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
     const [selectedUserList, setSelectedUserList] = useState([])
     const createListNameMutation = useMutation({
       mutationFn: createUserListName,
+      onSuccess(data, variables, context) {
+        userList.refetch()
+      },
     })
     useEffect(() => {
+    //  clearAllFilters()
       setIsSearchMode(false);
     }, [])
     const addItemToListMutation = useMutation({
       mutationFn: addItemToUserList,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["userList"] })
-      },
     })
     const { onTouchStart, onTouchEnd } = useSwipe(undefined, undefined, onSwipeUp, onSwipeDown, 6)
 
@@ -95,15 +97,19 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       </View>
     )
     const onBookMark = (item) => {
+      if(!isItemInUserList(item.id, userList.data)){
       userList.refetch()
       setSelectedFeedItem(item)
       setShowListModal(true)
+      }else{
+    //  const  userService =   new UserService();  
+    //  userService.removeCardFromList()
+      }
+
     }
     const addListName = () => {
       createListNameMutation.mutate(listName)
-      queryClient.invalidateQueries({ queryKey: ["userList"] })
-      userList.refetch()
-      setShowListModal(false)
+      setListName('')
     }
     const onAddItemToUserList = (listItem) => {
       addItemToListMutation.mutate({
@@ -112,6 +118,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         id: selectedFeedItem?.id,
       })
       setShowListModal(false)
+      queryClient.invalidateQueries({ queryKey: ["feed"] })
     }
     const checkUserListExpanded = (identifier) =>{
       return selectedUserList.includes(identifier)
@@ -177,14 +184,15 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
                         <Entypo name="add-to-list" size={24} color="black" />
                         </TouchableOpacity>
                       </ExpandableSection>
-                      ))}
+                      ))
+                      }
                   </View>
 
                   {userList.isLoading && <LoadingIndicator />}
                   {userList.error && <Text>an error occurred try again later</Text>}
                   <View style={{ width: "100%" }}>
                     <View marginT-10>
-                    <AppInput  onTextChange={(text) => {
+                    <AppInput value={listName}  onTextChange={(text) => {
                         setListName(text)
                       }}
                       trailingAccessory={

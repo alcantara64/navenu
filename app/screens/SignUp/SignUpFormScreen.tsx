@@ -39,9 +39,8 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
     setAuthEmail(email)
     setAuthPassword(password)
 
-    if (Object.values(validationErrors).some((v) => !!v))
       try {
-        await register()
+        await register(email, password)
       } catch (e) {
         console.log("error", e)
       }
@@ -73,7 +72,7 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
             validationSchema={signupValidationSchema}
             onSubmit={(values) => handleSignUp(values)}
           >
-            {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+            {({ values, touched, errors, isValid, handleChange, handleSubmit, handleBlur }) => (
               <>
                 <View style={$textContainer}>
                   <View style={$formContainer}>
@@ -112,7 +111,7 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
                   </View>
                 </View>
                 <View style={$buttonContainer}>
-                  <AppButton style={$button} onPress={handleSubmit}>
+                  <AppButton disabled={!isValid} style={$button} onPress={handleSubmit}>
                     <Text style={$buttonText}>Sign Up</Text>
                   </AppButton>
                   <AppButton style={$button} onPress={() => navigation.navigate("Login")}>

@@ -41,9 +41,9 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
     onSetSelectedList({ ...(userList[listName] as any), userListName: listName })
   }
 
-  const londonImage = require("../../assets/images/preferences/london.png")
+  const londonImage = require("../../assets/images/auth/defaulProfilePicture.jpg")
   // need to check if the user has a profile picture or not, if not use a default one
-  const userAvatar = user?.avatar ? { uri: user?.avatar } : londonImage
+  const userAvatar = user?.avatar && user.avatar !== 'https://media.navenu.com' ? { uri: user?.avatar } : londonImage
 
   return (
     <>

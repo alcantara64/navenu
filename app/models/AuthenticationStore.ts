@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
+import { navigate } from "../navigators"
 
 import { api } from "../services/api"
 import { UserService } from "../services/userService"
@@ -59,12 +60,12 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
       store.refreshToken = ""
     },
-    login: flow(function *() {
+    login: flow(function *(email:string, password:string) {
       store.errorMessage = '';
       store.isLoading = true
-      const formData = new FormData()
-      formData.append("email", store.authEmail)
-      formData.append("password", store.authPassword)
+      const formData = new FormData();
+      formData.append("email", email)
+      formData.append("password", password)
      const rootStore = getRootStore(store);
       // @ts-ignore
       const result =  yield api.login(formData);
@@ -72,25 +73,38 @@ export const AuthenticationStoreModel = types
         store.authToken = result.token;
         store.refreshToken = result.refresh_token;
         rootStore.userStore.setUserPreferences(result.user_preferences);
+        if(result.userLists){
+        rootStore.userStore.setUserLists(result.userLists);
+        }
+        if(!result.user_preferences || !result.user_preferences.DO){
+          navigate('PreferencesScreen')
+        }
       }else{   
         store.errorMessage = 'incorrect username or password'
       }
       store.isLoading = false
     }),
-    async register() {
+    async register(email:string, password:string){
       this.setErrorMessage('');
       this.setLoading(true)
       const formData = new FormData()
-      formData.append("email", store.authEmail)
-      formData.append("password", store.authPassword)
+      formData.append("email", email)
+      formData.append("password", password)
       // @ts-ignore
       const api = new UserService();
-      const result = await api.register({email: store.authEmail, password: store.authPassword});
+      const result = await api.register({email, password});
       if (result.kind === "ok") {
         this.setAuthToken(result.data.token);
         this.setRefreshToken(result.data.refresh_token);
+        const rootStore = getRootStore(store);
+        rootStore.userStore.setUserPreferences(result.data.user_preferences || []);
+        rootStore.userStore.setUserLists(result.data.userLists);
+        navigate('PreferencesScreen')
+
+ 
+
       } else {
-       this.setErrorMessage('Something went wrong')
+       this.setErrorMessage( result?.message||'Something went wrong')
       }
       this.setLoading(false);
     },

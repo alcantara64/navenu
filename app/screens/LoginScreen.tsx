@@ -146,10 +146,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setAuthEmail(email)
     setAuthPassword(password)
     setAttemptsCount(attemptsCount + 1)
+    
 
-    if (Object.values(validationErrors).some((v) => !!v)) return
     try {
-      await login()
+      await login(email, password)
     } catch (e) {
       console.error(e)
     }
@@ -196,7 +196,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           validationSchema={loginValidationSchema}
           onSubmit={(values) => onLogin(values)}
         >
-          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+          {({ values, touched, errors, handleChange, handleSubmit, handleBlur, isValid }) => (
             <View style={$formContainer}>
               {/* Input fields */}
               <View>
@@ -230,7 +230,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
               {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
               <View style={$buttonContainer}>
-                <AppButton style={$button} onPress={handleSubmit} disabled={true}>
+                <AppButton style={$button} onPress={handleSubmit} disabled={!isValid}>
                   <Text style={$buttonText}>Login</Text>
                 </AppButton>
                 <AppButton
@@ -249,16 +249,16 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
                 <AppButton
                   style={$borderlessButtonContainer}
-                  borderless
+                  borderless 
                   title={"Create a new account?"}
                   onPress={() => navigation.navigate("SignUpStart")}
                 />
-                <AppButton
+                {/* <AppButton
                   style={$borderlessButtonContainer}
                   borderless
                   title={"Forgot Password"}
                   onPress={() => navigation.navigate("ForgotPassword")}
-                />
+                /> */}
               </View>
             </View>
           )}

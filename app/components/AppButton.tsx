@@ -56,7 +56,7 @@ export const AppButton = observer(function AppButton(props: AppButtonProps) {
   }
 
   return (
-    <Pressable onPress={onPress} style={style}>
+    <Pressable onPress={onPress} style={style} {...extraProps}>
       {children}
     </Pressable>
   )

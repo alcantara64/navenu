@@ -15,7 +15,7 @@ import { BottomSheet } from "../../../components/BottomSheet"
 import { useSubscribeToNotification, useUserList } from "../../../hooks/useUser"
 import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
 import { Colors, typography } from "../../../theme"
-import { getInitials, getStyleByCategory, isItemInUserList } from "../../../utils/transform"
+import { getInitials, getStyleByCategory, isItemInUserList, shareLink } from "../../../utils/transform"
 import { DropCard, Gallery } from "../../../components"
 
 export interface VenueDetailCardProps {
@@ -61,6 +61,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     )
   }
 
+
   const [bottomSheet, setBottomSheet] = useState(false)
   const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
   const operatingHours = venue.operating_hours?.split(",")
@@ -96,7 +97,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       <View padding-15>
         <Text text60M>Menu</Text>
         <View marginT-15>
-          <Text text70>{venue.menu}</Text>
+          <Text text70>{'Not Available'}</Text>
         </View>
       </View>
     )
@@ -152,7 +153,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity marginV-10 onPress={() => console.log("Button 1")}>
+            <TouchableOpacity marginV-10 onPress={() => shareLink(venue.name, `Share ${venue.name}`)}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>

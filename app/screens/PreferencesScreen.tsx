@@ -166,6 +166,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         shop: false,
         fit: false,
       }
+      if(userStore?.userPreference){
       for (const key of Object.keys(selectedPreference)){
         if (userStore?.userPreference[key.toUpperCase()].length > 0) {
           selectedPreferenceintial[key] = true;
@@ -179,6 +180,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
           })
         }
       }
+    }
       setSelectedPreference(selectedPreferenceintial)
     }, [])
 

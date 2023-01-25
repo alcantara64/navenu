@@ -61,8 +61,8 @@ export class CloudMessaging {
             name: 'Default Channel',
         });
         await notifee.displayNotification({
-            title:"TEST Notification",
-            body: 'TEST BODY',
+            title:"Welcome to Navenu",
+            body: 'Welcome the Navenu App',
             data:undefined,
             android: {
                 channelId,

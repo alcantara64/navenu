@@ -108,7 +108,13 @@ const AppStack = observer(function AppStack() {
               headerTintColor: 'white',
             }}
           />
-          <Stack.Screen name="SignUpStart" component={SignUpStartScreen}  />
+          <Stack.Screen  options={{ 
+              headerShown: true, 
+              headerTransparent: true,
+              headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
+              headerBackTitleVisible: false,
+              headerTintColor: 'white',
+            }} name="SignUpStart" component={SignUpStartScreen}  />
           <Stack.Screen name="SignUpForm" component={SignUpFormScreen} 
             options={{ 
               headerShown: true, 
