@@ -39,7 +39,6 @@ export const createUserListName = async (listName) => {
 export const addItemToUserList = async (newList: AddListItemPayload) => {
   const api = new UserService()
   const response = await api.addItemToList(newList)
-  console.log({response})
   if (response.kind !== "ok") {
     throw new Error(response.message || "Could not add item to list")
   } else {

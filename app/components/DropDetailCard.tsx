@@ -6,10 +6,9 @@ import { View, Text, Button } from "react-native-ui-lib"
 import { Colors } from "../theme"
 import { DropCard } from "./DropCard"
 import { useState } from "react"
-import Carousel from "react-native-reanimated-carousel"
 import { IDrop } from "../interface/drops"
 import { CountdownTimer, Gallery, VenueCard } from "."
-import { getStyleByCategory } from "../utils/transform"
+import { getStyleByCategory, shareLink } from "../utils/transform"
 
 export interface DropDropDetailCardProps {
   /**
@@ -62,7 +61,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           <View flex-1 center paddingB-20 spread >
             <TouchableOpacity
               style={{ marginVertical: 15 }}
-              onPress={() => console.log("Button 1")}
+              onPress={() => shareLink(drop.name, `Share ${drop.name}`)}
             >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>

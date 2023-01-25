@@ -62,6 +62,9 @@ export const FeedStore = types
     setIsLoading(status: boolean) {
       self.isLoading = status
     },
+    clearAllFilters (){
+      self.catFilters = [];
+    },
 
     async setMapMode(status: boolean) {
       self.isMapMode = status

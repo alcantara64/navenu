@@ -60,12 +60,12 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
       store.refreshToken = ""
     },
-    login: flow(function *() {
+    login: flow(function *(email:string, password:string) {
       store.errorMessage = '';
       store.isLoading = true
       const formData = new FormData();
-      formData.append("email", store.authEmail)
-      formData.append("password", store.authPassword)
+      formData.append("email", email)
+      formData.append("password", password)
      const rootStore = getRootStore(store);
       // @ts-ignore
       const result =  yield api.login(formData);
@@ -84,15 +84,15 @@ export const AuthenticationStoreModel = types
       }
       store.isLoading = false
     }),
-    async register() {
+    async register(email:string, password:string){
       this.setErrorMessage('');
       this.setLoading(true)
       const formData = new FormData()
-      formData.append("email", store.authEmail)
-      formData.append("password", store.authPassword)
+      formData.append("email", email)
+      formData.append("password", password)
       // @ts-ignore
       const api = new UserService();
-      const result = await api.register({email: store.authEmail, password: store.authPassword});
+      const result = await api.register({email, password});
       if (result.kind === "ok") {
         this.setAuthToken(result.data.token);
         this.setRefreshToken(result.data.refresh_token);
@@ -104,7 +104,7 @@ export const AuthenticationStoreModel = types
  
 
       } else {
-       this.setErrorMessage('Something went wrong')
+       this.setErrorMessage( result?.message||'Something went wrong')
       }
       this.setLoading(false);
     },

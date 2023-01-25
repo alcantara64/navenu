@@ -1,4 +1,4 @@
-import { ViewStyle } from "react-native"
+import { Share, ViewStyle } from "react-native"
 import { IFeed } from "../interface/feed"
 import { IUserList } from "../interface/user"
 import { IAutoComplete } from "../services/api"
@@ -112,5 +112,12 @@ export const isItemInUserList = (id: any, DataListData: IUserList) => {
     return DataListData.userlist[key].cards.some((card) => {
       return card.id === id
     })
+  })
+}
+export const shareLink = (title:string, message="Check out Navenu", url="https://www.navenu.com") => {
+  Share.share({
+    message,
+    url,
+    title,
   })
 }
