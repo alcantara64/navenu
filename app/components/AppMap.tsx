@@ -19,6 +19,7 @@ import { Text } from "./Text"
 import { getDropsByID } from "../utils/transform"
 
 import { GOOGLE_MAPS_API_KEY } from "@env"
+import { useStores } from "../models"
 
 export interface AppMapProps {
   /**
@@ -66,6 +67,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
   const mapRef = React.useRef<MapView>(null)
+  const {venueStore} = useStores()
 
   useEffect(() => {
     ;(async () => {
@@ -87,6 +89,10 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const handleMarkerPressed = (feed: IDrop | IVenue) => {
     setCurrentFeed(feed)
     setShowBottomSheet(true)
+    if(feed.type === 'location'){
+    venueStore.setCurrentVenue(feed);
+    venueStore.setBottomSheetStatus(true)
+    }
   }
 
   React.useEffect(() => {
@@ -146,7 +152,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         ) : null}
       </MapView>
       
-      {showBottomSheet && (
+      {showBottomSheet && !venueStore.showBottomSheet && (
         <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}
           {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}

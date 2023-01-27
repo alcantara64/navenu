@@ -1,24 +1,28 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, } from "react-native"
+import { FlatList, ViewStyle, } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../../navigators"
 import { 
+  AppBottomsheet,
+  DropCard,
   ErrorMessage, 
   LoadingIndicator, 
   NearByVenues, 
-  Screen, 
+  Screen,
+  VenueCard, 
 } from "../../components"
 import { VenueDetailCard } from "./components/VenueDetailCard"
-import { View } from "react-native-ui-lib"
+import { View, Text } from "react-native-ui-lib"
 import { useVenue } from "../../hooks/useVenue"
 import { useStores } from "../../models"
 import * as Location from "expo-location"
+import { getDropsByID } from "../../utils/transform"
 
 // @ts-ignore
 export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueDetail">> = observer(function VenueDetailScreen({route}) {
   // Pull in one of our MST stores
-  const { authenticationStore } = useStores()
+  const { authenticationStore, venueStore:{showBottomSheet, currentVenue,setBottomSheetStatus , setCurrentVenue} } = useStores()
   const venueId = route.params.venue.id;
   const { data, error, isLoading } = useVenue(venueId);
   const [destinationDirections, setDestinationDirections] = useState<any>(null)
@@ -35,6 +39,17 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   ) => {
     return `uber://?action=setPickup&pickup[latitude]=${pickupLatitude}&pickup[longitude]=${pickupLongitude}&pickup[nickname]=${pickupNickname}&dropoff[latitude]=${dropoffLatitude}&dropoff[longitude]=${dropoffLongitude}&dropoff[nickname]=${dropoffNickname}`;
   };
+
+  const handleBottomSheetClose = () => {
+    setBottomSheetStatus(false)
+}
+
+  useEffect(() => {
+    return () => {
+      handleBottomSheetClose()
+      setCurrentVenue(null)
+    }
+  }, [])
 
   useEffect(() => {
     if(latitude === 0 && longitude === 0) {
@@ -53,10 +68,12 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   }, [])
 
 
+
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
 
   return (
+    <View flex-10>
     <Screen style={$root} preset="auto">
       <View style={$container}>
         <VenueDetailCard 
@@ -80,6 +97,23 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
         ) : null}
       </View>
     </Screen>
+    {currentVenue && showBottomSheet && <AppBottomsheet>
+      <>
+    {currentVenue && <VenueCard item={currentVenue} isFeed={false} />}
+        {getDropsByID(currentVenue?.drops as any, data?.nearby).length > 0 && (
+          <View>
+            <View>
+              <Text>Drops</Text>
+            </View>
+            <FlatList
+              data={getDropsByID(currentVenue?.drops as any, data?.nearby)}
+              renderItem={(item) => <DropCard item={item} isFeed={false} />}
+            />
+          </View>
+        )}
+        </>
+    </AppBottomsheet>}
+    </View>
   )
 })
 

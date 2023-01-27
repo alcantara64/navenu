@@ -82,7 +82,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       <View padding-15>
         <Text text60M>Opening Hours</Text>
         <View marginT-15>
-          {operatingHours.map((item, key) => (
+          {operatingHours?.map((item, key) => (
             <View row spread marginT-10 key={key}>
               <Text text70>{item}</Text>
             </View>
@@ -268,7 +268,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity>
           </View>
-          {venue.curators && venue.curators.length && (
+          {venue.curators && venue.curators.length > 0 && (
             <View marginT-20 row>
               <View row flex-2>
                 {venue.curators.slice(0, 3).map((curator, index) => {

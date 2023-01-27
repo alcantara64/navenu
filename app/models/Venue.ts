@@ -1,11 +1,12 @@
 import { SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
-import _ from 'lodash';
-import { VenuesService } from "../services/VenuesService";
+import _ from "lodash"
+import { VenuesService } from "../services/VenuesService"
+import { IVenue } from "../interface/venues"
 
 /**
- * @TODO complete with additional fields please refer to interface IVenues this all just seems very redundant 
+ * @TODO complete with additional fields please refer to interface IVenues this all just seems very redundant
  */
- const venue = types.model({
+const venue = types.model({
   id: types.identifier,
   title: types.maybe(types.string),
   description: types.maybe(types.string),
@@ -28,30 +29,36 @@ export const VenueStore = types
   .model("Venue")
   .props({
     venue: types.optional(types.array(venue), []),
-    error: types.optional(Error, {message: '', isError: false}),
+    error: types.optional(Error, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
     isFetchingNextPage: types.maybe(types.boolean),
+    showBottomSheet: types.maybe(types.boolean),
+    currentVenue: types.maybeNull(venue)
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
-   
-    setVenue(venue){
-     self.venue = venue;
+    setVenue(venue) {
+      self.venue = venue
     },
-    async getVenueDetail(id?:number){
-      const  VenuesService = new VenuesService();
-     const  result = await VenuesService.getVenueDetail(id);
-     if(result.kind === 'ok'){
-      console.log( 'venue', result.data);
-      this.setVenue(result.data)
-     }
+    setCurrentVenue(currentVenue:IVenue){
+    self.currentVenue = currentVenue
+    },
 
+    setBottomSheetStatus(status:boolean){
+     self.showBottomSheet = status
     },
-    async refetch(){
+  
+    async getVenueDetail(id?: number) {
+      const venuesService = new VenuesService()
+      const result = await venuesService.getVenueDetail(id)
+      if (result.kind === "ok") {
+        this.setVenue(result.data)
+      }
+    },
+    async refetch() {
       this.getVenueDetail(self.id)
     },
-
-  })) 
+  }))
 
 export interface VenueSnapshotOut extends SnapshotOut<typeof VenueStore> {}
 export interface VenueSnapshotIn extends SnapshotIn<typeof VenueStore> {}
