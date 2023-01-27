@@ -14,6 +14,7 @@ import { BottomSheet } from "./BottomSheet"
 import { VenueCard } from "./VenueCard"
 import { DropCard } from "./DropCard"
 import { getDropsByID } from "../utils/transform"
+import { useStores } from "../models"
 
 export interface NearByVenuesProps {
   /**
@@ -53,7 +54,8 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const [FitStateButton, setFitStateButton] = useState(false)
   const [miniFilter, setMiniFilter] = useState([])
   const [selectedVenue, setSelectedVenue] = useState<IVenue>(null)
-  const [showBottomSheet, setShowBottomSheet] = useState(false)
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const {venueStore} = useStores()
 
   const addCat = (cat) => {
     setMiniFilter([...miniFilter, cat])
@@ -61,6 +63,8 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const onMarkerPress = (venue) => {
     setSelectedVenue(venue)
     setShowBottomSheet(true)
+    venueStore.setCurrentVenue(venue);
+    venueStore.setBottomSheetStatus(true)
   }
   const removeCat = (cat) => {
     const newCatFilter = _.without(miniFilter, cat)
@@ -161,9 +165,4 @@ const $container: ViewStyle = {
   justifyContent: "center",
 }
 
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
-}
-const $mapStyle: ViewStyle = {}
+

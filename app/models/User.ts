@@ -93,7 +93,7 @@ const UserModel = types
     longitude: types.optional(types.number, 0),
     latitude: types.optional(types.number, 0),
     ID: types.identifier,
-    social_id: types.optional(types.string, ""),
+    social_id: types.maybeNull(types.optional(types.string, "")),
     user_login: types.optional(types.string, ""),
     user_nicename: types.optional(types.string, ""),
     user_email: types.optional(types.string, ""),
@@ -175,6 +175,7 @@ export const UserStoreModel = types
         // Fill UserListModel with API DATA
         self.usersList = response.data.userLists || [];
         self.userDrops = response.data.savedDeals || [];
+        self.userPreference = response.data.user_preferences;
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }

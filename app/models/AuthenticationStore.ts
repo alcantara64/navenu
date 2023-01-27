@@ -70,9 +70,10 @@ export const AuthenticationStoreModel = types
       // @ts-ignore
       const result =  yield api.login(formData);
       if (result.kind === "ok") {
-        store.authToken = result.token;
         store.refreshToken = result.refresh_token;
         rootStore.userStore.setUserPreferences(result.user_preferences);
+        rootStore.userStore.setCurrentUser(result.user);
+        store.authToken = result.token;
         if(result.userLists){
         rootStore.userStore.setUserLists(result.userLists);
         }
