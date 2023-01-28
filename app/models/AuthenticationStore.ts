@@ -77,9 +77,10 @@ export const AuthenticationStoreModel = types
         if(result.userLists){
         rootStore.userStore.setUserLists(result.userLists);
         }
-        if(!result.user_preferences || !result.user_preferences.DO){
-          navigate('PreferencesScreen')
-        }
+        // todo redirect to preference screen after successful 
+        // if(!result.user_preferences || !result.user_preferences.DO){
+        //   navigate('PreferencesScreen')
+        // }
       }else{   
         store.errorMessage = 'incorrect username or password'
       }
@@ -100,7 +101,7 @@ export const AuthenticationStoreModel = types
         const rootStore = getRootStore(store);
         rootStore.userStore.setUserPreferences(result.data.user_preferences || []);
         rootStore.userStore.setUserLists(result.data.userLists);
-        navigate('PreferencesScreen')
+       // navigate('PreferencesScreen')
 
  
 

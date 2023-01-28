@@ -509,7 +509,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
               {selectedListItem?.userListName}
             </Text>
             <View marginT-15>
-              <CardList data={selectedListItem?.cards || []} />
+              <CardList data={selectedListItem?.cards || []} isFeed={false} />
             </View>
           </View>
         </BottomSheet>
