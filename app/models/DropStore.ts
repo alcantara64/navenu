@@ -82,7 +82,6 @@ export const DropStoreModel = types
       const dropService = new DropService();
       const claimedResult= await dropService.claimDrop(dropId);
       if(claimedResult.kind === 'ok'){
-       await this.getDropDetail(dropId);
       this.setShowClaimModal(true)
       this.setClaimedCode(claimedResult.claimCode)
       }
