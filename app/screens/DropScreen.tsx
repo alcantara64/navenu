@@ -31,7 +31,9 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
     const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore;
     const queryClient = useQueryClient()
   
-
+    const closeClaimModal = () => {
+      setShowClaimModal(false)
+    }
     useEffect(() => {
       setShowClaimModal(false)
       return closeClaimModal()
@@ -47,9 +49,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
       await  claimDropCode(currentDropId);
       queryClient.invalidateQueries({queryKey: ['drop-detail', currentDropId]})
     }
-    const closeClaimModal = () => {
-      setShowClaimModal(false)
-    }
+
     const gotoUserProfile = () =>{
       navigation.navigate('Settings')
       closeClaimModal()

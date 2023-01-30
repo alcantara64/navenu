@@ -4,7 +4,9 @@ import { IUserPreference } from "../../interface/user"
 import {
   AddListItemPayload,
   Api,
+  DeleUserListPayload,
   ICreateUserListResponse,
+  IDeleteUserListResponse,
   IUserListResponse,
   UserResponse,
 } from "../api"
@@ -139,8 +141,8 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
-  async removeCardFromList(payload) {
-    const response: ApiResponse<ICreateUserListResponse> = await this.httpClient.delete(
+  async removeCardFromList(payload:DeleUserListPayload) {
+    const response: ApiResponse<IDeleteUserListResponse> = await this.httpClient.delete(
       "/UserLists/item",
       payload,
     )
@@ -167,8 +169,9 @@ export class UserService {
   async saveUserPreference(payload: IUserPreference) {
     const formData = new FormData()
     formData.append(`user_preferences`, JSON.stringify(payload))
-
-    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData)
+  console.log('payload',JSON.stringify(payload))
+    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData);
+console.log(response.data)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem

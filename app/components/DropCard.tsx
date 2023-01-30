@@ -75,7 +75,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               </TouchableOpacity>
             </View>}
           </View>
-          {item.expiration && (
+          {item.expiration && !item.expired && (
             <View
               marginL-4
               paddingL-4
