@@ -10,6 +10,7 @@ import { Colors } from "../theme"
 import { getStyleByCategory } from "../utils/transform"
 import CategoryIcons from "../../assets/icons/drops/claim-icons.svg"
 import { useDrop } from "../hooks/useDrops"
+import { useQueryClient } from 'react-query';
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -27,10 +28,13 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
     const { dropStore } = useStores()
     const currentDropId = route.params.venue.id
     const { isLoading, data, error } = useDrop(currentDropId)
-    const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
+    const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore;
+    const queryClient = useQueryClient()
+  
 
     useEffect(() => {
       setShowClaimModal(false)
+      return closeClaimModal()
     }, [route.params.venue.id])
 
     if (error) {
@@ -39,11 +43,16 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
     if (isLoading) {
       return <LoadingIndicator></LoadingIndicator>
     }
-    const claimCode = () => {
-      //  claimDropCode(currentDropId);
+    const claimCode = async () => {
+      await  claimDropCode(currentDropId);
+      queryClient.invalidateQueries({queryKey: ['drop-detail', currentDropId]})
     }
     const closeClaimModal = () => {
       setShowClaimModal(false)
+    }
+    const gotoUserProfile = () =>{
+      navigation.navigate('Settings')
+      closeClaimModal()
     }
     return (
       <Screen style={$root} preset="scroll">
@@ -74,7 +83,9 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
                       </View>
                       <View row>
                         <Text text80>Codes are Automatically saved on your </Text>
+                        <TouchableOpacity onPress={gotoUserProfile}>
                         <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
+                        </TouchableOpacity>
                       </View>
                     </>
                   </TouchableWithoutFeedback>
