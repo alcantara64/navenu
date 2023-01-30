@@ -101,15 +101,15 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             )}
             {!drop.user_claimed && (
               <>
-                <View marginL-4 row style={{...$countDownContainer, ...getStyleByCategory(drop.category), borderColor:getStyleByCategory(drop.category).backgroundColor}}>
-                  <Text style={$countdownText}>ENDS IN</Text>
-                  <CountdownTimer time={drop.expiration} />
+                <View marginL-4 row style={{...$countDownContainer, ...getStyleByCategory(drop.category), borderColor:getStyleByCategory(drop.category).backgroundColor, opacity: drop.expired? 0.4: 1}}>
+                  <Text style={$countdownText}>{!drop.expired ?'ENDS IN': 'Expired'}</Text>
+                  {!drop.expired && <CountdownTimer time={drop.expiration} />}
                 </View>
                 <Button
                   size="large"
                   fullWidth
-
-                  label={"CLAIM CODE!"}
+                  disabled={drop.expired}
+                  label={ "CLAIM CODE!"}
                   color="white"
                   onPress={onClaimCode}
                   style={$claimButton}
@@ -127,7 +127,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View>
-           <VenueCard item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0}} onPress={onVenuePress}/>
+           <VenueCard item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0, id:drop.venue_id}} onPress={onVenuePress}/>
           </View>
 
           <View row marginT-20 marginB-10>

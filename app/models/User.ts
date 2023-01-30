@@ -171,11 +171,15 @@ export const UserStoreModel = types
       const response = yield userService.getUsers();
       if (response.kind === "ok") {
         // FIll UserModel with API Data
+        if(response.data.user){
         self.currentUser = response.data.user
+        }
         // Fill UserListModel with API DATA
-        self.usersList = response.data.userLists || [];
+        self.usersList = response.data.userLists || {};
         self.userDrops = response.data.savedDeals || [];
+        if(response.data.user_preferences){
         self.userPreference = response.data.user_preferences;
+        }
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }
@@ -209,21 +213,23 @@ export const UserStoreModel = types
     setCurrentUser(value) {
       self.currentUser = value
     },
+    
     // @TODO need help
     // Trying to save data from API to UserLists Model
     setUserLists(value) {
       // making userLists easier to deal with
-      const lists = value.userLists
+      self.usersList = value
+      //const lists = value.userLists
       // Setting List name
       // emmanuel - why this?
-      const listnames = Object.keys(lists)
+     // const listnames = Object.keys(lists)
       // loop through array of listnames
-      for (const l in listnames) {
-      }
+      // for (const l in listnames) {
+      // }
       // loop through each list
-      for (const x in lists) {
+      // for (const x in lists) {
         // self.userLists.listname=Object.keys(input.userLists)
-      }
+      // }
     },
     changeAvatar: flow(function* (avatar: string) {
       self.currentUser.avatar = avatar
