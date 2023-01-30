@@ -88,7 +88,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               <CountdownTimer time={item.expiration} />
             </View>
           )}
-         {item.isExpired && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText}> EXPIRED</Text></View>)}
+         {item.expired && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText}> EXPIRED</Text></View>)}
         </View>
       </ImageBackground>
     </TouchableOpacity>
