@@ -25,7 +25,7 @@ export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "Cur
   // const navigation = useNavigation()
   return (
     <Screen style={$root} preset="scroll">
-      <CuratorCard venue={data}></CuratorCard>
+      <CuratorCard curator={data}></CuratorCard>
     </Screen>
   )
 })

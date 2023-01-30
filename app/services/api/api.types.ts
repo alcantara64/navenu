@@ -155,6 +155,18 @@ export interface ICreateUserListResponse {
   }
   status: number
 }
+export interface IDeleteUserListResponse {
+  data: {
+    user_list_id: string
+    listname: string
+  }
+  status: number
+}
+export type DeleUserListPayload = {
+  user_list_id: string
+  type: "Article" | "location" | "drop"
+  id: string
+}
 export type AddListItemPayload = { user_list_id: string; type: FEED_TYPE; id: number }
 
 export interface AutoCompleteResponse {

@@ -114,6 +114,21 @@ export const isItemInUserList = (id: any, DataListData: IUserList) => {
     })
   })
 }
+export const getUserListIdByItemId = (id: any, DataListData: IUserList) => {
+  let userListId;
+  if(DataListData){
+    Object.keys(DataListData.userlist).some((key) => {
+      return DataListData.userlist[key].cards.some((card) => {
+
+        if( card.id === id){
+          userListId = DataListData.userlist[key].user_list_id
+          return true
+        }
+      })
+    })
+  }
+  return userListId;
+}
 export const shareLink = (title:string, message="Check out Navenu", url="https://www.navenu.com") => {
   Share.share({
     message,
