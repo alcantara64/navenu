@@ -46,10 +46,10 @@ export const AuthenticationStoreModel = types
       store.isLoading = value
     },
     setAuthEmail(value: string) {
-      store.authEmail = value.replace(/ /g, "")
+      store.authEmail = value?.replace(/ /g, "")
     },
     setAuthPassword(value: string) {
-      store.authPassword = value.replace(/ /g, "")
+      store.authPassword = value?.replace(/ /g, "")
     },
     setRefreshToken(value: string) {
       store.refreshToken = value
@@ -130,9 +130,9 @@ export const AuthenticationStoreModel = types
       formData.append("email", email)
       formData.append("sid", socialId)
       formData.append("authtype", authType)
-      formData.append("firstname", firstName)
-      formData.append("lastname", lastName)
-      formData.append("avatar", avatar)
+      formData.append("firstname", firstName || '')
+      formData.append("lastname", lastName || '')
+      formData.append("avatar", avatar || '')
 
       // @ts-ignore
       const api = new UserService()
