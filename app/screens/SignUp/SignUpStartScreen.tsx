@@ -17,6 +17,7 @@ import * as AppleAuthentication from "expo-apple-authentication"
 
 import { useStores } from "../../models"
 import { Platform } from "expo-modules-core"
+import jwtDecode from "jwt-decode"
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
@@ -77,10 +78,14 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       })
-
-      if (credential) {
+      let decodeEmail = '';
+      if(credential.identityToken){
+      const result  =   jwtDecode<{email:string}>(credential.identityToken);
+      decodeEmail = result.email;
+      } 
+      if (credential && (credential.email || decodeEmail)) {
         socialRegister({
-          email: credential.email,
+          email: credential.email || decodeEmail,
           firstName: credential.fullName.givenName,
           lastName: credential.fullName.familyName,
           socialId: credential.user,
