@@ -82,16 +82,18 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     const useInfo = await response.json()
 
     if (useInfo) {
-      socialRegister({
-        email: useInfo.email,
-        firstName: useInfo.given_name,
-        lastName: useInfo.family_name,
-        socialId: useInfo.id,
-        authType: "google",
-        avatar: useInfo.picture,
-      }).then(() => {
-        navigation.navigate("PreferencesScreen")
-      })
+      try {
+        await socialRegister({
+          email: useInfo.email,
+          firstName: useInfo.given_name,
+          lastName: useInfo.family_name,
+          socialId: useInfo.id,
+          authType: "google",
+          avatar: useInfo.picture,
+        })
+      } catch (e) {
+        setErrorMessage(e.message)
+      }
     }
   }
 
