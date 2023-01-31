@@ -14,8 +14,8 @@ export const AuthenticationStoreModel = types
     isLoading: types.optional(types.boolean, false),
     longitude: types.optional(types.number, 0),
     latitude: types.optional(types.number, 0),
-    errorMessage: types.optional(types.string, ''),
-    refreshToken: types.optional(types.string, ''),
+    errorMessage: types.optional(types.string, ""),
+    refreshToken: types.optional(types.string, ""),
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -42,8 +42,8 @@ export const AuthenticationStoreModel = types
     setAuthToken(value?: string) {
       store.authToken = value
     },
-    setLoading(value:boolean){
-     store.isLoading = value
+    setLoading(value: boolean) {
+      store.isLoading = value
     },
     setAuthEmail(value: string) {
       store.authEmail = value.replace(/ /g, "")
@@ -51,8 +51,8 @@ export const AuthenticationStoreModel = types
     setAuthPassword(value: string) {
       store.authPassword = value.replace(/ /g, "")
     },
-    setRefreshToken(value:string){
-      store.refreshToken = value;
+    setRefreshToken(value: string) {
+      store.refreshToken = value
     },
     logout() {
       store.authToken = undefined
@@ -60,68 +60,73 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
       store.refreshToken = ""
     },
-    login: flow(function *(email:string, password:string) {
-      store.errorMessage = '';
+    login: flow(function* (email: string, password: string) {
+      store.errorMessage = ""
       store.isLoading = true
-      const formData = new FormData();
+      const formData = new FormData()
       formData.append("email", email)
       formData.append("password", password)
-     const rootStore = getRootStore(store);
+      const rootStore = getRootStore(store)
       // @ts-ignore
-      const result =  yield api.login(formData);
+      const result = yield api.login(formData)
       if (result.kind === "ok") {
         store.refreshToken = result.refresh_token;
-        rootStore.userStore.setUserPreferences(result.user_preferences);
-        rootStore.userStore.setCurrentUser(result.user);
-        store.authToken = result.token;
-        if(result.userLists){
-        rootStore.userStore.setUserLists(result.userLists);
+        rootStore.userStore.setCurrentUser(result.user)
+
+        if (result.userLists && !Array.isArray(result.userLists)) {
+          rootStore.userStore.setUserLists(result.userLists)
         }
-        // todo redirect to preference screen after successful 
-        // if(!result.user_preferences || !result.user_preferences.DO){
-        //   navigate('PreferencesScreen')
-        // }
-      }else{   
-        store.errorMessage = 'incorrect username or password'
+        if (result.user_preferences) {
+          rootStore.userStore.setUserPreferences(result.user_preferences)
+        } else {
+          setTimeout(() => {
+            navigate("PreferencesScreen")
+          }, 50)
+        }
+        store.authToken = result.token
+      } else {
+        store.errorMessage = "incorrect username or password"
       }
       store.isLoading = false
     }),
-    async register(email:string, password:string){
-      this.setErrorMessage('');
+    async register(email: string, password: string) {
+      this.setErrorMessage("")
       this.setLoading(true)
       const formData = new FormData()
       formData.append("email", email)
       formData.append("password", password)
       // @ts-ignore
-      const api = new UserService();
-      const result = await api.register({email, password});
+      const api = new UserService()
+      const result = await api.register({ email, password })
       if (result.kind === "ok") {
-        this.setAuthToken(result.data.token);
-        this.setRefreshToken(result.data.refresh_token);
-        const rootStore = getRootStore(store);
-        rootStore.userStore.setUserPreferences(result.data.user_preferences || []);
-        rootStore.userStore.setUserLists(result.data.userLists);
-       // navigate('PreferencesScreen')
+        this.setRefreshToken(result.data.refresh_token)
+        const rootStore = getRootStore(store)
+        if (result.data.user_preferences) {
+          rootStore.userStore.setUserPreferences(result.data.user_preferences)
+        }else{
+          setTimeout(() => {
+            navigate("PreferencesScreen")
+          }, 50)
+        }
 
- 
-
+        this.setAuthToken(result.data.token)
       } else {
-       this.setErrorMessage( result?.message||'Something went wrong')
+        this.setErrorMessage(result?.message || "Something went wrong")
       }
-      this.setLoading(false);
+      this.setLoading(false)
     },
     async socialRegister({
-      email, 
-      socialId, 
+      email,
+      socialId,
       authType,
-      firstName = '',
-      lastName = '',
-      avatar = ''
+      firstName = "",
+      lastName = "",
+      avatar = "",
     }) {
-      this.setAuthEmail(email);
+      this.setAuthEmail(email)
       this.setLoading(true)
       const formData = new FormData()
-      
+
       formData.append("email", email)
       formData.append("sid", socialId)
       formData.append("authtype", authType)
@@ -130,25 +135,24 @@ export const AuthenticationStoreModel = types
       formData.append("avatar", avatar)
 
       // @ts-ignore
-      const api = new UserService();
-      const result = await api.socialRegister({email, socialId, authType});
+      const api = new UserService()
+      const result = await api.socialRegister({ email, socialId, authType })
       if (result.kind === "ok") {
-        this.setAuthToken(result.data.token);
-        this.setRefreshToken(result.data.refresh_token);
+        this.setAuthToken(result.data.token)
+        this.setRefreshToken(result.data.refresh_token)
       } else {
-       this.setErrorMessage('Something went wrong')
+        this.setErrorMessage("Something went wrong")
       }
-      this.setLoading(false);
+      this.setLoading(false)
     },
-    setErrorMessage(value: string){
-     store.errorMessage = value
+    setErrorMessage(value: string) {
+      store.errorMessage = value
     },
-    setLongitudeAndLatitude(longitude, latitude){
-      store.longitude = longitude;
-      store.latitude = latitude;
+    setLongitudeAndLatitude(longitude, latitude) {
+      store.longitude = longitude
+      store.latitude = latitude
     },
   }))
 
 export interface AuthenticationStore extends Instance<typeof AuthenticationStoreModel> {}
 export interface AuthenticationStoreSnapshot extends SnapshotOut<typeof AuthenticationStoreModel> {}
-

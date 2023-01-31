@@ -22,4 +22,5 @@ export interface IDrop  {
     drops?: Array<IDrop>
     user_code: string
     images: Array<{id: string, image: string}>
+    expired: boolean
   }
