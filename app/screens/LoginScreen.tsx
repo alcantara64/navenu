@@ -33,6 +33,7 @@ import { useNavigation } from "@react-navigation/native"
 import { typography } from "../theme/typography"
 import { FontAwesome5 } from "@expo/vector-icons"
 import jwtDecode from "jwt-decode"
+import { Platform } from "expo-modules-core"
 const authImage = require("../../assets/images/auth/auth-login-image.png")
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
@@ -248,10 +249,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                   <FontAwesome5 name="google" size={24} color="#FFFFFF" />
                   <Text style={$buttonText}>Continue with google</Text>
                 </AppButton>
-                <AppButton style={$button} onPress={handleAppleSignin}>
+                {Platform.OS === 'ios' && <AppButton style={$button} onPress={handleAppleSignin}>
                   <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
                   <Text style={$buttonText}>Continue with Apple</Text>
-                </AppButton>
+                </AppButton>}
 
                 <AppButton
                   style={$borderlessButtonContainer}
