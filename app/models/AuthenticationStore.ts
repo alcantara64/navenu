@@ -122,7 +122,9 @@ export const AuthenticationStoreModel = types
       firstName = "",
       lastName = "",
       avatar = "",
+      isSignUp= false
     }) {
+      this.setErrorMessage("")
       this.setAuthEmail(email)
       this.setLoading(true)
       const formData = new FormData()
@@ -141,7 +143,7 @@ export const AuthenticationStoreModel = types
         this.setAuthToken(result.data.token)
         this.setRefreshToken(result.data.refresh_token)
       } else {
-        this.setErrorMessage("Something went wrong")
+        this.setErrorMessage(isSignUp ? result.message || 'Could not signup at the moment' : 'Invalid username or password')
       }
       this.setLoading(false)
     },

@@ -494,7 +494,6 @@ const $cardContainer: ViewStyle = {
 const $carouselContainer: ViewStyle = {
   zIndex: -1,
   height: Dimensions.get("screen").height,
-  position: "absolute",
 }
 
 const $preferenceItemSubItem: ViewStyle = {

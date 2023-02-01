@@ -169,9 +169,7 @@ export class UserService {
   async saveUserPreference(payload: IUserPreference) {
     const formData = new FormData()
     formData.append(`user_preferences`, JSON.stringify(payload))
-  console.log('payload',JSON.stringify(payload))
     const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData);
-console.log(response.data)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
