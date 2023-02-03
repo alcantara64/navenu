@@ -38,11 +38,10 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
     const { email, password } = values
     setAuthEmail(email)
     setAuthPassword(password)
-
       try {
         await register(email, password)
       } catch (e) {
-        console.log("error", e)
+        setErrorMessage(e.message)
       }
     setAuthPassword("")
     setAuthEmail("")
