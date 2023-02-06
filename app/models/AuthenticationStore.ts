@@ -60,7 +60,7 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
       store.refreshToken = ""
     },
-    login: flow(function* (email: string, password: string) {
+    login: flow(function* (email: string, password: string,  deviceToken: string, deviceType: string ) {
       store.errorMessage = ""
       store.isLoading = true
       const formData = new FormData()
@@ -70,12 +70,16 @@ export const AuthenticationStoreModel = types
       // @ts-ignore
       const result = yield api.login(formData)
       if (result.kind === "ok") {
+        const userService = new UserService();
+    
         store.refreshToken = result.refresh_token;
         rootStore.userStore.setCurrentUser(result.user)
 
         if (result.userLists && !Array.isArray(result.userLists)) {
           rootStore.userStore.setUserLists(result.userLists)
         }
+
+        
         if (result.user_preferences) {
           rootStore.userStore.setUserPreferences(result.user_preferences)
         } else {
@@ -83,6 +87,9 @@ export const AuthenticationStoreModel = types
             navigate("PreferencesScreen")
           }, 50)
         }
+        setTimeout(()=> {
+           userService.savePushNotificationToken({deviceType, deviceToken }, result.token).then().catch(err => {console.log(err)})
+        }, 50)
         store.authToken = result.token
       } else {
         store.errorMessage = "incorrect username or password"

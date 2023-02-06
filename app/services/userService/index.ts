@@ -248,4 +248,25 @@ export class UserService {
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
   }
+
+  async savePushNotificationToken(payload: {
+    deviceType: string
+    deviceToken: string
+  }, apiToken: string){
+    const formData = new FormData()
+    formData.append(`device_token`, payload.deviceToken)
+    formData.append(`device_type`, payload.deviceType)
+ 
+
+    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/token`, formData, {headers:{
+      Authorization: apiToken
+    }})
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+ 
+    const rawData = response.data
+    return { kind: "ok", data: rawData.data }
+  }
 }

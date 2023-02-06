@@ -1,5 +1,5 @@
 import notifee from '@notifee/react-native';
-
+import messaging from '@react-native-firebase/messaging';
 
 export class CloudMessaging {
 
@@ -70,7 +70,7 @@ export class CloudMessaging {
         });
     };
 
-    // getDeviceToken = async (): Promise<string> => {
-    //     return messaging().getToken();
-    // };
+    getDeviceToken = async (): Promise<string> => {
+        return messaging().getToken();
+    };
 }

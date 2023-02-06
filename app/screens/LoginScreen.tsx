@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import {
   TextStyle,
   ViewStyle,
@@ -34,6 +34,7 @@ import { typography } from "../theme/typography"
 import { FontAwesome5 } from "@expo/vector-icons"
 import jwtDecode from "jwt-decode"
 import { Platform } from "expo-modules-core"
+import { CloudMessaging } from "../services/cloudMessagingService"
 const authImage = require("../../assets/images/auth/auth-login-image.png")
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
@@ -44,6 +45,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState("")
   const [errorState, setErrorState] = useState("")
+  const cloudMessagingRef = useRef<CloudMessaging>();
   // const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const {
@@ -67,6 +69,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     iosClientId: GOOGLE_IOS_CLIENT_ID,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
   })
+
+  useEffect(() => {
+  cloudMessagingRef.current = new CloudMessaging();
+  }, [])
 
   React.useEffect(() => {
     if (response?.type === "success") {
@@ -94,6 +100,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       })
     }
   }
+
 
   const handleAppleSignin = async () => {
     try {
@@ -156,7 +163,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     
 
     try {
-      await login(email, password)
+    const token =  await cloudMessagingRef.current.getDeviceToken();
+      await login(email, password, token, Platform.OS )
     } catch (e) {
       console.error(e)
     }
