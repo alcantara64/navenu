@@ -106,6 +106,11 @@
 		<string>Inter-SemiBold.ttf</string>
 		<string>Inter-Thin.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIRequiredDeviceCapabilities</key>

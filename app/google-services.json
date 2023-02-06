@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "533893697678",
+    "firebase_url": "https://solar-sylph-303300-default-rtdb.firebaseio.com",
+    "project_id": "solar-sylph-303300",
+    "storage_bucket": "solar-sylph-303300.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533893697678:android:e5446fd0a55d176c6979df",
+        "android_client_info": {
+          "package_name": "com.navenu.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj_UE-5Ns3FhiaBqfoZ5EwID1Sdz_qOfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533893697678-c0hog3mmvsc96jitgmfofak0u3toiod6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.generate.navenu",
+                "app_store_id": "1453855181"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

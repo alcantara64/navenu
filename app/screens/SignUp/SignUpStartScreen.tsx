@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { ImageBackground, View, Dimensions, ViewStyle, TextStyle, Alert } from "react-native"
 import { Text } from "react-native-ui-lib"
 import { FontAwesome5 } from "@expo/vector-icons"
@@ -18,6 +18,7 @@ import * as AppleAuthentication from "expo-apple-authentication"
 import { useStores } from "../../models"
 import { Platform } from "expo-modules-core"
 import jwtDecode from "jwt-decode"
+import { ToastLoader } from "../../components"
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
@@ -30,8 +31,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
 ) {
   const navigation = useNavigation()
   const {
-    authenticationStore: { socialRegister },
+    authenticationStore: { socialRegister, setLoading, isLoading, errorMessage, setErrorMessage },
   } = useStores()
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   const goToFormPage = () => {
     navigation.navigate("SignUpForm")
@@ -56,7 +61,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
     })
     const useInfo = await response.json()
 
-    if (useInfo) {
+    if (useInfo && useInfo.email ) {
       socialRegister({
         email: useInfo.email,
         firstName: useInfo.given_name,
@@ -64,6 +69,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
         socialId: useInfo.id,
         authType: "google",
         avatar: useInfo.picture,
+        isSignUp: true,
       }).then(() => {
         navigation.navigate("PreferencesScreen")
       })
@@ -78,11 +84,11 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       })
-      let decodeEmail = '';
-      if(credential.identityToken){
-      const result  =   jwtDecode<{email:string}>(credential.identityToken);
-      decodeEmail = result.email;
-      } 
+      let decodeEmail = ""
+      if (credential.identityToken) {
+        const result = jwtDecode<{ email: string }>(credential.identityToken)
+        decodeEmail = result.email
+      }
       if (credential && (credential.email || decodeEmail)) {
         socialRegister({
           email: credential.email || decodeEmail,
@@ -90,14 +96,14 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
           lastName: credential.fullName.familyName,
           socialId: credential.user,
           authType: "apple",
+          isSignUp:true
         })
       }
-
     } catch (e) {
       console.log(e)
       if (e.code === "ERR_CANCELED") {
-        Alert.alert('Sign in with Apple canceled')
-      } 
+        Alert.alert("Sign in with Apple canceled")
+      }
     }
   }
 
@@ -111,6 +117,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
             height: Dimensions.get("window").height,
           }}
         >
+        <ToastLoader
+        isLoading={isLoading}
+        hasError={!!errorMessage}
+        errorMessage={errorMessage}
+        clearError={() => setErrorMessage("")}
+      />
           <View style={$textContainer}>
             <Text style={$text}>GAIN ACCESS TO A</Text>
             <Text style={$text}>New World:</Text>
@@ -126,12 +138,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
               <FontAwesome5 name="google" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with google</Text>
             </AppButton>
-           { Platform.OS === 'ios' && (
-            <AppButton style={$button} onPress={handleAppleSignin}>
-              <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
-              <Text style={$buttonText}>Continue with Apple</Text>
-            </AppButton>)
-            }
+            {Platform.OS === "ios" && (
+              <AppButton style={$button} onPress={handleAppleSignin}>
+                <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
+                <Text style={$buttonText}>Continue with Apple</Text>
+              </AppButton>
+            )}
             <AppButton style={$button} onPress={goToFormPage}>
               <FontAwesome5 solid name="envelope" size={24} color="#FFFFFF" />
               <Text style={$buttonText}>Continue with email</Text>

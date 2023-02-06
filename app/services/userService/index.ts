@@ -169,9 +169,7 @@ export class UserService {
   async saveUserPreference(payload: IUserPreference) {
     const formData = new FormData()
     formData.append(`user_preferences`, JSON.stringify(payload))
-  console.log('payload',JSON.stringify(payload))
     const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData);
-console.log(response.data)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -242,6 +240,27 @@ console.log(response.data)
     formData.append(`avatar`, payload.avatar)
 
     const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/social`, formData)
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+ 
+    const rawData = response.data
+    return { kind: "ok", data: rawData.data }
+  }
+
+  async savePushNotificationToken(payload: {
+    deviceType: string
+    deviceToken: string
+  }, apiToken: string){
+    const formData = new FormData()
+    formData.append(`device_token`, payload.deviceToken)
+    formData.append(`device_type`, payload.deviceType)
+ 
+
+    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/token`, formData, {headers:{
+      Authorization: apiToken
+    }})
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem

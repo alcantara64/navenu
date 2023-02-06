@@ -11,6 +11,9 @@ production = ENV["PRODUCTION"] == "1"
 
 target 'Navenu' do
   pod 'GoogleSignIn', '~> 6.2.2'
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
   use_expo_modules!
   post_integrate do |installer|
     begin
