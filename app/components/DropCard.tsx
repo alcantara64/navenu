@@ -28,14 +28,16 @@ export interface DropCardProps {
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
   isFeed?: boolean,
-  userListData?: IUserList
+  userListData?: IUserList,
+  onRemoveFromUserList?: (feed:any) => void
+  isUserList?:boolean;
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { item, onBookMark, isFeed, userListData } = props
+  const { item, onBookMark, isFeed, userListData, isUserList, onRemoveFromUserList } = props
   const navigation = useNavigation();
 
 
@@ -46,6 +48,10 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
     navigation.navigate("DropScreen", {
       venue,
     })
+  }
+  const removeFromUserList = () => {
+    onRemoveFromUserList(item)
+
   }
 
   return (
@@ -69,6 +75,16 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
                 <FontAwesome5
                   solid={isItemInUserList(item.id, userListData)}
                   name="bookmark"
+                  size={20}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+            </View>}
+            {isUserList && !isFeed && <View flex-1 right>
+              <TouchableOpacity onPress={removeFromUserList}>
+                <FontAwesome5
+                  solid
+                  name="times-circle"
                   size={20}
                   color="#FFFFFF"
                 />

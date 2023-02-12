@@ -95,12 +95,12 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   }
   return (
     <View>
-      <View marginB-10 marginL-10>
+      <View marginB-10 marginL-10 >
         <Text left sectionHeader>
           Venues Near By
         </Text>
       </View>
-      <View centerH flex>
+      <View centerH flex  marginB-10>
         <CategoryFilterBar
           addCat={addCat}
           removeCat={removeCat}
@@ -127,6 +127,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         item={venues}
         useExternalMarkers
         ExternalMakers={Markers}
+        style={$mapHeight}
         directions={
           destinationDirections && destinationDirections.destination
             ? {
@@ -163,6 +164,9 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
 
 const $container: ViewStyle = {
   justifyContent: "center",
+}
+const $mapHeight: ViewStyle ={
+  height: 300
 }
 
 

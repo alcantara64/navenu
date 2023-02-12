@@ -22,11 +22,13 @@ export interface ArticleCardProps {
   item: IArticle
   isFeed?: boolean
   onBookMark?: (feed: any) => void
-  userListData?: IUserList
+  userListData?: IUserList,
+  onRemoveFromUserList?: (feed:any) => void
+  isUserList?:boolean;
 }
 
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
-  const { item, isFeed, onBookMark, userListData } = props
+  const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList} = props
   const navigation = useNavigation()
   const onCardPressed = () => {
     navigation.navigate("Article", {
@@ -35,6 +37,10 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
   }
   const saveDrop = () => {
     onBookMark(item)
+  }
+  const removeFromUserList = () => {
+    onRemoveFromUserList(item)
+
   }
 
   return (
@@ -64,6 +70,13 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
               <View flex-1 right>
                 <TouchableOpacity onPress={saveDrop}>
                   <FontAwesome5 solid={isItemInUserList(item.id, userListData)} name="bookmark" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            )}
+            {isUserList && (
+              <View flex-1 right>
+                <TouchableOpacity onPress={removeFromUserList}>
+                  <FontAwesome5 solid name="times-circle" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             )}

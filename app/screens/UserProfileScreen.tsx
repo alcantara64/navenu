@@ -69,7 +69,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       userDrops,
       updateUserName,
       updateUserDescription,
-
     } = userStore
 
     const [showBottomSheet, setShowBottomSheet] = useState(false)
@@ -143,22 +142,24 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     const selectFile = async () => {
       // Opening Document Picker to select one file
       try {
-        const res = await launchImageLibrary({
-          mediaType: 'photo',
-        }, (response) => {
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-            return false
-          } else if (response.errorCode) {
-            console.log('ImagePicker Error: ', response.errorCode);
-            return false
-          } 
-          return true
-        });
-        if(!res.didCancel){
+        const res = await launchImageLibrary(
+          {
+            mediaType: "photo",
+          },
+          (response) => {
+            if (response.didCancel) {
+              console.log("User cancelled image picker")
+              return false
+            } else if (response.errorCode) {
+              console.log("ImagePicker Error: ", response.errorCode)
+              return false
+            }
+            return true
+          },
+        )
+        if (!res.didCancel) {
           setSingleFile(res)
         }
-        
       } catch (err) {
         setSingleFile(null)
         // Handling any exception (If any)
@@ -201,7 +202,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         setErrorMessage("Could not remove list, try again later")
       } else {
         onCloseUserListModal()
-        await getUser();
+        await getUser()
       }
     }
 
@@ -219,6 +220,21 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
         </View>
       </View>
     )
+    const removeFromUserList = async (item, listId: any) => {
+      setLoading(true)
+      const userService = new UserService()
+      const response = await userService.removeCardFromList({
+        type: item.type,
+        id: item.id,
+        user_list_id: listId,
+      })
+
+      if (response.kind === "ok") {
+        getUser()
+        setShowUserListModal(false)
+        setLoading(false)
+      }
+    }
     return (
       <>
         <Screen style={$root} preset="scroll">
@@ -508,8 +524,15 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
             <Text header marginT-10>
               {selectedListItem?.userListName}
             </Text>
-            <View marginT-15>
-              <CardList data={selectedListItem?.cards || []} isFeed={false} />
+            <View marginT-15 style={$mapContainer}>
+              <CardList
+                data={selectedListItem?.cards || []}
+                isFeed={false}
+                isUserList
+                removeItemFromUserList={(item) =>
+                  removeFromUserList(item, selectedListItem?.user_list_id)
+                }
+              />
             </View>
           </View>
         </BottomSheet>
@@ -590,4 +613,7 @@ const $logoutButtonText: TextStyle = {
 
 const $locationButtonText: TextStyle = {
   ...$logoutButtonText,
+}
+const $mapContainer: ViewStyle = {
+  maxHeight: 400,
 }

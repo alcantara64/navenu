@@ -28,6 +28,8 @@ export interface CardListProps {
   isFetchingNextPage?: boolean
   getMoreData?: () => void
   userList?: IUserList
+  isUserList?: boolean,
+  removeItemFromUserList?: (feed:any) => void 
 }
 
 /**
@@ -46,20 +48,24 @@ export const CardList = observer(function CardList(props: CardListProps) {
     toggleSaveFeed,
     isFetchingNextPage,
     getMoreData,
-    userList
+    userList,
+    isUserList,
+    removeItemFromUserList
   } = props
+
+
 
   const renderItem = ({ item }) => {
     if (item.type === "location") {
       return (
-        <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} />
+        <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} />
       )
     }
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} userListData={userList} />
+      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} />
     }
     if (item.type === FEED_TYPE.drop) {
-      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} userListData={userList} />
+      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
     }
   }
   return (

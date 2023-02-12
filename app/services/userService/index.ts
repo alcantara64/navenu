@@ -142,10 +142,14 @@ export class UserService {
   }
 
   async removeCardFromList(payload:DeleUserListPayload) {
-    const response: ApiResponse<IDeleteUserListResponse> = await this.httpClient.delete(
-      "/UserLists/item",
-      payload,
-    )
+    const formData = new FormData();
+    formData.append('user_list_id', payload.user_list_id);
+    formData.append('id', payload.id);
+    formData.append('type', payload.type);
+    const response: ApiResponse<IDeleteUserListResponse> = await this.httpClient.post(
+      "/UserLists/remove",
+      formData,
+    );
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem

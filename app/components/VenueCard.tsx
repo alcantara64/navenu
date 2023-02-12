@@ -30,13 +30,15 @@ export interface VenueCardProps {
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
   userListData?:IUserList
+  onRemoveFromUserList?: (feed:any) => void
+  isUserList?:boolean;
 }
 
 /**
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { item, isFeed =true, onBookMark, userListData } = props
+  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList } = props
   const navigation = useNavigation();
 
   const onPressVenue  = (venue) =>{
@@ -47,6 +49,10 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
 
   const saveDrop = () => {
     onBookMark(item)
+  }
+  const removeFromUserList = () => {
+    onRemoveFromUserList(item)
+
   }
 
   return (
@@ -65,8 +71,8 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
 
         <View row style={$itemContainer}>
         <View flex-7 marginT-5 style={$cardtext}>
-          <Text style={$topText}>{item.name}</Text>
-          <Text style={$belowText}>{item.category}</Text>
+          <Text style={$topText}>{item.category}</Text>
+          <Text style={$belowText}>{item.name}</Text>
           <Text style={$address}>{item.address}</Text>
           <Text bottom style={$bottomText}>@ {item.name}</Text>
         </View>
@@ -75,6 +81,16 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
                 <FontAwesome5
                   solid={isItemInUserList(item.id, userListData)}
                   name="bookmark"
+                  size={20}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+            </View>}
+            {isUserList && !isFeed && <View flex-1 right>
+              <TouchableOpacity onPress={removeFromUserList}>
+                <FontAwesome5
+                  solid
+                  name="times-circle"
                   size={20}
                   color="#FFFFFF"
                 />
