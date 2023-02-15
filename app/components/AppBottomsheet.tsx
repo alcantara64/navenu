@@ -36,6 +36,7 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
         index={0}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
+        enablePanDownToClose
       >
         <View style={$contentContainer}>{children}</View>
       </BottomSheet>

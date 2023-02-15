@@ -133,7 +133,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     <>
       <ImageBackground source={{ uri: venue.image }} resizeMode="cover" style={$imagetop}>
         <View style={$imageFilter} />
-        <View marginT-10 style={$closeBtn}>
+        <View marginT-15 style={$closeBtn}>
           <TouchableOpacity onPress={goBack}>
             <FontAwesome5 solid name="times-circle" size={27} color="#FFFFFF" />
           </TouchableOpacity>

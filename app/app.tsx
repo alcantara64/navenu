@@ -26,6 +26,7 @@ import { CloudMessaging } from './services/cloudMessagingService';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { configureDesignSystem } from './utils/designSystem';
 import {enableLatestRenderer} from 'react-native-maps';
+import messaging from '@react-native-firebase/messaging';
 
 enableLatestRenderer();
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
@@ -66,6 +67,13 @@ function App(props: AppProps) {
   const { hideSplashScreen } = props
 
   useEffect(() => {
+    const cloudMessagingService = new CloudMessaging();
+    const unsubscribe = messaging().onMessage(cloudMessagingService.handlePushMessage);
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
     return notifee.onForegroundEvent(({ type, detail }) => {
       switch (type) {
         case EventType.DISMISSED:
@@ -76,12 +84,6 @@ function App(props: AppProps) {
     });
   }, []);
 
-
-   useEffect(() =>{
-   const cloudMessagingService = new CloudMessaging();
-   cloudMessagingService.sendFakePushNotification();
-
-   }, []);
   const {
     initialNavigationState,
     onNavigationStateChange,

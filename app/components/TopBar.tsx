@@ -14,7 +14,7 @@ import { FontAwesome5 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { CategoryFilterBar } from "./CategoryFilterBar"
 import { useStores } from "../models"
-import { View, Text } from "react-native-ui-lib"
+import { View, Text, Button } from "react-native-ui-lib"
 import { Colors, spacing, typography } from "../theme"
 import { FEED_TYPE } from "../interface/feed"
 import { horizontalScale } from "../utils/metrics"
@@ -106,77 +106,68 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
         <View padding-5 marginT-5>
           {/* <ScrollView horizontal> */}
           <View marginT-5 row spread>
-            <TouchableOpacity onPress={toggleDrop} flex-1>
-              <ImageBackground
-                source={require("../../assets/images/drops-background.jpg")}
-                style={[
-                  $filterType,
-                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.drop)) ||
-                    (isSearchMode && searchFilterType === FEED_TYPE.drop + "s")) &&
-                    $activeFilter,
-                  isSearchMode && $searchMode,
-                ]}
-                imageStyle={$filterTypeImageStyle}
-                resizeMode="cover"
-              >
-                <Text white text70 left style={$CardTitles}>
-                  DROPS
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleVenue}>
-              <ImageBackground
-                source={require("../../assets/images/venue.png")}
-                style={[
-                  $filterType,
-                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.location)) ||
-                    (isSearchMode && searchFilterType === FEED_TYPE.location + "s")) &&
-                    $activeFilter,
-                  isSearchMode && $searchMode,
-                ]}
-                imageStyle={$filterTypeImageStyle}
-              >
-                <Text white text70 left style={$CardTitles}>
-                  VENUE
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleEditorial} marginR-5>
-              <ImageBackground
-                source={require("../../assets/images/editorial.jpg")}
-                style={[
-                  $filterType,
-                  ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.article)) ||
-                    (isSearchMode && searchFilterType === FEED_TYPE.article + "s")) &&
-                    $activeFilter,
-                  isSearchMode && $searchMode,
-                ]}
-                imageStyle={$filterTypeImageStyle}
-                resizeMode={"cover"}
-              >
-                <Text white center style={$CardTitles}>
-                  EDITORIAL
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
+            <Button
+              fullWidth
+              backgroundColor={Colors.black}
+              onPress={toggleVenue}
+              style={[
+                $filterType,
+                ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.location)) ||
+                  (isSearchMode && searchFilterType === FEED_TYPE.location + "s")) &&
+                  $activeFilter,
+                isSearchMode && $searchMode,
+              ]}
+              size={ isSearchMode? Button.sizes.medium: Button.sizes.large}
+              label="VENUES"
+              labelStyle={$CardTitles}
+            />
+            <Button
+              fullWidth
+              backgroundColor={Colors.black}
+              onPress={toggleDrop}
+              size={ isSearchMode? Button.sizes.medium: Button.sizes.large}
+              style={[
+                $filterType,
+                ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.drop)) ||
+                  (isSearchMode && searchFilterType === FEED_TYPE.drop + "s")) &&
+                  $activeFilter,
+                isSearchMode && $searchMode,
+              ]}
+              label="Drops"
+              labelStyle={$CardTitles}
+            />
+
             {isSearchMode && (
-              <TouchableOpacity onPress={toggleCurator} marginR-5>
-                <ImageBackground
-                  source={require("../../assets/images/curator.jpg")}
-                  style={[
-                    $filterType,
-                    searchFilterType === FEED_TYPE.curators + "s" && $activeFilter,
-                    $searchMode,
-                  ]}
-                  imageStyle={$filterTypeImageStyle}
-                  resizeMode={"cover"}
-                >
-                  <Text white center style={$CardTitles}>
-                    CURATORS
-                  </Text>
-                </ImageBackground>
-              </TouchableOpacity>
+              <Button
+                fullWidth
+                backgroundColor={Colors.black}
+                onPress={toggleCurator}
+                style={[
+                  $filterType,
+                  searchFilterType === FEED_TYPE.curators + "s" && $activeFilter,
+                  $searchMode,
+                ]}
+                label="CURATORS"
+                labelStyle={$CardTitles}
+                size={ isSearchMode? Button.sizes.medium: Button.sizes.large}
+              />
             )}
+
+            <Button
+              fullWidth
+              backgroundColor={Colors.black}
+              onPress={toggleEditorial}
+              style={[
+                $filterType,
+                ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.article)) ||
+                  (isSearchMode && searchFilterType === FEED_TYPE.article + "s")) &&
+                  $activeFilter,
+                isSearchMode && $searchMode,
+              ]}
+              label="EDITORIAL"
+              
+              labelStyle={$CardTitles}
+            />
           </View>
           {/* </ScrollView> */}
           {(!isSearchMode ||
@@ -225,13 +216,14 @@ const $logo: ImageStyle = {
   height: 13,
 }
 const $filterType: ImageStyle = {
-  paddingRight: 20,
-  paddingTop: 20,
-  paddingLeft: 38,
-  paddingBottom: 10,
+  // paddingRight: 20,
+  // paddingTop: 20,
+  // paddingLeft: 38,
+  // paddingBottom: 10,
   marginBottom: 5,
   opacity: 0.3,
-  flexGrow: 1,
+  borderRadius: 8,
+  //  flexGrow: 1,
 }
 const $searchMode: ImageStyle = {
   paddingRight: 16,

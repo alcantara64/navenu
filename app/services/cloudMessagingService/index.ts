@@ -40,13 +40,13 @@ export class CloudMessaging {
         });
     };
 
-    // requestUserPermission = async (): Promise<boolean> => {
-    //     const authStatus = await messaging().requestPermission();
-    //     const enabled =
-    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    //     return enabled;
-    // };
+    requestUserPermission = async (): Promise<boolean> => {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        return enabled;
+    };
 
     checkInitialNotification = async () => {
         const initialNotification = await notifee.getInitialNotification();
