@@ -8,7 +8,15 @@ import { useRefreshByUser } from "../hooks/useRefreshByUser"
 import { useFeeds } from "../hooks"
 import { useStores } from "../models"
 import { filterFeeds, getUserListIdByItemId, isItemInUserList } from "../utils/transform"
-import { View, Text, TouchableOpacity, SkeletonView, ExpandableSection } from "react-native-ui-lib"
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SkeletonView,
+  RadioGroup,
+  RadioButton,
+  Button,
+} from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { addItemToUserList, createUserListName, useUserList } from "../hooks/useUser"
 import { useMutation, useQueryClient } from "react-query"
@@ -44,7 +52,8 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
 
     const [longitude, setLongitude] = useState<number>(authenticationStore.longitude)
     const [latitude, setLatitude] = useState<number>(authenticationStore.latitude)
-    const [selectedUserList, setSelectedUserList] = useState([])
+    const [selectedUserList, setSelectedUserList] = useState()
+
     const createListNameMutation = useMutation({
       mutationFn: createUserListName,
       onSuccess(data, variables, context) {
@@ -79,13 +88,10 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         toggleHeaderState()
       }
     }
-    const expandableHeaders = (title: string, targetChberon: boolean) => (
+    const expandableHeaders = (title: string) => (
       <View style={$headerTextContainer} row spread>
         <View>
           <Text style={$labelStyle}>{title}</Text>
-        </View>
-        <View center>
-          <Entypo name={targetChberon ? "chevron-up" : "chevron-down"} size={24} color="black" />
         </View>
       </View>
     )
@@ -96,8 +102,11 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       } else {
         const userService = new UserService()
         const userListId = getUserListIdByItemId(item.id, userList.data)
-       await userService.removeCardFromList({ user_list_id: userListId, type: item.type, id: item.id })
-
+        await userService.removeCardFromList({
+          user_list_id: userListId,
+          type: item.type,
+          id: item.id,
+        })
       }
       userList.refetch()
     }
@@ -105,17 +114,15 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       createListNameMutation.mutate(listName)
       setListName("")
     }
-    const onAddItemToUserList = (listItem) => {
+    const onAddItemToUserList = () => {
       addItemToListMutation.mutate({
-        user_list_id: listItem?.user_list_id,
+        user_list_id: selectedUserList,
         type: selectedFeedItem?.type,
         id: selectedFeedItem?.id,
       })
-      setShowListModal(false)
+      setShowListModal(false);
+      setSelectedUserList(undefined);
       queryClient.invalidateQueries({ queryKey: ["feed"] })
-    }
-    const checkUserListExpanded = (identifier) => {
-      return selectedUserList.includes(identifier)
     }
 
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
@@ -139,10 +146,12 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
           <Modal
             show={showListModal}
             body={
-              <View center flex style={$centeredView}>
+              <View bottom flex style={$centeredView}>
                 <View style={$modalView}>
                   <View marginB-10 row spread width={"100%"}>
-                    <Text header>ADD TO LisT</Text>
+                    <Text header center>
+                      SAVE TO LIST
+                    </Text>
                     <TouchableOpacity
                       onPress={() => {
                         setShowListModal(false)
@@ -151,48 +160,36 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
                       <Ionicons name="close-circle-sharp" size={24} color="black" />
                     </TouchableOpacity>
                   </View>
-                  <View width={"100%"}>
-                    {userList?.data?.userlist &&
-                      Object.entries(userList.data.userlist).map(
-                        (key, index) =>
-                          key[0] && (
-                            <ExpandableSection
-                              key={index}
-                              marginT-10
-                              onPress={() => {
-                                let newUserList = []
-                                if (checkUserListExpanded(key[0])) {
-                                  newUserList = selectedUserList.filter((item) => item !== key[0])
-                                } else {
-                                  newUserList = [...selectedUserList, key[0]]
-                                }
-                                setSelectedUserList(newUserList)
-                              }}
-                              expanded={checkUserListExpanded(key[0])}
-                              paddingB-10
-                              sectionHeader={expandableHeaders(
-                                `${key[0]} (${userList.data.userlist[key[0]]?.cards?.length})`,
-                                checkUserListExpanded(key[0]),
-                              )}
-                            >
-                              <TouchableOpacity
-                                marginV-10
-                                right
-                                row
-                                onPress={() => {
-                                  onAddItemToUserList(userList.data.userlist[key[0]])
-                                }}
-                              >
-                                <Entypo name="add-to-list" size={24} color="black" />
-                              </TouchableOpacity>
-                            </ExpandableSection>
-                          ),
-                      )}
+                  <View width={"100%"} spread>
+                    <RadioGroup
+                      onValueChange={(userListId) => {
+                        setSelectedUserList(userListId)
+                      }}
+                      style={{ flexWrap: "wrap" }}
+                      row
+                    >
+                      {userList?.data?.userlist &&
+                        Object.entries(userList.data.userlist).map(
+                          (key, index) =>
+                            key[0] && (
+                              <RadioButton
+                                color={Colors.stay}
+                                labelStyle={$userListLabelStyle}
+                                key={index}
+                                marginB-10
+                                value={`${userList.data.userlist[key[0]]?.user_list_id}`}
+                                label={expandableHeaders(
+                                  `${key[0]} (${userList.data.userlist[key[0]]?.cards?.length})`,
+                                )}
+                              />
+                            ),
+                        )}
+                    </RadioGroup>
                   </View>
 
                   {userList.isLoading && <LoadingIndicator />}
-                  {userList.error && <Text>an error occurred try again later</Text>}
-                  <View style={{ width: "100%" }}>
+                  {userList.error && <Text>an error occurred fetching userList</Text>}
+                  <View marginB-15 style={{ width: "100%" }}>
                     <View marginT-10>
                       <AppInput
                         value={listName}
@@ -206,6 +203,17 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
                         }
                         placeholder="add to a new list"
                       />
+                      <View marginT-10>
+                        <Button
+                          onPress={onAddItemToUserList}
+                          style={$buttonStyle}
+                          disabled={!selectedUserList}
+                          backgroundColor={Colors.stay}
+                          fullWidth
+                          label={"ADD TO LIST "}
+                          labelStyle={$userListLabelStyle}
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -259,7 +267,7 @@ const $modalView: ViewStyle = {
   shadowRadius: 8,
   elevation: 5,
   // borderTopWidth: 10,
-  width: "80%",
+  width: "100%",
   borderRadius: 8,
 }
 const $skeletonViewStyle: ViewStyle = {
@@ -273,4 +281,13 @@ const $labelStyle: TextStyle = {
 }
 const $headerTextContainer: ViewStyle = {
   alignItems: "center",
+}
+const $userListLabelStyle: TextStyle = {
+  fontFamily: typography.fonts.inter.normal,
+  fontWeight: "700",
+  textTransform: "uppercase",
+  marginRight: 5,
+}
+const $buttonStyle: ViewStyle = {
+  borderRadius: 8,
 }

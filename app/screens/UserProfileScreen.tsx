@@ -186,11 +186,11 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       navigation.navigate("PreferencesScreen")
     }
 
-    const shareLink = () => {
+    const shareLink = (url:string, message:string, title= 'Navenu') => {
       Share.share({
-        message: "Check out Navenu",
-        url: `https://www.navenu.com`,
-        title: "Navenu",
+        message,
+        url,
+        title,
       })
     }
 
@@ -500,7 +500,9 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                 fullWidth
                 bottom
                 label={"Share Navenu"}
-                onPress={shareLink}
+                onPress={() => {
+                  shareLink('https://navenuapp.page.link', `${currentUser.display_name} wants to share their Navenu profile with you`)
+                }}
               />
             </View>
           </View>
@@ -516,7 +518,9 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
               >
                 <AntDesign name="delete" size={30} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={shareLink}>
+              <TouchableOpacity onPress={() => {
+                  shareLink('https://navenuapp.page.link/userList', `${currentUser.display_name} wants to share their ${selectedListItem?.userListName} with you`)
+                }}>
                 <MaterialIcons name="ios-share" size={30} color="#black" />
               </TouchableOpacity>
             </View>

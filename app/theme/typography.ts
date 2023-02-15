@@ -53,7 +53,10 @@ const fonts = {
     normal: "bourtonbase",
     medium: "bourtonbasedrop",
 
-  } 
+  },
+  inter:{
+    normal: 'Inter-Regular'
+  }
 }
 
 export const typography = {

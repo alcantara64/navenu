@@ -96,7 +96,9 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
           <TouchableOpacity onPress={navigateToMap}>
             <FontAwesome5 name="map-marker-alt" size={27} color="#000000" />
           </TouchableOpacity>
+          <View center>
           <Image source={require("../../assets/icon-navenu.png")} style={$logo} />
+          </View>
           <TouchableOpacity onPress={showFilter}>
             <FontAwesome5 name="filter" size={27} color="#000000" />
           </TouchableOpacity>
@@ -209,11 +211,14 @@ const $container: ViewStyle = {
   shadowOpacity: 0.36,
   shadowRadius: 6.68,
   elevation: 11,
+  marginLeft:10,
+  marginRight:10,
 }
 const $logo: ImageStyle = {
   marginTop: 12,
   width: horizontalScale(106),
   height: 13,
+  alignSelf: 'center',
 }
 const $filterType: ImageStyle = {
   // paddingRight: 20,
@@ -241,4 +246,5 @@ const $CardTitles: TextStyle = {
   fontSize: spacing.medium,
   color: Colors.white,
   fontWeight: "900",
+  textAlign: 'center'
 }

@@ -61,7 +61,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           <View flex-1 center paddingB-20 spread >
             <TouchableOpacity
               style={{ marginVertical: 15 }}
-              onPress={() => shareLink(drop.name, `Share ${drop.name}`)}
+              onPress={() => shareLink(drop.name, `Checkout ${drop.name} on Navenu`, 'https://navenuapp.page.link/drop')}
             >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
