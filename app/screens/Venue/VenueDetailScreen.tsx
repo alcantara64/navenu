@@ -89,8 +89,9 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
                 latitude,
                 longitude
               },
-              destination: destinationDirections
+              destination: destinationDirections 
             }}
+            defaultLocation={{latitude: data.lat, longitude:data.lng}}
             setLatitude={setLatitude}
             setLongitude={setLongitude}
           />

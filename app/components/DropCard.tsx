@@ -18,13 +18,14 @@ import { IFeed } from "../interface/feed"
 import { useNavigation } from "@react-navigation/native"
 import { getStyleByCategory, isItemInUserList } from '../utils/transform'
 import { IUserList } from "../interface/user"
+import { IDrop } from "../interface/drops"
 
 export interface DropCardProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  item: any
+  item: IDrop
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
   isFeed?: boolean,
@@ -91,7 +92,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               </TouchableOpacity>
             </View>}
           </View>
-          {item.expiration && !item.expired && (
+          {item.expiration && !item.expired && !item.user_claimed && (
             <View
               marginL-4
               paddingL-4
@@ -105,6 +106,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
             </View>
           )}
          {item.expired && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText}> EXPIRED</Text></View>)}
+         {item.user_claimed && !item.expired && item.user_code && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText} > {item.user_code}</Text></View>)}
         </View>
       </ImageBackground>
     </TouchableOpacity>

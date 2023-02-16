@@ -153,7 +153,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity marginV-10 onPress={() => shareLink(venue.name, `Share ${venue.name}`)}>
+            <TouchableOpacity marginV-10 onPress={() => shareLink(venue.name, `Checkout ${venue.name} on Navenu`, 'https://navenuapp.page.link/venue')}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>
