@@ -35,6 +35,10 @@ export interface NearByVenuesProps {
       longitude: number
     }
   }
+  defaultLocation:{
+    latitude: number
+      longitude: number
+  }
   setLatitude: React.Dispatch<React.SetStateAction<number>>
   setLongitude: React.Dispatch<React.SetStateAction<number>>
   venues: Array<IVenue>
@@ -44,7 +48,9 @@ export interface NearByVenuesProps {
  * Describe your component here
  */
 export const NearByVenues = observer(function NearByVenues(props: NearByVenuesProps) {
-  const { style, venues, setLatitude, setLongitude, destinationDirections } = props
+  const { style, venues, setLatitude, setLongitude, destinationDirections, defaultLocation } = props;
+
+  
   const $styles = [$container, style]
   const [DoStateButton, setDoStateButton] = useState(false)
   const [EatStateButton, setEatStateButton] = useState(false)
@@ -124,10 +130,12 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         longitude={destinationDirections.origin.longitude}
         onSetLatitude={setLatitude}
         onSetLongitude={setLongitude}
-        item={venues}
+        item={miniFilter.length > 0? venues.filter((venue) => miniFilter.includes(venue.category)): venues}
         useExternalMarkers
         ExternalMakers={Markers}
         style={$mapHeight}
+        initialLatitude={defaultLocation.latitude}
+        initialLongitude={defaultLocation.longitude}
         directions={
           destinationDirections && destinationDirections.destination
             ? {
@@ -142,6 +150,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
               }
             : null
         }
+        isfromNearBy
       />
       <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose} height={600}>
         {selectedVenue && <VenueCard item={selectedVenue} />}

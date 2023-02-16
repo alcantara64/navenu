@@ -30,7 +30,9 @@ export interface AppMapProps {
   onSetLatitude: (value: number) => void
   onSetLongitude: (value: number) => void
   latitude: number
-  longitude: number
+  longitude: number,
+  initialLatitude?: number,
+  initialLongitude?: number,
   directions?: {
     origin: {
       latitude: number
@@ -45,6 +47,7 @@ export interface AppMapProps {
   showBottomSheet?: boolean
   ExternalMakers?: React.ReactNode
   useExternalMarkers?: boolean
+  isfromNearBy?:boolean,
 }
 
 /**
@@ -61,13 +64,21 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     item,
     useExternalMarkers,
     ExternalMakers,
-    directions
+    directions,
+    initialLatitude,
+    initialLongitude,
+    isfromNearBy
+
   } = props
   const $styles = [$container, style]
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
   const mapRef = React.useRef<MapView>(null)
-  const {venueStore} = useStores()
+  const {venueStore} = useStores();
+
+  useEffect(() => {
+    venueStore.setBottomSheetStatus(false);
+  },[])
 
   useEffect(() => {
     ;(async () => {
@@ -89,10 +100,13 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const handleMarkerPressed = (feed: IDrop | IVenue) => {
     setCurrentFeed(feed)
     setShowBottomSheet(true)
+    if(isfromNearBy){
+    
     if(feed.type === 'location'){
     venueStore.setCurrentVenue(feed);
     venueStore.setBottomSheetStatus(true)
     }
+  }
   }
 
   React.useEffect(() => {
@@ -116,8 +130,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         ref={mapRef}
         style={$styles}
         initialRegion={{
-          latitude,
-          longitude,
+          latitude:initialLatitude || latitude,
+          longitude:initialLongitude || longitude,
           // todo work on longitude delta, important for zooming
           latitudeDelta: 0.28,
           longitudeDelta: 0.28 * (Dimensions.get("window").width / Dimensions.get("window").height),
@@ -151,8 +165,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
           />
         ) : null}
       </MapView>
-      
-      {showBottomSheet && !venueStore.showBottomSheet && (
+      {showBottomSheet && (venueStore.showBottomSheet !== true || !isfromNearBy) && (
         <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}
           {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}

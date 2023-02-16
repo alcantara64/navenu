@@ -136,6 +136,7 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
           latitude={latitude}
           onSetLatitude={setLatitude}
           onSetLongitude={setLongitude}
+          useExternalMarkers
           item={filterFeeds(data?.pages.flat(), selectedFilterTypes, catFilters) as any}
         />
       )
