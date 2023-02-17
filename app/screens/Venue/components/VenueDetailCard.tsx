@@ -15,8 +15,15 @@ import { BottomSheet } from "../../../components/BottomSheet"
 import { useSubscribeToNotification, useUserList } from "../../../hooks/useUser"
 import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
 import { Colors, typography } from "../../../theme"
-import { getInitials, getStyleByCategory, isItemInUserList, shareLink } from "../../../utils/transform"
-import { DropCard, Gallery } from "../../../components"
+import {
+  getInitials,
+  getStyleByCategory,
+  getUserListIdByItemId,
+  isItemInUserList,
+  shareLink,
+} from "../../../utils/transform"
+import { DropCard, Gallery, RemoveAndAddToUserList } from "../../../components"
+import { UserService } from "../../../services/userService"
 
 export interface VenueDetailCardProps {
   /**
@@ -44,6 +51,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
   const { venue, setDestinationDirections, createUberUrl } = props
   const navigation = useNavigation()
+  const [showListModal, setShowListModal] = useState(false)
   const goBack = () => {
     navigation.goBack()
   }
@@ -55,16 +63,27 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   }
   const $lineDivider = [$horizontalLine, $bigDivider]
   const onSubscribeToNotification = () => {
-    mutate(
-      { type: "venue", id: venue.id },
-  
-    )
+    mutate({ type: "venue", id: venue.id })
   }
-
 
   const [bottomSheet, setBottomSheet] = useState(false)
   const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
   const operatingHours = venue.operating_hours?.split(",")
+
+  const onBookMark = async () => {
+    if (!isItemInUserList(venue.id, userList.data)) {
+      setShowListModal(true)
+    } else {
+      const userService = new UserService()
+      const userListId = getUserListIdByItemId(venue.id, userList.data)
+      await userService.removeCardFromList({
+        user_list_id: userListId,
+        type: venue.type,
+        id: venue.id as any,
+      })
+    }
+    userList.refetch()
+  }
 
   const renderBottomSheetContent = () => {
     switch (bottomSheetCurrentContent) {
@@ -97,7 +116,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       <View padding-15>
         <Text text60M>Menu</Text>
         <View marginT-15>
-          <Text text70>{'Not Available'}</Text>
+          <Text text70>{"Not Available"}</Text>
         </View>
       </View>
     )
@@ -153,7 +172,16 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity marginV-10 onPress={() => shareLink(venue.name, `Checkout ${venue.name} on Navenu`, 'https://navenuapp.page.link/venue')}>
+            <TouchableOpacity
+              marginV-10
+              onPress={() =>
+                shareLink(
+                  venue.name,
+                  `Checkout ${venue.name} on Navenu`,
+                  "https://navenuapp.page.link/venue",
+                )
+              }
+            >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>
@@ -167,8 +195,13 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               />
               {/* } */}
             </TouchableOpacity>
-            <TouchableOpacity marginV-5>
-              <FontAwesome5 name="bookmark" solid={isItemInUserList(venue.id, userList.data)} size={30} color="#FFFFFF" />
+            <TouchableOpacity marginV-5 onPress={onBookMark}>
+              <FontAwesome5
+                name="bookmark"
+                solid={isItemInUserList(venue.id, userList.data)}
+                size={30}
+                color="#FFFFFF"
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -331,11 +364,17 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View>{venue?.images?.length > 0 && <Gallery items={venue.images} />}</View>
       </View>
+      <RemoveAndAddToUserList
+        showListModal={showListModal}
+        setShowListModal={setShowListModal}
+        selectedFeedItem={venue}
+      />
       <BottomSheet
         show={bottomSheet}
         onClose={() => {
           setBottomSheet(!bottomSheet)
         }}
+        category={venue.category}
       >
         <View padding-15>{renderBottomSheetContent()}</View>
       </BottomSheet>
