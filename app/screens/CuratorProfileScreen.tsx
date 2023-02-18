@@ -27,12 +27,12 @@ export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "Cur
   const curatorId = route.params.curator.id;
  const {data, error, isLoading} = useCurator(curatorId);
 
-//  if (isLoading) return <LoadingIndicator />;
-//  if (error) return <ErrorMessage message={'Error occured looking for curators'}></ErrorMessage>;
- 
+ if (isLoading) return <LoadingIndicator />;
+ if (error) return <ErrorMessage message={'Error occurred looking for curators'}></ErrorMessage>;
+
   return (
     <Screen style={$root} preset="scroll">
-      <CuratorDetail curator={route.params.curator}></CuratorDetail>
+      <CuratorDetail curator={data}></CuratorDetail>
     </Screen>
   )
 })

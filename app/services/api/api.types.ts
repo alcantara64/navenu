@@ -182,6 +182,6 @@ export interface IAutoComplete {
   cats: Array<string>
 }
 export interface ICuratorResponse {
-  data: ICurator
+  curator:ICurator
   status: number
 }

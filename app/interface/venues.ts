@@ -53,6 +53,7 @@ export interface IArticle  {
   category: any
   image: string
   title: string,
+  subscribed:boolean
 }
 export interface IGallery {
   id: number

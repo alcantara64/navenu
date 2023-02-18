@@ -60,7 +60,7 @@ export interface ISavedLocation{
 }
 
 export interface ICurator {
-    id: string,
+    ID: string,
     social_id: null | string,
     user_nicename: string,
     user_email: string,
@@ -74,6 +74,9 @@ export interface ICurator {
     gender: string,
     home_town: string,
     image: string
+    drops:Array<IDrop>
+    venues:Array<IVenue>
+    subscribed:boolean
 }
 export interface IUserList {
     userlist: Record<string,ListItem >
