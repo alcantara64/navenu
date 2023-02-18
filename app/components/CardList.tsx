@@ -11,6 +11,7 @@ import { FEED_TYPE } from "../interface/feed"
 import { DropCard } from "./DropCard"
 import { LoadingIndicator } from "./LoadingIndicator"
 import { IUserList } from "../interface/user"
+import { CuratorCard } from "./CuratorCard"
 
 export interface CardListProps {
   onTouchEnd?: (event: GestureResponderEvent) => void
@@ -61,11 +62,15 @@ export const CardList = observer(function CardList(props: CardListProps) {
         <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} />
       )
     }
+
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} isFeed={isFeed} onBookMark={toggleSaveFeed} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} />
+      return <ArticleCard item={item} isFeed={isFeed} onBookMark={onBookMark} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} />
     }
     if (item.type === FEED_TYPE.drop) {
-      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={toggleSaveFeed} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
+      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
+    }
+    if(item.type?.toLowerCase() ===  FEED_TYPE.curators){
+      return <CuratorCard  isFeed={isFeed} onBookMark={onBookMark} curator={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
     }
   }
   return (

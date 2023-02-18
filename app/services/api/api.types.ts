@@ -2,6 +2,7 @@ import { IDrop } from "../../interface/drops"
 import { FEED_TYPE, IFeed } from "../../interface/feed"
 import { IArticle, IVenue } from "../../interface/venues"
 import {
+  ICurator,
   ISavedDeal,
   ISavedLocation,
   IUser,
@@ -179,4 +180,8 @@ export interface IAutoComplete {
   borough: Array<string>,
   tags: Array<string>,
   cats: Array<string>
+}
+export interface ICuratorResponse {
+  data: ICurator
+  status: number
 }
