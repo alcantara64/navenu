@@ -14,7 +14,6 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
-import { Text, View } from "../components"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
@@ -26,6 +25,7 @@ import {
   PreferencesScreen,
   WelcomeScreen,
   LogoutScreen,
+  CuratorProfileScreen,
 } from "../screens"
 import { typography } from "../theme"
 
@@ -94,6 +94,7 @@ const AppStack = observer(function AppStack() {
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Logout" component={LogoutScreen} />
+        <Stack.Screen name='CuratorProfileScreen' component={CuratorProfileScreen} />
         </>
       ) : (
         <>

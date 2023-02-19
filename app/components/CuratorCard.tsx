@@ -1,107 +1,87 @@
 import * as React from "react"
-import { ImageBackground, StyleProp, TextStyle, TouchableWithoutFeedback, ViewStyle } from "react-native"
+import { ImageBackground, ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
+import { colors, typography } from "../theme"
+import { Text } from "./Text"
+import { TouchableOpacity, View } from "react-native-ui-lib"
+import { ICurator, IUserList } from "../interface/user"
+import { FontAwesome5 } from "@expo/vector-icons"
+import { isItemInUserList } from "../utils/transform"
 import { useNavigation } from "@react-navigation/native"
-import { TouchableOpacity, View, Text, TabController } from "react-native-ui-lib"
-import { FontAwesome5, MaterialIcons, Ionicons } from "@expo/vector-icons"
-import { ICurator } from "../interface/user"
 
 export interface CuratorCardProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  curator: ICurator
+  curator: ICurator,
+  isFeed?:boolean,
+  onBookMark:(item:ICurator) => void
+  userListData?: IUserList,
+  onRemoveFromUserList?: (feed:any) => void
+  isUserList?:boolean;
 }
 
 /**
  * Describe your component here
  */
 export const CuratorCard = observer(function CuratorCard(props: CuratorCardProps) {
-  const { style, curator } = props
+  const { style, curator, isFeed, onBookMark, userListData, isUserList, onRemoveFromUserList } = props
   const $styles = [$container, style]
-  const navigation = useNavigation();
-  const  goBack = () => {
-    navigation.goBack()
+  const navigation = useNavigation()
+
+  const onCuratorPressed = (curator:ICurator) => {
+    navigation.navigate("CuratorProfileScreen", {
+      curator,
+    })
   }
+  const saveDrop = () => {
+    onBookMark(curator)
+  }
+  const removeFromUserList = () => {
+    onRemoveFromUserList(curator)
 
+  }
   return (
-    <>
-    <ImageBackground source={{ uri: curator.avatar }} resizeMode="cover" style={styles.imagetop}>
-    <View style={styles.closeBtn}>
-      <TouchableOpacity
-        onPress={goBack }
-        style={{
-          marginRight: 10,
-        }}>
-        <FontAwesome5 name="times-circle" size={27} color="#FFFFFF" />
-      </TouchableOpacity>
-    </View>
-    <View style={styles.cardtext}>
-      <Text
-        text80BL
-        style={{
-          marginBottom: 0,
-          color: '#FFFFFF',
-          textTransform: 'uppercase',
-        }}>
-        {user.profession}
-      </Text>
-      <Text
-        text60BL
-        white
-        style={{
-          marginBottom: 15,
-          textTransform: 'uppercase',
-        }}>
-        {user.name}
-      </Text>
-    </View>
-    <View style={styles.functionBtns}>
-      <TouchableWithoutFeedback>
-        <TouchableOpacity onPress={() => console.log('Button 1')}>
-          <FontAwesome5 name="bell" size={27} color="#FFFFFF" />
-        </TouchableOpacity>
-      </TouchableWithoutFeedback>
-      {/*  <FavouriteButton venue={venue.venue} /> */}
-    </View>
-  </ImageBackground>
-  <View flex>
-  {curator.bio && <Text text80>{curator.bio}</Text>}
-  <View style={{ height: 300 }} flex>
-    <TabController items={[{ label: 'Info' }, { label: 'Drops' }]}>
-      <TabController.TabBar enableShadows />
-
-      <TabController.TabPage index={0}>
-        <View style={{ height: 280, paddingTop: 65 }}>
-          <View style={{ justifyContent: 'space-evenly' }} flex row>
-            <FontAwesome5 name="clock" size={50} color="black" />
-
-            <MaterialIcons name="restaurant-menu" size={50} color="black" />
-          </View>
-          <View style={{ justifyContent: 'space-evenly' }} flex row>
-            <FontAwesome5 name="map-marked" size={50} color="black" />
-
-            <FontAwesome5 name="calendar-plus" size={50} color="black" />
-
-            <FontAwesome5 name="uber" size={50} color="black" />
-          </View>
-          <View style={{ justifyContent: 'space-evenly' }} flex row>
-            <FontAwesome5 br100 name="phone-alt" size={50} color="black" />
-
-            <FontAwesome5 br100 name="share-alt" size={50} color="black" />
+    <TouchableOpacity style={$dropCardContainer} key={curator.id} onPress={() => onCuratorPressed(curator)} activeOpacity={0.1}>
+      <ImageBackground
+        source={{ uri: curator.image }}
+        imageStyle={$imageBackground}
+        resizeMode="cover"
+        style={$image}
+      >
+        <View style={$imageFilter} />
+        <View paddingL-4 marginT-15 flex >
+          <View row style={$cardTextContainer}>
+            <View flex-7>
+              <Text numberOfLines={2} style={$belowText}>
+                {curator.name}
+              </Text>
+            </View>
+            {isFeed && <View flex-1 right>
+              <TouchableOpacity onPress={saveDrop}>
+                <FontAwesome5
+                  solid={isItemInUserList(curator.id, userListData)}
+                  name="bookmark"
+                  size={20}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+            </View>}
+            {isUserList && !isFeed && <View flex-1 right>
+              <TouchableOpacity onPress={removeFromUserList}>
+                <FontAwesome5
+                  solid
+                  name="times-circle"
+                  size={20}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+            </View>}
           </View>
         </View>
-      </TabController.TabPage>
-      <TabController.TabPage index={1} lazy>
-        <View style={{ height: 200, paddingTop: 65 }} center>
-          <Text>No Drops Yet</Text>
-        </View>
-      </TabController.TabPage>
-    </TabController>
-  </View>
-</View>
-</>
+      </ImageBackground>
+    </TouchableOpacity>
   )
 })
 
@@ -109,3 +89,36 @@ const $container: ViewStyle = {
   justifyContent: "center",
 }
 
+const $dropCardContainer:ViewStyle = {
+  minHeight: 100,
+}
+const $cardTextContainer: TextStyle = {
+  marginHorizontal: 6,
+}
+const $imageFilter: ViewStyle = {
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+}
+
+const $belowText: TextStyle = {
+  marginBottom: 0,
+  color: "#FFFFFF",
+  fontFamily: "bourtonbase",
+  textTransform: "uppercase",
+  fontSize: 22,
+  letterSpacing: 1.76,
+}
+
+const $image: ImageStyle = {
+  flex: 1,
+  width: "100%",
+  marginBottom: 5,
+  justifyContent: "center",
+}
+const $imageBackground: ImageStyle = {
+  borderRadius: 6,
+}

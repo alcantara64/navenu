@@ -191,7 +191,7 @@ export const UserStoreModel = types
       const userService = new UserService()
       const response = yield userService.updateDisplayName({display_name: name});
       if (response.kind === "ok") {
-        self.currentUser.display_name = response.data
+        self.currentUser.display_name = name
       } else {
         self.error = { isError: true, message: "Error Updating Your information" }
       }

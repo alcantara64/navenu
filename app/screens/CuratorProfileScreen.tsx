@@ -3,8 +3,9 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text } from "../components"
-import { CuratorCard } from "../components/CuratorCard"
+import { CuratorDetail, ErrorMessage, LoadingIndicator, Screen, Text } from "../components"
+import { useCurator } from "../hooks/useCurator"
+
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -17,15 +18,21 @@ import { CuratorCard } from "../components/CuratorCard"
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
-export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "CuratorProfile">> = observer(function CuratorProfileScreen() {
+export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "CuratorProfile">> = observer(function CuratorProfileScreen({route}) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+  const curatorId = route.params.curator.id;
+ const {data, error, isLoading} = useCurator(curatorId);
+
+//  if (isLoading) return <LoadingIndicator />;
+//  if (error) return <ErrorMessage message={'Error occured looking for curators'}></ErrorMessage>;
+ 
   return (
     <Screen style={$root} preset="scroll">
-      <CuratorCard curator={data}></CuratorCard>
+      <CuratorDetail curator={route.params.curator}></CuratorDetail>
     </Screen>
   )
 })

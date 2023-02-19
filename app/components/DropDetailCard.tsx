@@ -7,8 +7,10 @@ import { Colors } from "../theme"
 import { DropCard } from "./DropCard"
 import { useState } from "react"
 import { IDrop } from "../interface/drops"
-import { CountdownTimer, Gallery, VenueCard } from "."
-import { getStyleByCategory, shareLink } from "../utils/transform"
+import { CountdownTimer, Gallery, RemoveAndAddToUserList, VenueCard } from "."
+import { getStyleByCategory, getUserListIdByItemId, isItemInUserList, shareLink } from "../utils/transform"
+import { useUserList } from "../hooks/useUser"
+import { UserService } from "../services/userService"
 
 export interface DropDropDetailCardProps {
   /**
@@ -28,7 +30,9 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
 ) {
   const { style, drop, navigation, onClaimCode } = props
   const $styles = [$container, style]
+  const userList = useUserList()
   const [bookmark, setBookmark] = useState(false)
+  const [showListModal, setShowListModal] = useState(false)
 
   const goBack = () => {
     navigation.goBack()
@@ -41,6 +45,20 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
       venue
     })
   } 
+  const onBookMark = async () => {
+    if (!isItemInUserList(drop.id, userList.data)) {
+      setShowListModal(true)
+    } else {
+      const userService = new UserService()
+      const userListId = getUserListIdByItemId(drop.id, userList.data)
+      await userService.removeCardFromList({
+        user_list_id: userListId,
+        type: drop.type,
+        id: drop.id as any,
+      })
+    }
+    userList.refetch()
+  }
 
   return (
     <View style={$styles}>
@@ -65,8 +83,8 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             >
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={saveDrop} style={{ marginVertical: 5 }}>
-              <FontAwesome5 solid={bookmark} name="bookmark" size={30} color="#FFFFFF" />
+            <TouchableOpacity onPress={onBookMark} style={{ marginVertical: 5 }}>
+              <FontAwesome5 solid={isItemInUserList(drop.id, userList.data)} name="bookmark" size={30} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -140,6 +158,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           <View row style={$horizontalLine}></View>
         </View>
       </View>
+      <RemoveAndAddToUserList  showListModal={showListModal} setShowListModal={setShowListModal} selectedFeedItem={drop}/>
     </View>
   )
 })

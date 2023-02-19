@@ -60,7 +60,7 @@ export interface ISavedLocation{
 }
 
 export interface ICurator {
-    ID: string,
+    id: string,
     social_id: null | string,
     user_nicename: string,
     user_email: string,
@@ -73,6 +73,7 @@ export interface ICurator {
     short_description: string,
     gender: string,
     home_town: string,
+    image: string
 }
 export interface IUserList {
     userlist: Record<string,ListItem >
