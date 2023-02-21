@@ -4,7 +4,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { ErrorMessage, LoadingIndicator, Screen } from "../components"
 import { useArticle } from "../hooks/useArticles"
-import { View, TouchableOpacity, Text } from "react-native-ui-lib"
+import { View, TouchableOpacity, Text, Image } from "react-native-ui-lib"
 import { Colors, typography } from "../theme"
 import { TextStyle, ViewStyle, ImageBackground } from "react-native"
 import { useNavigation } from "@react-navigation/native"
@@ -24,7 +24,7 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
     if (isLoading) return <LoadingIndicator />
     return (
       <Screen preset="auto">
-        <ImageBackground source={{ uri: data.image }} resizeMode="cover" style={$imagetop}>
+        <ImageBackground source={{ uri: data.mainimage }} resizeMode="cover" style={$imagetop}>
           <View style={$imageFilter} />
           <View marginT-10 style={$closeBtn}>
             <TouchableOpacity onPress={goBack}>
@@ -51,7 +51,11 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
               <Text header>{data.title}</Text>
             </View>
             <View marginT-10>
-              <Text subheader itemId>{data.description}</Text>
+           {data.content.map((item, index) =>( <View key={index} marginT-5>
+              {item.type === 'subtitle' && (<Text subheader itemId>{data.description}</Text>)}
+              {item.type === 'image' && (<Image source={{uri:item.image }}></Image>)}
+              {item.type === 'text' && (<Text> {item.text}</Text>)}
+            </View>) )}
             </View>
           </View>
         </View>

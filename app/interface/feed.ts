@@ -22,7 +22,7 @@ export enum FEED_TYPE{
   article =  "article",
   location =  "location",
    drop =  "drop",
-   curators = 'curator',
+   curator = 'curator',
 
 }
 export interface IAutoCompletePayload{

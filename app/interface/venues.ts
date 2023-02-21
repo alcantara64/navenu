@@ -54,6 +54,8 @@ export interface IArticle  {
   image: string
   title: string,
   subscribed:boolean
+  mainimage:string
+  content:Array<{type:'image'| 'text'| 'subtitle', image?: string, text?:string, subtitle:string}>
 }
 export interface IGallery {
   id: number

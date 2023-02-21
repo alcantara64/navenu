@@ -145,7 +145,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View>
-           <VenueCard item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0, id:drop.venue_id}} onPress={onVenuePress}/>
+           <VenueCard isFeed={false} item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0, id:drop.venue_id}} onPress={onVenuePress}/>
           </View>
 
           <View row marginT-20 marginB-10>
