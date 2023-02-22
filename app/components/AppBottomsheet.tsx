@@ -22,7 +22,7 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
   const $styles = [$container, style]
 
   // ref
-  const bottomSheetRef = useRef<BottomSheet>(null)
+   const bottomSheetRef = useRef<BottomSheet>(null)
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], [])
@@ -39,7 +39,7 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
         onChange={handleSheetChanges}
         enablePanDownToClose
         onClose={onClose}
-  
+        
   
       >
         <View style={$contentContainer}>{children}</View>

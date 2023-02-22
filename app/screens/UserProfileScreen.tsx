@@ -101,7 +101,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
 
     useEffect(() => {
       getUser()
-    }, [])
+    }, [currentUser, usersList])
 
     const logout = () => {
       authenticationStore.logout()
