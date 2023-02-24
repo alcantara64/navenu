@@ -10,7 +10,7 @@ import {
 import { View, Text } from "react-native-ui-lib"
 import { observer } from "mobx-react-lite"
 import FastImage from "react-native-fast-image"
-import { verticalScale } from "../utils/metrics"
+import { calculatePreciseDistance, verticalScale } from "../utils/metrics"
 import { Colors, typography } from "../theme"
 import { IFeed } from "../interface/feed"
 import { FontAwesome5 } from "@expo/vector-icons"
@@ -32,13 +32,16 @@ export interface VenueCardProps {
   userListData?:IUserList
   onRemoveFromUserList?: (feed:any) => void
   isUserList?:boolean;
+  currentUserLatitude: number;
+  currentUserLongitude: number;
+
 }
 
 /**
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList } = props
+  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList, currentUserLatitude, currentUserLongitude } = props
   const navigation = useNavigation();
 
   const onPressVenue  = (venue) =>{
@@ -75,6 +78,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
           <Text style={$belowText}>{item.name}</Text>
           <Text style={$address}>{item.address}</Text>
           <Text bottom style={$bottomText}>@ {item.name}</Text>
+       { (item.lat && item.lng && currentUserLatitude && currentUserLongitude) && <Text white>{calculatePreciseDistance({firstCoordinateLatitude: item.lat, firstCoordinateLongitude: item.lng, secondCoordinateLatitude: currentUserLatitude,secondCoordinateLongitude: currentUserLongitude })} km away </Text>}
         </View>
         {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>

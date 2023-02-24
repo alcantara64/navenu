@@ -2617,10 +2617,10 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/dynamic-links@^17.3.0":
-  version "17.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-17.3.0.tgz#c1920f050838f19a6e3c6fe40aef5ca61249bbd7"
-  integrity sha512-0vEI0Ah7nwTIBgGxdyJvWBqOmFcTzVw3lbGEIzxNm863nPcWN/GJodgHEyhHpGs1ipDhYfqnr6moPixnbnrYMQ==
+"@react-native-firebase/dynamic-links@17.0.0":
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-17.0.0.tgz#faec1b086492f159eb50d50e5557e2e1840b31a2"
+  integrity sha512-EcG6Cgy2+lJa4ji1jrqCWKIacq4VhxhQqjXjrXzRzI3arEF5EZZte+w6ZREcTtZkIJ2X7YRNp82E7s+AqghbfA==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
 
@@ -8011,6 +8011,11 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
+
+geolib@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/geolib/-/geolib-3.3.3.tgz#17f5a0dcdc0b051bd631b66f7131d2c14c54a15b"
+  integrity sha512-YO704pzdB/8QQekQuDmFD5uv5RAwAf4rOUPdcMhdEOz+HoPWD0sC7Qqdwb+LAvwIjXVRawx0QgZlocKYh8PFOQ==
 
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"

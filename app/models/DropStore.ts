@@ -81,9 +81,11 @@ export const DropStoreModel = types
       this.setError({ isError: false, message: "" })
       const dropService = new DropService();
       const claimedResult= await dropService.claimDrop(dropId);
+  console.log({claimedResult})
       if(claimedResult.kind === 'ok'){
-      this.setShowClaimModal(true)
-      this.setClaimedCode(claimedResult.claimCode)
+        this.setClaimedCode(claimedResult.claimCode.user_code)
+      this.setShowClaimModal(!!claimedResult.claimCode.user_code)
+      
       }
       this.setIsLoading(false)
     },

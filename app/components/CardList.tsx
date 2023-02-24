@@ -12,6 +12,7 @@ import { DropCard } from "./DropCard"
 import { LoadingIndicator } from "./LoadingIndicator"
 import { IUserList } from "../interface/user"
 import { CuratorCard } from "./CuratorCard"
+import { useStores } from "../models"
 
 export interface CardListProps {
   onTouchEnd?: (event: GestureResponderEvent) => void
@@ -53,13 +54,14 @@ export const CardList = observer(function CardList(props: CardListProps) {
     isUserList,
     removeItemFromUserList
   } = props
+  const {authenticationStore:{latitude, longitude}} = useStores() 
 
 
 
   const renderItem = ({ item }) => {
     if (item.type === "location") {
       return (
-        <VenueCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} />
+        <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} />
       )
     }
 
