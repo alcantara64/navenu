@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Dimensions, ViewStyle } from "react-native"
+import { Dimensions, Keyboard, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "../navigators"
 import { AppInput, CardList } from "../components"
 import { View, Text, TouchableOpacity, SkeletonView } from "react-native-ui-lib"
@@ -71,6 +71,7 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
 
   return (
     <View style={$root}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View margin-8>
         <View marginB-10>
           {selectedSearchItems.length > 0 && (
@@ -123,7 +124,9 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
    
         </View>
       </View>
+      </TouchableWithoutFeedback>
     </View>
+   
   )
 })
 

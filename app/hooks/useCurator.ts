@@ -6,7 +6,7 @@ const getCuratorById = async (curatorId: string) => {
  const  curratorService = new CuratorService();
  const response = await curratorService.getCuratorDetail(curatorId);
  if(response.kind === 'ok'){
-  return response.data.data
+  return response.data.curator
  }else{
   throw new Error('Failed to fetch Curator Detail ')
  }

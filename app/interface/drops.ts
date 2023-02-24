@@ -23,4 +23,5 @@ export interface IDrop  {
     user_code: string
     images: Array<{id: string, image: string}>
     expired: boolean
+    subscribed:boolean;
   }

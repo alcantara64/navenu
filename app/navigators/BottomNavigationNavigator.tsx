@@ -43,6 +43,7 @@ export const BottomNavigationNavigator = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => <FontAwesome5 name="search" color={color} size={size} />,
           headerShown: false,
+          tabBarHideOnKeyboard:false
           
         }}
       />

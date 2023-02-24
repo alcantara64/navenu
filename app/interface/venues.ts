@@ -53,6 +53,9 @@ export interface IArticle  {
   category: any
   image: string
   title: string,
+  subscribed:boolean
+  mainimage:string
+  content:Array<{type:'image'| 'text'| 'subtitle', image?: string, text?:string, subtitle:string}>
 }
 export interface IGallery {
   id: number

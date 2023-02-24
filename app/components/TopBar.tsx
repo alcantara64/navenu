@@ -87,7 +87,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
     }
   }
   const toggleCurator = () => {
-    setSearchFilterType(FEED_TYPE.curators + "s")
+    setSearchFilterType(FEED_TYPE.curator + "s")
   }
   return (
     <View marginT-45 marginB-15 marginL-4 marginR-5>
@@ -146,7 +146,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 onPress={toggleCurator}
                 style={[
                   $filterType,
-                  searchFilterType === FEED_TYPE.curators + "s" && $activeFilter,
+                  searchFilterType === FEED_TYPE.curator + "s" && $activeFilter,
                   $searchMode,
                 ]}
                 label="CURATORS"

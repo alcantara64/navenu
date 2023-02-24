@@ -32,27 +32,27 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
   const [showListModal, setShowListModal] = useState(false)
   
   
-  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
+  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification('curator')
   const  goBack = () => {
     navigation.goBack()
   }
   const onSubscribeToNotification = () => {
-    mutate({ type: 'Curator', id: curator.id })
+    mutate({ type: 'curator', id: curator.ID })
   }
   const onLinkPress = () => {
    // openLinkInBrowser(curator.)
   }
 
   const onBookMark = async () => {
-    if (!isItemInUserList(curator.id, userList.data)) {
+    if (!isItemInUserList(curator.ID, userList.data)) {
       setShowListModal(true)
     } else {
       const userService = new UserService()
-      const userListId = getUserListIdByItemId(curator.id, userList.data)
+      const userListId = getUserListIdByItemId(curator.ID, userList.data)
       await userService.removeCardFromList({
         user_list_id: userListId,
         type: 'curator',
-        id: curator.id as any,
+        id: curator.ID as any,
       })
     }
     userList.refetch()
@@ -61,7 +61,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
   return (
     <>
   
-      <ImageBackground source={{ uri: curator.image }} resizeMode="cover" style={$imagetop}>
+      <ImageBackground source={{ uri: curator.avatar }} resizeMode="cover" style={$imagetop}>
         <View style={$imageFilter} />
         <View marginT-15 style={$closeBtn}>
           <TouchableOpacity onPress={goBack}>

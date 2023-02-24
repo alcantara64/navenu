@@ -10,17 +10,19 @@ export interface AppBottomsheetProps {
    */
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
+  onClose?: () => void
+  expand?: () => void
 }
 
 /**
  * Describe your component here
  */
 export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottomsheetProps) {
-  const { style, children } = props
+  const { style, children, onClose, expand } = props
   const $styles = [$container, style]
 
   // ref
-  const bottomSheetRef = useRef<BottomSheet>(null)
+   const bottomSheetRef = useRef<BottomSheet>(null)
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], [])
@@ -28,7 +30,6 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index)
   }, [])
-
   return (
   
       <BottomSheet
@@ -37,6 +38,9 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         enablePanDownToClose
+        onClose={onClose}
+        
+  
       >
         <View style={$contentContainer}>{children}</View>
       </BottomSheet>

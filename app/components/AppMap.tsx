@@ -20,6 +20,7 @@ import { getDropsByID } from "../utils/transform"
 
 import { GOOGLE_MAPS_API_KEY } from "@env"
 import { useStores } from "../models"
+import { AppBottomsheet } from "./AppBottomsheet"
 
 export interface AppMapProps {
   /**
@@ -75,6 +76,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
   const mapRef = React.useRef<MapView>(null)
   const {venueStore} = useStores();
+  
 
   useEffect(() => {
     venueStore.setBottomSheetStatus(false);
@@ -130,8 +132,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         ref={mapRef}
         style={$styles}
         initialRegion={{
-          latitude:initialLatitude || latitude,
-          longitude:initialLongitude || longitude,
+          latitude: 51.500149 || initialLatitude || latitude,
+          longitude:-0.126240 || initialLongitude || longitude,
           // todo work on longitude delta, important for zooming
           latitudeDelta: 0.28,
           longitudeDelta: 0.28 * (Dimensions.get("window").width / Dimensions.get("window").height),
@@ -166,7 +168,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         ) : null}
       </MapView>
       {showBottomSheet && (venueStore.showBottomSheet !== true || !isfromNearBy) && (
-        <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose}>
+        <AppBottomsheet  onClose={handleBottomSheetClose}>
           {currentFeed?.type === FEED_TYPE.location && <VenueCard item={currentFeed} />}
           {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}
           {getDropsByID(currentFeed.drops as any, item).length > 0 && (
@@ -180,7 +182,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
               />
             </View>
           )}
-        </BottomSheet>
+        </AppBottomsheet>
       )}
     </>
   )

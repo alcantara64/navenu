@@ -26,6 +26,9 @@ import {
   WelcomeScreen,
   LogoutScreen,
   CuratorProfileScreen,
+  DataPolicyScreen,
+  PrivacyPolicyScreen,
+  TermsOfUseScreen,
 } from "../screens"
 import { typography } from "../theme"
 
@@ -58,11 +61,14 @@ export type AppStackParamList = {
   MapScreen: undefined
   DropScreen: {venue: any}
   VenueDetailScreen: undefined
-  CuratorProfileScreen: undefined
+  CuratorProfileScreen: undefined,
   Cardview: undefined,
   Location: undefined,
   Notification: undefined,
   Logout: undefined,
+  DataPolicy: undefined,
+  PrivacyPolicy: undefined,
+  TermsOfUse: undefined,
 }
 
 /**
@@ -81,7 +87,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated, logout },
+    authenticationStore: { isAuthenticated },
   } = useStores();
   return (
     <Stack.Navigator
@@ -95,6 +101,9 @@ const AppStack = observer(function AppStack() {
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Logout" component={LogoutScreen} />
         <Stack.Screen name='CuratorProfileScreen' component={CuratorProfileScreen} />
+        <Stack.Screen name="DataPolicy" options={headeOption('Data Policy')} component={DataPolicyScreen} />
+        <Stack.Screen name="PrivacyPolicy" options={headeOption('Privacy Policy')} component={PrivacyPolicyScreen} />
+        <Stack.Screen name="TermsOfUse" options={headeOption('Terms of Use')} component={TermsOfUseScreen} />
         </>
       ) : (
         <>
@@ -135,7 +144,13 @@ const AppStack = observer(function AppStack() {
     </Stack.Navigator>
   )
 })
-
+const headeOption = (title:string) => ({ 
+  headerShown: true, 
+  headerTransparent: true,
+  headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
+  headerBackTitleVisible: false,
+  headerTitle: title,
+})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 

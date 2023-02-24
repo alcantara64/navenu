@@ -12,6 +12,7 @@ import { useState } from "react"
 import { AppInput } from "./AppInput"
 import { LoadingIndicator } from "./LoadingIndicator"
 import { Entypo, Ionicons } from "@expo/vector-icons"
+import { ICurator } from "../interface/user"
 
 export interface RemoveAndAddToUserListProps {
   /**
@@ -20,7 +21,7 @@ export interface RemoveAndAddToUserListProps {
   style?: StyleProp<ViewStyle>
   showListModal: boolean,
   setShowListModal:(status:boolean) => void
-  selectedFeedItem: IVenue | IDrop | IArticle | null
+  selectedFeedItem: IVenue | IDrop | IArticle | null |ICurator
 }
 
 /**

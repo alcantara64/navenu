@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "react-query"
+import { IDrop } from "../interface/drops"
 import { FEED_TYPE } from "../interface/feed"
-import { IVenue } from "../interface/venues"
+import { ICurator } from "../interface/user"
+import { IArticle, IVenue } from "../interface/venues"
 import { AddListItemPayload, Api } from "../services/api"
 import { UserService } from "../services/userService"
 
@@ -54,29 +56,29 @@ const subscribeToNotification = async (payload: { type: FEED_TYPE; id: string })
     return response.results
   }
 }
-export const useSubscribeToNotification = () => {
+export const useSubscribeToNotification = (type:'curator'| 'venue'| 'drop-detail'| 'article' = 'venue') => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: subscribeToNotification,
     mutationKey: "subscribe-to-mutation",
-    onMutate: async (newVenue) => {
+    onMutate: async (feedItem) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({ queryKey: ["venue", newVenue.id] })
-      const previousVenue:IVenue = queryClient.getQueryData(["venue", newVenue.id])
+      await queryClient.cancelQueries({ queryKey: [type, feedItem.id] })
+      const previousFeed:IVenue | ICurator | IArticle | IDrop = queryClient.getQueryData([type, feedItem.id])
       // Optimistically update to the new value
-      queryClient.setQueryData(["venue", newVenue.id], (old: IVenue) => {
+      queryClient.setQueryData([type, feedItem.id], (old: IVenue | ICurator | IArticle | IDrop) => {
         return { ...old, subscribed: !old.subscribed }
       })
-      return { previousVenue }
+      return { previousFeed }
     },
     onError: (err: any, newTodo, context: any) => {
-      queryClient.setQueryData(["venue",context.previousVenue.id], context.previousVenue)
+      queryClient.setQueryData([type,context.previousFeed.id], context.previousFeed)
       throw new Error(err)
     },
     // Always refetch after error or success:
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["venue"] })
+      queryClient.invalidateQueries({ queryKey: [type] })
     },
   })
 }

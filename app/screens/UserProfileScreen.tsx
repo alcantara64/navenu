@@ -101,7 +101,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
 
     useEffect(() => {
       getUser()
-    }, [])
+    }, [currentUser, usersList])
 
     const logout = () => {
       authenticationStore.logout()
@@ -184,6 +184,9 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     }
     const openPreferenceScreen = () => {
       navigation.navigate("PreferencesScreen")
+    }
+    const gotoScreen = (screen:string) => {
+      navigation.navigate(screen);
     }
 
     const shareLink = (url:string, message:string, title= 'Navenu') => {
@@ -424,6 +427,21 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                 <View marginT-10 marginB-10>
                   <TouchableOpacity onPress={openPreferenceScreen}>
                     <Text style={$labelStyle}>Preference</Text>
+                  </TouchableOpacity>
+                </View>
+                <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={() => {gotoScreen('DataPolicy')}}>
+                    <Text style={$labelStyle}>Data Policy</Text>
+                  </TouchableOpacity>
+                </View>
+                <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={() => {gotoScreen('PrivacyPolicy')}}>
+                    <Text style={$labelStyle}>Privacy Policy</Text>
+                  </TouchableOpacity>
+                </View>
+                <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={() => {gotoScreen('TermsOfUse')}}>
+                    <Text style={$labelStyle}>Terms Of Service</Text>
                   </TouchableOpacity>
                 </View>
                 {/* 
