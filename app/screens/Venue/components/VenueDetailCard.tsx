@@ -84,6 +84,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     }
     userList.refetch()
   }
+  const onPressCurator  = (curator) =>{
+    navigation.navigate('CuratorProfileScreen', {
+   curator
+    })
+  } 
 
   const renderBottomSheetContent = () => {
     switch (bottomSheetCurrentContent) {
@@ -320,6 +325,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   return (
                     <Avatar
                       size={60}
+                      onPress={onPressCurator(curator)}
                       key={curator.id}
                       containerStyle={{ ...$imageContainer, ...$dynamicStyle }}
                       label={getInitials(curator.name)}
