@@ -135,7 +135,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                   $activeFilter,
                 isSearchMode && $searchMode,
               ]}
-              label="Drops"
+              label="DROPS"
               labelStyle={$CardTitles}
             />
 

@@ -112,6 +112,7 @@ const AppStack = observer(function AppStack() {
             options={{ 
               headerShown: true, 
               headerTransparent: true,
+              headerTitleAlign: 'center',
               headerTitle: 'LOGIN',
               headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
               headerBackTitleVisible: false,
@@ -119,6 +120,7 @@ const AppStack = observer(function AppStack() {
             }}
           />
           <Stack.Screen  options={{ 
+              headerTitleAlign: 'center',
               headerShown: true, 
               headerTransparent: true,
               headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
@@ -129,6 +131,7 @@ const AppStack = observer(function AppStack() {
             options={{ 
               headerShown: true, 
               headerTransparent: true,
+              headerTitleAlign: 'center',
               headerTitle: 'SIGNUP',
               headerTitleStyle: {fontFamily: typography.fonts.bourtonbase.normal, fontSize: 26},
               headerBackTitleVisible: false,
