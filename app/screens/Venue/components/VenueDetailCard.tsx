@@ -33,10 +33,13 @@ export interface VenueDetailCardProps {
   setDestinationDirections: (destination: any) => void
   createUberUrl: () => string
   style?: StyleProp<ViewStyle>
+  setBottomSheetCurrentContent: (any) => any,
+  setBottomSheet: (boolean) => void
+  
 }
 
 // create a enum for the different types of bottom sheet
-enum BottomSheetType {
+export enum BottomSheetType {
   operatingHours = "operatingHours",
   menu = "menu",
   book = "book",
@@ -49,7 +52,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const userList = useUserList()
 
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
-  const { venue, setDestinationDirections, createUberUrl } = props
+  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet } = props
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
   const goBack = () => {
@@ -66,9 +69,6 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     mutate({ type: "venue", id: venue.id })
   }
 
-  const [bottomSheet, setBottomSheet] = useState(false)
-  const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
-  const operatingHours = venue.operating_hours?.split(",")
 
   const onBookMark = async () => {
     if (!isItemInUserList(venue.id, userList.data)) {
@@ -83,43 +83,6 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       })
     }
     userList.refetch()
-  }
-
-  const renderBottomSheetContent = () => {
-    switch (bottomSheetCurrentContent) {
-      case BottomSheetType.operatingHours:
-        return renderOperatingHours()
-      case BottomSheetType.menu:
-        return renderMenu()
-      default:
-        return null
-    }
-  }
-
-  const renderOperatingHours = () => {
-    return (
-      <View padding-15>
-        <Text text60M>Opening Hours</Text>
-        <View marginT-15>
-          {operatingHours?.map((item, key) => (
-            <View row spread marginT-10 key={key}>
-              <Text text70>{item}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-    )
-  }
-
-  const renderMenu = () => {
-    return (
-      <View padding-15>
-        <Text text60M>Menu</Text>
-        <View marginT-15>
-          <Text text70>{"Not Available"}</Text>
-        </View>
-      </View>
-    )
   }
 
   const renderPriceLevel = () => {
@@ -368,16 +331,8 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         showListModal={showListModal}
         setShowListModal={setShowListModal}
         selectedFeedItem={venue}
+        queryKey={{ queryKey: ["venue", venue.id] }}
       />
-      <BottomSheet
-        show={bottomSheet}
-        onClose={() => {
-          setBottomSheet(!bottomSheet)
-        }}
-        category={venue.category}
-      >
-        <View padding-15>{renderBottomSheetContent()}</View>
-      </BottomSheet>
     </>
   )
 })
