@@ -5,6 +5,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../../navigators"
 import { 
   AppBottomsheet,
+  BottomSheet,
   DropCard,
   ErrorMessage, 
   LoadingIndicator, 
@@ -12,7 +13,7 @@ import {
   Screen,
   VenueCard, 
 } from "../../components"
-import { VenueDetailCard } from "./components/VenueDetailCard"
+import { BottomSheetType, VenueDetailCard } from "./components/VenueDetailCard"
 import { View, Text } from "react-native-ui-lib"
 import { useVenue } from "../../hooks/useVenue"
 import { useStores } from "../../models"
@@ -28,6 +29,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   const [destinationDirections, setDestinationDirections] = useState<any>(null)
   const [latitude, setLatitude] = useState(authenticationStore.latitude)
   const [longitude, setLongitude] = useState(authenticationStore.longitude)
+  const [bottomSheet, setBottomSheet] = useState(false)
+  const [bottomSheetCurrentContent, setBottomSheetCurrentContent] = useState<BottomSheetType>(null)
 
   const createUberUrl = (
     pickupLatitude: number, 
@@ -66,12 +69,46 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
       })();
     }
   }, [])
+  const operatingHours = data?.operating_hours?.split(",")
+  const renderOperatingHours = () => {
+    return (
+      <View padding-15>
+        <Text text60M>Opening Hours</Text>
+        <View marginT-15>
+          {operatingHours?.map((item, key) => (
+            <View row spread marginT-10 key={key}>
+              <Text text70>{item}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    )
+  }
 
+  const renderMenu = () => {
+    return (
+      <View padding-15>
+        <Text text60M>Menu</Text>
+        <View marginT-15>
+          <Text text70>{"Not Available"}</Text>
+        </View>
+      </View>
+    )
+  }
 
 
   if (error) return <ErrorMessage message={'Error occurred'}></ErrorMessage>;
   if (isLoading) return <LoadingIndicator />;
-
+  const renderBottomSheetContent = () => {
+    switch (bottomSheetCurrentContent) {
+      case BottomSheetType.operatingHours:
+        return renderOperatingHours()
+      case BottomSheetType.menu:
+        return renderMenu()
+      default:
+        return null
+    }
+  }
   return (
     <View flex-10>
     <Screen style={$root} preset="auto">
@@ -80,6 +117,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           venue={data} 
           setDestinationDirections={setDestinationDirections} 
           createUberUrl={() => createUberUrl(latitude, longitude, 'Current Location', data.lat, data.lng, data.name)}
+          setBottomSheetCurrentContent={setBottomSheetCurrentContent}
+          setBottomSheet={setBottomSheet}
         />
         {data?.nearby && latitude !== 0 && longitude !== 0 ? (
           <NearByVenues 
@@ -98,6 +137,15 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
         ) : null}
       </View>
     </Screen>
+    <BottomSheet
+        show={bottomSheet}
+        onClose={() => {
+          setBottomSheet(!bottomSheet)
+        }}
+        category={data.category}
+      >
+        <View padding-15>{renderBottomSheetContent()}</View>
+      </BottomSheet>
     {currentVenue && showBottomSheet && <AppBottomsheet>
       <>
     {currentVenue && <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} item={currentVenue} isFeed={false} />}

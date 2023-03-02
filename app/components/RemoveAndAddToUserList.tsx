@@ -22,13 +22,14 @@ export interface RemoveAndAddToUserListProps {
   showListModal: boolean,
   setShowListModal:(status:boolean) => void
   selectedFeedItem: IVenue | IDrop | IArticle | null |ICurator
+  queryKey?:  any
 }
 
 /**
  * Describe your component here
  */
 export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(props: RemoveAndAddToUserListProps) {
-  const { style, selectedFeedItem, setShowListModal, showListModal } = props
+  const { style, selectedFeedItem, setShowListModal, showListModal, queryKey } = props
   const $styles = [$container, style];
 
   const userList = useUserList();
@@ -53,7 +54,7 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
     createListNameMutation.mutate(listName)
     setListName("")
   }
-  const onAddItemToUserList = () => {
+  const onAddItemToUserList = async() => {
     addItemToListMutation.mutate({
       user_list_id: selectedUserList,
       type: selectedFeedItem?.type,
@@ -61,7 +62,10 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
     })
     setShowListModal(false);
     setSelectedUserList(undefined);
-    queryClient.invalidateQueries({ queryKey: ["feed"] })
+    await queryClient.invalidateQueries({ queryKey: ["feed"] })
+    if(queryKey){
+      queryClient.invalidateQueries(queryKey)
+    }
   }
   const expandableHeaders = (title: string) => (
     <View style={$headerTextContainer} row spread>
