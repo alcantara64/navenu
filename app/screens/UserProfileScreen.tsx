@@ -84,8 +84,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     })
     const [singleFile, setSingleFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
-    const [loading, setLoading] = useState(false)
-
+    const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState({
       isTouched: false,
       value: currentUser?.display_name,
@@ -98,10 +97,10 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
 
     const [showUserListModal, setShowUserListModal] = useState(false)
     const [selectedListItem, setSelectedListItem] = useState(null)
-
+    navigation.addListener('focus', getUser);
     useEffect(() => {
       getUser()
-    }, [currentUser, usersList])
+    }, [])
 
     const logout = () => {
       authenticationStore.logout()

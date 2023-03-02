@@ -1,4 +1,5 @@
 import { ApiResponse } from "apisauce"
+import { IDrop } from "../../interface/drops"
 import { Api, IDropResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem"
 
@@ -9,7 +10,7 @@ export class DropService {
   }
 
   async claimDrop(dropId: string) {
-    const response: ApiResponse<{ status: boolean; message: string; data: string }> =
+    const response: ApiResponse<{ status: boolean; message: string; data: IDrop }> =
       await this.httpClient.get(`/Drops/claim/${dropId}`)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

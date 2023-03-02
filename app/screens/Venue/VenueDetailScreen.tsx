@@ -100,7 +100,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     </Screen>
     {currentVenue && showBottomSheet && <AppBottomsheet>
       <>
-    {currentVenue && <VenueCard item={currentVenue} isFeed={false} />}
+    {currentVenue && <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} item={currentVenue} isFeed={false} />}
         {getDropsByID(currentVenue?.drops as any, data?.nearby).length > 0 && (
           <View>
             <View>

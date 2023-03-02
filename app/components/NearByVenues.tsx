@@ -153,7 +153,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         isfromNearBy
       />
       <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose} height={600}>
-        {selectedVenue && <VenueCard item={selectedVenue} />}
+        {selectedVenue && <VenueCard currentUserLatitude={destinationDirections.destination.latitude} currentUserLongitude={destinationDirections.destination.longitude} item={selectedVenue} />}
         {getDropsByID(selectedVenue?.drops as any, venues).length > 0 && (
           <View>
             <View>
