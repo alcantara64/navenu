@@ -25,7 +25,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
   // Pull in one of our MST stores
   const { authenticationStore, venueStore:{showBottomSheet, currentVenue,setBottomSheetStatus , setCurrentVenue} } = useStores()
   const venueId = route.params.venue.id;
-  const { data, error, isLoading } = useVenue(venueId);
+  const { data, error, isLoading, refetch } = useVenue(venueId);
   const [destinationDirections, setDestinationDirections] = useState<any>(null)
   const [latitude, setLatitude] = useState(authenticationStore.latitude)
   const [longitude, setLongitude] = useState(authenticationStore.longitude)
@@ -110,7 +110,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     }
   }
   return (
-    <View flex-10>
+    <View flex-1>
     <Screen style={$root} preset="auto">
       <View style={$container}>
         <VenueDetailCard 
@@ -119,6 +119,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           createUberUrl={() => createUberUrl(latitude, longitude, 'Current Location', data.lat, data.lng, data.name)}
           setBottomSheetCurrentContent={setBottomSheetCurrentContent}
           setBottomSheet={setBottomSheet}
+          refetch={refetch}
         />
         {data?.nearby && latitude !== 0 && longitude !== 0 ? (
           <NearByVenues 
@@ -130,7 +131,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
               },
               destination: destinationDirections 
             }}
-            defaultLocation={{latitude: data.lat, longitude:data.lng}}
+            defaultLocation={{latitude:!data.lat? 0: Number(data.lat), longitude: !data.lat? 0 :Number(data.lng)}}
             setLatitude={setLatitude}
             setLongitude={setLongitude}
           />
@@ -170,7 +171,6 @@ const $root: ViewStyle = {
   flex: 1,
 }
 const $container:ViewStyle =  {
-  flex: 1,
   height: "100%",
   backgroundColor: "#F2F2F2",
 };

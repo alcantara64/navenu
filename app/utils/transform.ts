@@ -110,7 +110,11 @@ export const isItemInUserList = (id: any, DataListData: IUserList) => {
   if(!DataListData) return false
   return Object.keys(DataListData.userlist).some((key) => {
     return DataListData.userlist[key].cards.some((card) => {
-      return card.id === id
+      if(card.id && id){
+      return card.id?.toString() === id?.toString()
+      }else{
+        return false
+      }
     })
   })
 }
@@ -120,7 +124,7 @@ export const getUserListIdByItemId = (id: any, DataListData: IUserList) => {
     Object.keys(DataListData.userlist).some((key) => {
       return DataListData.userlist[key].cards.some((card) => {
 
-        if( card.id === id){
+        if( card.id?.toString() === id?.toString()){
           userListId = DataListData.userlist[key].user_list_id
           return true
         }

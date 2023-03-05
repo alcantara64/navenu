@@ -117,7 +117,7 @@ export const UserProfile = observer(function UserProfile(props: UserProfileProps
                   <UserListCard
                     onListPress={onSelectedListItemPressed}
                     key={name}
-                    image=""
+                    image={userList[name]?.cards[0]?.image}
                     name={name}
                   />
                 ))}

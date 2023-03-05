@@ -36,6 +36,7 @@ export interface IVenue {
   articles?: Array<IArticle>
   drops?: Array<IDrop>
   subscribed: boolean
+  menu_url:string
 }
 
 interface ICurators {

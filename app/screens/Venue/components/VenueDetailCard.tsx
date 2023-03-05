@@ -22,7 +22,7 @@ import {
   isItemInUserList,
   shareLink,
 } from "../../../utils/transform"
-import { DropCard, Gallery, RemoveAndAddToUserList } from "../../../components"
+import { DropCard, Gallery, RemoveAndAddToUserList, Web } from "../../../components"
 import { UserService } from "../../../services/userService"
 
 export interface VenueDetailCardProps {
@@ -35,6 +35,7 @@ export interface VenueDetailCardProps {
   style?: StyleProp<ViewStyle>
   setBottomSheetCurrentContent: (any) => any,
   setBottomSheet: (boolean) => void
+  refetch: () => any
   
 }
 
@@ -52,9 +53,10 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const userList = useUserList()
 
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
-  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet } = props
+  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet, refetch } = props
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
+  const [showWebview, setShowWebview] = useState(false)
   const goBack = () => {
     navigation.goBack()
   }
@@ -114,6 +116,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       )
     }
     return null
+  }
+  if(showWebview){
+   return <Web  url={venue.menu_url}></Web>
   }
 
   return (
@@ -212,10 +217,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 HOUR
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {venue.menu_url && (<TouchableOpacity
               onPress={() => {
-                setBottomSheet(true)
-                setBottomSheetCurrentContent(BottomSheetType.menu)
+                setShowWebview(true)
+                // setBottomSheet(true)
+                // setBottomSheetCurrentContent(BottomSheetType.menu)
               }}
             >
               <View padding-15 style={$boxContainer}>
@@ -225,7 +231,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 {" "}
                 MENU
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>)}
             {/* <TouchableOpacity onPress={() => {
               setBottomSheet(true)
               setBottomSheetCurrentContent(BottomSheetType.book)
@@ -288,7 +294,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   return (
                     <Avatar
                       size={60}
-                      onPress={onPressCurator(curator)}
+                      onPress={() => {onPressCurator(curator)}}
                       key={curator.id}
                       containerStyle={{ ...$imageContainer, ...$dynamicStyle }}
                       label={getInitials(curator.name)}
@@ -337,8 +343,10 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         showListModal={showListModal}
         setShowListModal={setShowListModal}
         selectedFeedItem={venue}
-        queryKey={{ queryKey: ["venue", venue.id] }}
+        queryKey={{ queryKey: ["venue", venue.id], }}
+        onRefetch={refetch}
       />
+
     </>
   )
 })

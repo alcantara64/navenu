@@ -1,24 +1,44 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { ErrorMessage, LoadingIndicator, Screen } from "../components"
+import { ErrorMessage, LoadingIndicator, RemoveAndAddToUserList, Screen } from "../components"
 import { useArticle } from "../hooks/useArticles"
 import { View, TouchableOpacity, Text, Image } from "react-native-ui-lib"
 import { Colors } from "../theme"
 import { ViewStyle, ImageBackground } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"
-import { getStyleByCategory } from "../utils/transform"
+import { getStyleByCategory, getUserListIdByItemId, isItemInUserList } from "../utils/transform"
+import { useUserList } from "../hooks/useUser"
+import { UserService } from "../services/userService"
 
 // @ts-ignore
 export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">> = observer(
   function ArticleScreen({ route }) {
     const itemId = route.params.article.id
-    const { data, isLoading, error } = useArticle(itemId)
+    const { data, isLoading, error, refetch } = useArticle(itemId)
+    const [showListModal, setShowListModal] = useState(false)
     const navigation = useNavigation()
+    const userList = useUserList()
     const goBack = () => {
       navigation.goBack()
+    }
+
+    const onBookMark = async () => {
+      if (!isItemInUserList(data.id, userList.data)) {
+        setShowListModal(true)
+      } else {
+        const userService = new UserService()
+        const userListId = getUserListIdByItemId(data.id, userList.data);
+        console.log('here', userListId, data.type, data.id)
+        await userService.removeCardFromList({
+          user_list_id: userListId,
+          type: 'Article',
+          id: data.id as any,
+        })
+      }
+      userList.refetch()
     }
     if (error) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
     if (isLoading) return <LoadingIndicator />
@@ -36,8 +56,8 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
               <TouchableOpacity marginV-10 onPress={() => console.log("Button 1")}>
                 <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
               </TouchableOpacity>
-              <TouchableOpacity marginV-5>
-                <FontAwesome5 name="bookmark" size={30} color="#FFFFFF" />
+              <TouchableOpacity marginV-5 onPress={onBookMark}>
+                <FontAwesome5 name="bookmark" solid={isItemInUserList(itemId, userList.data)} size={30} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
           </View>
@@ -59,6 +79,7 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
             </View>
           </View>
         </View>
+        <RemoveAndAddToUserList  showListModal={showListModal} setShowListModal={setShowListModal} selectedFeedItem={{...data, type:'article'}} queryKey={{ queryKey: ["article", data.id], }} onRefetch={refetch}/>
       </Screen>
     )
   },

@@ -81,7 +81,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   let Venuecards
 
   if (miniFilter.length === 0) {
-    Venuecards = venues.map((venue, index) => <SlimVenueCard venue={venue} key={"g" + index} />)
+    Venuecards = venues.map((venue, index) => <VenueCard item={venue} key={"g" + index} isFeed={false} currentUserLatitude={null} currentUserLongitude={null} />)
 
     Markers = venues.map((venue, index) => (
       <ISuckMapMarker onMarkerPressed={onMarkerPress} venue={venue} key={"f" + index} />
@@ -89,7 +89,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   } else {
     Venuecards = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
-        return <SlimVenueCard venue={venue} key={"m" + index} />
+        return <VenueCard item={venue} key={"m" + index}  isFeed={false} currentUserLatitude={null} currentUserLongitude={null} />
     })
     Markers = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
@@ -100,7 +100,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
     setShowBottomSheet(false)
   }
   return (
-    <View>
+    <View flex-1 >
       <View marginB-10 marginL-10 >
         <Text left sectionHeader>
           Venues Near By
@@ -166,7 +166,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
           </View>
         )}
       </BottomSheet>
-      <View flex>{Venuecards}</View>
+      <View flex marginR-5 marginL-5>{Venuecards}</View>
     </View>
   )
 })
