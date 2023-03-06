@@ -1,5 +1,5 @@
 import React from "react"
-import { CardviewScreen, NotificationScreen, SavedDropsScreen, UserProfileScreen } from "../screens"
+import { CardviewScreen, HomeScreen,NotificationScreen, SavedDropsScreen, UserProfileScreen } from "../screens"
 import { FontAwesome5, Foundation, Ionicons } from "@expo/vector-icons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { TopBarLogoOnly } from "../components/TopBarLogoOnly"
@@ -49,7 +49,7 @@ export const BottomNavigationNavigator = () => {
       />
       <BottomTab.Screen
         name="SavedDrops"
-        component={CardviewScreen}
+        component={HomeScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => <BottomTabLogo />,
