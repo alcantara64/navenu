@@ -30,7 +30,8 @@ export const UserListCard = observer(function UserListCard(props: UserListCardPr
       imageStyle={$imageBackground}
       resizeMode="cover"
       style={$backgroundImage}
-    >
+    >       
+     <View style={$imageFilter} />
           <View flex-7 padding-10>
               <Text numberOfLines={2} style={$belowText}>
                 {name}
@@ -60,4 +61,12 @@ const $belowText: TextStyle = {
   textTransform: "uppercase",
   fontSize: 22,
   letterSpacing: 1.76,
+}
+const $imageFilter: ViewStyle = {
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
 }

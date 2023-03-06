@@ -20,6 +20,7 @@ export interface DropDropDetailCardProps {
   drop: IDrop
   navigation: any
   onClaimCode: () => void
+  refetchDrop: () => void
 }
 
 /**
@@ -28,7 +29,7 @@ export interface DropDropDetailCardProps {
 export const DropDropDetailCard = observer(function DropDropDetailCard(
   props: DropDropDetailCardProps,
 ) {
-  const { style, drop, navigation, onClaimCode } = props
+  const { style, drop, navigation, onClaimCode, refetchDrop } = props
   const $styles = [$container, style]
   const userList = useUserList()
   const [bookmark, setBookmark] = useState(false)
@@ -158,7 +159,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           <View row style={$horizontalLine}></View>
         </View>
       </View>
-      <RemoveAndAddToUserList  showListModal={showListModal} setShowListModal={setShowListModal} selectedFeedItem={drop}/>
+      <RemoveAndAddToUserList  showListModal={showListModal} setShowListModal={setShowListModal} selectedFeedItem={drop} queryKey={{ queryKey: ["drop-detail", drop.id], }} onRefetch={refetchDrop}/>
     </View>
   )
 })

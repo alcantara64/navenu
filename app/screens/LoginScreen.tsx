@@ -89,6 +89,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
     if (useInfo) {
       try {
+        const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
         await socialRegister({
           email: useInfo.email,
           firstName: useInfo.given_name,
@@ -96,6 +97,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           socialId: useInfo.id,
           authType: "google",
           avatar: useInfo.picture,
+          deviceToken,
+          deviceType: Platform.OS,
         })
       } catch (e) {
         setErrorMessage(e.message)
@@ -106,6 +109,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   const handleAppleSignin = async () => {
     try {
+      const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -125,6 +129,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           lastName: credential.fullName.familyName || '',
           socialId: credential.user,
           authType: "apple",
+          deviceToken,
+          deviceType: Platform.OS,
         })
       }
     } catch (e) {

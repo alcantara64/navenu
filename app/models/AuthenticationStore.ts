@@ -87,8 +87,8 @@ export const AuthenticationStoreModel = types
             navigate("PreferencesScreen")
           }, 50)
         }
-        setTimeout(()=> {
-           userService.savePushNotificationToken({deviceType, deviceToken }, result.token).then().catch(err => {console.log(err)})
+        setTimeout( async ()=> {
+          await userService.savePushNotificationToken({deviceType, deviceToken }, result.token).then().catch(err => {console.log(err)})
         }, 50)
         store.authToken = result.token
       } else {
@@ -129,7 +129,10 @@ export const AuthenticationStoreModel = types
       firstName = "",
       lastName = "",
       avatar = "",
-      isSignUp= false
+      isSignUp= false,
+      deviceType,
+      deviceToken
+
     }) {
       this.setErrorMessage("")
       this.setAuthEmail(email)
@@ -147,6 +150,9 @@ export const AuthenticationStoreModel = types
       const api = new UserService()
       const result = await api.socialRegister({ email, socialId, authType })
       if (result.kind === "ok") {
+        setTimeout( async ()=> {
+          await api.savePushNotificationToken({deviceType, deviceToken }, result.data.token).then().catch(err => {console.log(err)})
+        }, 50)
         this.setAuthToken(result.data.token)
         this.setRefreshToken(result.data.refresh_token)
       } else {

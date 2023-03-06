@@ -171,6 +171,7 @@ export const UserStoreModel = types
       const response = yield userService.getUsers();
       if (response.kind === "ok") {
         // FIll UserModel with API Data
+        try{
         if(response.data.user){
         self.currentUser = response.data.user
         }
@@ -180,6 +181,9 @@ export const UserStoreModel = types
         if(response.data.user_preferences){
         self.userPreference = response.data.user_preferences;
         }
+      }catch(err){
+        self.error = { isError: true, message: "Error Fetching Your information" }
+      }
       } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }

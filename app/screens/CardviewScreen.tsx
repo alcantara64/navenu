@@ -119,10 +119,13 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
         user_list_id: selectedUserList,
         type: selectedFeedItem?.type,
         id: selectedFeedItem?.id,
-      })
+      },{
+        onSuccess:(data, variables, context) => {
+        userList.refetch()
+      },})
       setShowListModal(false);
       setSelectedUserList(undefined);
-      queryClient.invalidateQueries({ queryKey: ["feed"] })
+
     }
 
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>

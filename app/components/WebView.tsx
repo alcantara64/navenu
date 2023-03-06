@@ -1,13 +1,12 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { Dimensions, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
 import {WebViewMessageEvent, WebViewNavigation} from 'react-native-webview/lib/WebViewTypes';
 import {WebView, WebViewProps} from 'react-native-webview';
 import { useRef } from "react";
 import { LoadingIndicator } from "./LoadingIndicator";
 
-export interface WebViewCompProps extends WebViewProps {
+export interface WebCompProps extends WebViewProps {
   /**
    * An optional style override useful for padding & margin.
    */
@@ -24,7 +23,7 @@ export interface WebViewCompProps extends WebViewProps {
 /**
  * Describe your component here
  */
-export const Web = observer(function WebView(props: WebViewCompProps) {
+export const Web = observer(function Web(props: WebCompProps) {
   const { style, url, headers, isWebURL, ...rest } = props
   const $styles = [$container, style];
   const webview = useRef<WebView>(null);
@@ -41,7 +40,7 @@ const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
   return (
     <View style={$styles}>
       <WebView
-                    ref={webview}
+
                     originWhitelist={['http*://*', 'redirect://*']}
                     onNavigationStateChange={handleWebViewNavigationStateChange}
                     domStorageEnabled
@@ -65,5 +64,7 @@ const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
 
 const $container: ViewStyle = {
   justifyContent: "center",
+  flex: 1,
+  height: Dimensions.get('screen').height
 }
 

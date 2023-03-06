@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useRef } from "react"
 import { ImageBackground, View, Dimensions, ViewStyle, TextStyle, Alert } from "react-native"
 import { Text } from "react-native-ui-lib"
 import { FontAwesome5 } from "@expo/vector-icons"
@@ -19,6 +19,8 @@ import { useStores } from "../../models"
 import { Platform } from "expo-modules-core"
 import jwtDecode from "jwt-decode"
 import { ToastLoader } from "../../components"
+import { CloudMessaging } from "../../services/cloudMessagingService"
+
 
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
@@ -33,6 +35,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
   const {
     authenticationStore: { socialRegister, setLoading, isLoading, errorMessage, setErrorMessage },
   } = useStores()
+  const cloudMessagingRef = useRef<CloudMessaging>();
 
   useEffect(() => {
     setLoading(false)
@@ -55,12 +58,16 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
     }
   }, [response, accessToken])
 
+  useEffect(() => {
+    cloudMessagingRef.current = new CloudMessaging();
+    }, [])
+
   async function fetchUserInfo() {
     const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
     const useInfo = await response.json()
-
+    const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
     if (useInfo && useInfo.email ) {
       socialRegister({
         email: useInfo.email,
@@ -70,6 +77,8 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
         authType: "google",
         avatar: useInfo.picture,
         isSignUp: true,
+        deviceToken,
+        deviceType: Platform.OS,
       }).then(() => {
         navigation.navigate("PreferencesScreen")
       })
@@ -78,6 +87,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
 
   const handleAppleSignin = async () => {
     try {
+      const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -96,7 +106,9 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
           lastName: credential.fullName.familyName,
           socialId: credential.user,
           authType: "apple",
-          isSignUp:true
+          isSignUp:true,
+          deviceToken,
+          deviceType: Platform.OS,
         })
       }
     } catch (e) {

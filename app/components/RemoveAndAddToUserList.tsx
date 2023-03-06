@@ -23,13 +23,14 @@ export interface RemoveAndAddToUserListProps {
   setShowListModal:(status:boolean) => void
   selectedFeedItem: IVenue | IDrop | IArticle | null |ICurator
   queryKey?:  any
+  onRefetch: () => void
 }
 
 /**
  * Describe your component here
  */
 export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(props: RemoveAndAddToUserListProps) {
-  const { style, selectedFeedItem, setShowListModal, showListModal, queryKey } = props
+  const { style, selectedFeedItem, setShowListModal, showListModal, queryKey, onRefetch } = props
   const $styles = [$container, style];
 
   const userList = useUserList();
@@ -59,7 +60,13 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
       user_list_id: selectedUserList,
       type: selectedFeedItem?.type,
       id: selectedFeedItem?.id,
-    })
+    }, {onSuccess: async (data, variables, context) =>{
+      if(onRefetch){
+       await userList.refetch()
+       onRefetch()
+       
+      }
+    },})
     setShowListModal(false);
     setSelectedUserList(undefined);
     await queryClient.invalidateQueries({ queryKey: ["feed"] })

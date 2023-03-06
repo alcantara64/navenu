@@ -27,7 +27,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
   function DropScreen({ route, navigation }) {
     const { dropStore } = useStores()
     const currentDropId = route.params.venue.id
-    const { isLoading, data, error } = useDrop(currentDropId)
+    const { isLoading, data, error, refetch } = useDrop(currentDropId)
     const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore;
     const queryClient = useQueryClient()
   
@@ -99,6 +99,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
           onClaimCode={claimCode}
           drop={data}
           navigation={navigation}
+          refetchDrop={refetch}
         ></DropDropDetailCard>
       </Screen>
     )

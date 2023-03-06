@@ -30,12 +30,13 @@ export interface ArticleCardProps {
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
   const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList} = props
   const navigation = useNavigation()
-  const onCardPressed = () => {
+  const onCardPressed = (article:any) => {
+  
     navigation.navigate("Article", {
-      article: item,
+      article,
     })
   }
-  const saveDrop = () => {
+  const saveARticle= () => {
     onBookMark(item)
   }
   const removeFromUserList = () => {
@@ -46,7 +47,9 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
   return (
     <TouchableOpacity
       key={item.id}
-      onPress={onCardPressed}
+      onPress={() => {
+        onCardPressed(item)
+      }}
       style={$cardContainer}
       activeOpacity={0.1}
     >
@@ -68,7 +71,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
             </View>
             {isFeed && (
               <View flex-1 right>
-                <TouchableOpacity onPress={saveDrop}>
+                <TouchableOpacity onPress={saveARticle}>
                   <FontAwesome5 solid={isItemInUserList(item.id, userListData)} name="bookmark" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>

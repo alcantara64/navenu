@@ -90,8 +90,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         return
       }
       const knownLocation = await Location.getLastKnownPositionAsync({})
-      onSetLatitude(knownLocation.coords?.latitude)
-      onSetLongitude(knownLocation.coords?.longitude)
+      onSetLatitude(knownLocation?.coords?.latitude)
+      onSetLongitude(knownLocation?.coords?.longitude)
     })()
   }, [])
 
@@ -144,8 +144,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
       >
         <Marker
           coordinate={{
-            longitude,
-            latitude,
+            longitude: longitude || 0,
+            latitude: latitude || 0,
           }}
           image={Images.NU}
           title="Navenu Member"

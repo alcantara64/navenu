@@ -30,7 +30,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     <Screen style={$root} preset="auto">
         <View style={$container}>
       
-        <NearByVenues venues={data?.nearby} />
+        
   
     </View>
     </Screen>
