@@ -80,51 +80,6 @@ Images and video are stored in AWS S3 and distributed from AWS Cloudfront from t
 
 ## Project's structure:
 
-```
-NavenuRN
-├── app
-│   ├── components
-│   ├── config
-│   ├── i18n
-│   ├── models
-│   ├── navigators
-│   ├── screens
-│   ├── services
-│   ├── theme
-│   ├── utils
-│   ├── app.tsx
-├── test
-│   ├── __snapshots__
-│   ├── mockFile.ts
-│   ├── setup.ts
-├── README.md
-├── android
-│   ├── app
-│   ├── build.gradle
-│   ├── gradle
-│   ├── gradle.properties
-│   ├── gradlew
-│   ├── gradlew.bat
-│   ├── keystores
-│   └── settings.gradle
-├── ignite
-│   └── templates
-|       |── app-icon
-│       ├── component
-│       ├── model
-│       ├── navigator
-│       └── screen
-├── index.js
-├── ios
-│   ├── IgniteProject
-│   ├── IgniteProject-tvOS
-│   ├── IgniteProject-tvOSTests
-│   ├── IgniteProject.xcodeproj
-│   └── IgniteProjectTests
-├── .env
-└── package.json
-
-```
 
 ### ./app directory
 
@@ -132,19 +87,7 @@ Included in an Ignite boilerplate project is the `app` directory. This is a dire
 
 The inside of the `app` directory looks similar to the following:
 
-```
-app
-├── components
-├── config
-├── i18n
-├── models
-├── navigators
-├── screens
-├── services
-├── theme
-├── utils
-├── app.tsx
-```
+
 
 **components**
 This is where your reusable components live which help you build your screens.
