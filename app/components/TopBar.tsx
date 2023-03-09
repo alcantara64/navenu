@@ -64,7 +64,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   }
   const toggleDrop = () => {
     if (isSearchMode) {
-      setSearchFilterType(FEED_TYPE.drop + "s")
+      setSearchFilterType(FEED_TYPE.drop)
     } else {
       const isToggle = selectedFilterTypes.includes(FEED_TYPE.drop)
       isToggle ? removeFilterType(FEED_TYPE.drop) : addFilterType(FEED_TYPE.drop)
@@ -72,7 +72,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   }
   const toggleVenue = () => {
     if (isSearchMode) {
-      setSearchFilterType(FEED_TYPE.location + "s")
+      setSearchFilterType(FEED_TYPE.location)
     } else {
       const isToggle = selectedFilterTypes.includes(FEED_TYPE.location)
       isToggle ? removeFilterType(FEED_TYPE.location) : addFilterType(FEED_TYPE.location)
@@ -80,14 +80,14 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
   }
   const toggleEditorial = () => {
     if (isSearchMode) {
-      setSearchFilterType(FEED_TYPE.article + "s")
+      setSearchFilterType(FEED_TYPE.article)
     } else {
       const isToggle = selectedFilterTypes.includes(FEED_TYPE.article)
       isToggle ? removeFilterType(FEED_TYPE.article) : addFilterType(FEED_TYPE.article)
     }
   }
   const toggleCurator = () => {
-    setSearchFilterType(FEED_TYPE.curator + "s")
+    setSearchFilterType(FEED_TYPE.curator)
   }
   return (
     <View marginT-45 marginB-15 marginL-4 marginR-5>
@@ -115,7 +115,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
               style={[
                 $filterType,
                 ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.location)) ||
-                  (isSearchMode && searchFilterType === FEED_TYPE.location + "s")) &&
+                  (isSearchMode && searchFilterType === FEED_TYPE.location)) &&
                   $activeFilter,
                 isSearchMode && $searchMode,
               ]}
@@ -131,7 +131,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
               style={[
                 $filterType,
                 ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.drop)) ||
-                  (isSearchMode && searchFilterType === FEED_TYPE.drop + "s")) &&
+                  (isSearchMode && searchFilterType === FEED_TYPE.drop)) &&
                   $activeFilter,
                 isSearchMode && $searchMode,
               ]}
@@ -146,7 +146,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
                 onPress={toggleCurator}
                 style={[
                   $filterType,
-                  searchFilterType === FEED_TYPE.curator + "s" && $activeFilter,
+                  searchFilterType === FEED_TYPE.curator && $activeFilter,
                   $searchMode,
                 ]}
                 label="CURATORS"
@@ -162,7 +162,7 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
               style={[
                 $filterType,
                 ((!isSearchMode && selectedFilterTypes.includes(FEED_TYPE.article)) ||
-                  (isSearchMode && searchFilterType === FEED_TYPE.article + "s")) &&
+                  (isSearchMode && searchFilterType === FEED_TYPE.article)) &&
                   $activeFilter,
                 isSearchMode && $searchMode,
               ]}
@@ -173,8 +173,8 @@ export const TopBar = observer(function TopBar(props: TopBarProps) {
           </View>
           {/* </ScrollView> */}
           {(!isSearchMode ||
-            searchFilterType === FEED_TYPE.location + "s" ||
-            searchFilterType === FEED_TYPE.drop + "s") && (
+            searchFilterType === FEED_TYPE.location  ||
+            searchFilterType === FEED_TYPE.drop) && (
             <CategoryFilterBar
               addCat={addCartFilter}
               removeCat={removeCartFilter}
