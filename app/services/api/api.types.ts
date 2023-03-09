@@ -179,7 +179,11 @@ export interface IAutoComplete {
   location : Array<string>,
   borough: Array<string>,
   tags: Array<string>,
-  cats: Array<string>
+  cats: Array<string>,
+  curators:Array<string>,
+  drop: Array<string>,
+  article: Array<string>,
+
 }
 export interface ICuratorResponse {
   curator:ICurator

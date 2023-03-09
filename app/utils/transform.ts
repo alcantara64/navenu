@@ -91,6 +91,21 @@ export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete)
       transFormedData.push({ type: "Tags", display: `Tag:${tag}` })
     })
   }
+  if (data.curators && data.curators.length) {
+    data.curators.forEach((curator) => {
+      transFormedData.push({ type: "Curators", display: `Curator:${curator}` })
+    })
+  }
+  if(data.drop && data.drop.length){
+    data.drop.forEach((drop) => {
+      transFormedData.push({ type: "Drop", display: `Drop:${drop}` })
+    })
+  }
+  if(data.article && data.article.length){
+    data.article.forEach((singleArticle) => {
+      transFormedData.push({ type: "Article", display: `Article:${singleArticle}` })
+    })
+  }
   return transFormedData
 }
 /**  
