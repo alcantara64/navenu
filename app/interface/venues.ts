@@ -37,6 +37,7 @@ export interface IVenue {
   drops?: Array<IDrop>
   subscribed: boolean
   menu_url:string
+  booking_url:string
 }
 
 interface ICurators {
@@ -56,7 +57,7 @@ export interface IArticle  {
   title: string,
   subscribed:boolean
   mainimage:string
-  content:Array<{type:'image'| 'text'| 'subtitle', image?: string, text?:string, subtitle:string}>
+  content:Array<{type:'image'| 'text'| 'subtitle'|'venue_card'|'insert_drop_card'|'insert_curator_card', image?: string, text?:string, subtitle:string,venue?:Array<IVenue>,drop?:Array<IDrop>,curators?:Array<ICurators>}>
 }
 export interface IGallery {
   id: number
