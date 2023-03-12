@@ -32,6 +32,7 @@ export interface CardListProps {
   userList?: IUserList
   isUserList?: boolean,
   removeItemFromUserList?: (feed:any) => void 
+  hideRemove?: boolean
 }
 
 /**
@@ -52,7 +53,8 @@ export const CardList = observer(function CardList(props: CardListProps) {
     getMoreData,
     userList,
     isUserList,
-    removeItemFromUserList
+    removeItemFromUserList,
+    hideRemove
   } = props
   const {authenticationStore:{latitude, longitude}} = useStores() 
 
@@ -61,18 +63,18 @@ export const CardList = observer(function CardList(props: CardListProps) {
   const renderItem = ({ item }) => {
     if (item.type === "location") {
       return (
-        <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} />
+        <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove} />
       )
     }
 
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} isFeed={isFeed} onBookMark={onBookMark} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} />
+      return <ArticleCard item={item} isFeed={isFeed} onBookMark={onBookMark} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove} />
     }
     if (item.type === FEED_TYPE.drop) {
-      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
+      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
     }
-    if(item.type?.toLowerCase() ===  FEED_TYPE.curator){
-      return <CuratorCard  isFeed={isFeed} onBookMark={onBookMark} curator={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList}/>
+    if(item.type?.toLowerCase() ===  FEED_TYPE.curator || item.type?.toLowerCase() ===  FEED_TYPE.curator+'s' ){
+      return <CuratorCard  isFeed={isFeed} onBookMark={onBookMark} curator={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
     }
   }
   return (

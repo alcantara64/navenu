@@ -25,10 +25,11 @@ export interface ArticleCardProps {
   userListData?: IUserList,
   onRemoveFromUserList?: (feed:any) => void
   isUserList?:boolean;
+  hideRemove?: boolean
 }
 
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
-  const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList} = props
+  const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList, hideRemove} = props
   const navigation = useNavigation()
   const onCardPressed = (article:any) => {
   
@@ -76,7 +77,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
                 </TouchableOpacity>
               </View>
             )}
-            {isUserList && (
+            {isUserList && !hideRemove && (
               <View flex-1 right>
                 <TouchableOpacity onPress={removeFromUserList}>
                   <FontAwesome5 solid name="times-circle" size={20} color="#FFFFFF" />
