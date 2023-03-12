@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ImageBackground, StyleProp, TextStyle, ViewStyle, ImageStyle, Linking } from "react-native"
+import { ImageBackground, StyleProp, TextStyle, ViewStyle, ImageStyle, Linking,Platform } from "react-native"
 import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, Avatar } from "react-native-ui-lib"
 import {
@@ -56,7 +56,8 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet, refetch } = props
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
-  const [showWebview, setShowWebview] = useState(false)
+
+  // const [showWebview, setShowWebview] = useState(false)
   const goBack = () => {
     navigation.goBack()
   }
@@ -117,9 +118,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     }
     return null
   }
-  if(showWebview){
-   return <Web  url={venue.menu_url}></Web>
-  }
+  // if(showWebview){
+  // return <Web  url={venue.menu_url}></Web>
+  // }
 
   return (
     <>
@@ -219,9 +220,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             </TouchableOpacity>
             {venue.menu_url && (<TouchableOpacity
               onPress={() => {
-                setShowWebview(true)
-                // setBottomSheet(true)
-                // setBottomSheetCurrentContent(BottomSheetType.menu)
+               // setShowWebview(true)
+                setBottomSheet(true)
+                setBottomSheetCurrentContent(BottomSheetType.menu)
               }}
             >
               <View padding-15 style={$boxContainer}>
@@ -246,11 +247,16 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
               </Text>
             </TouchableOpacity> */}
             <TouchableOpacity
-              onPress={() =>
-                setDestinationDirections({
-                  latitude: venue.lat,
-                  longitude: venue.lng,
-                })
+              onPress={() =>{
+                const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+                const latLng = `${venue.lat},${venue.lng}`;
+              const label = venue.name;
+              const mapurl = Platform.select({
+                ios: `${scheme}${label}@${latLng}`,
+                android: `${scheme}${latLng}(${label})`
+              });
+                
+                Linking.openURL(mapurl).catch((error) => console.error(error))}
               }
             >
               <View padding-15 style={$boxContainer}>
