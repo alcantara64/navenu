@@ -2,7 +2,7 @@ import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { ErrorMessage, LoadingIndicator, RemoveAndAddToUserList, Screen } from "../components"
+import { ErrorMessage, LoadingIndicator, RemoveAndAddToUserList, DropCard,VenueCard,CuratorCard,Screen } from "../components"
 import { useArticle } from "../hooks/useArticles"
 import { View, TouchableOpacity, Text, Image } from "react-native-ui-lib"
 import { Colors } from "../theme"
@@ -12,6 +12,7 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"
 import { getStyleByCategory, getUserListIdByItemId, isItemInUserList } from "../utils/transform"
 import { useUserList } from "../hooks/useUser"
 import { UserService } from "../services/userService"
+import { useStores } from "../models"
 
 // @ts-ignore
 export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">> = observer(
@@ -20,6 +21,7 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
     const { data, isLoading, error, refetch } = useArticle(itemId)
     const [showListModal, setShowListModal] = useState(false)
     const navigation = useNavigation()
+    const {authenticationStore:{latitude, longitude}} = useStores() 
     const userList = useUserList()
     const goBack = () => {
       navigation.goBack()
@@ -75,6 +77,9 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
               {item.type === 'subtitle' && (<Text subheader itemId>{data.description}</Text>)}
               {item.type === 'image' && (<Image source={{uri:item.image }}></Image>)}
               {item.type === 'text' && (<Text> {item.text}</Text>)}
+              {item.type === 'venue_card' && (<VenueCard item={item.venue} key={"g" + item.venue.id} isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />)}
+              {item.type === 'insert_drop_card' && (<DropCard key={item.drop.id} item={item.drop} />)}
+              {item.type === 'insert_curator_card' && (<CuratorCard  curator={item.curators} />)}
             </View>) )}
             </View>
           </View>

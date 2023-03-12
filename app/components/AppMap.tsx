@@ -135,8 +135,8 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
           latitude: initialLatitude || latitude,
           longitude:initialLongitude || longitude,
           // todo work on longitude delta, important for zooming
-          latitudeDelta: 0.28,
-          longitudeDelta: 0.28 * (Dimensions.get("window").width / Dimensions.get("window").height),
+          latitudeDelta: 0.0091,
+          longitudeDelta: 0.0091 * (Dimensions.get("window").width / Dimensions.get("window").height),
         }}
         zoomTapEnabled
         zoomEnabled

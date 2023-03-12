@@ -62,7 +62,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const [selectedVenue, setSelectedVenue] = useState<IVenue>(null)
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const {venueStore} = useStores()
-
+  const {authenticationStore:{latitude, longitude}} = useStores() 
   const addCat = (cat) => {
     setMiniFilter([...miniFilter, cat])
   }
@@ -81,7 +81,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   let Venuecards
 
   if (miniFilter.length === 0) {
-    Venuecards = venues.map((venue, index) => <VenueCard item={venue} key={"g" + index} isFeed={false} currentUserLatitude={null} currentUserLongitude={null} />)
+    Venuecards = venues.map((venue, index) =>  <VenueCard item={venue} key={"g" + index} isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />)
 
     Markers = venues.map((venue, index) => (
       <ISuckMapMarker onMarkerPressed={onMarkerPress} venue={venue} key={"f" + index} />
@@ -89,7 +89,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   } else {
     Venuecards = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
-        return <VenueCard item={venue} key={"m" + index}  isFeed={false} currentUserLatitude={null} currentUserLongitude={null} />
+        return <VenueCard item={venue} key={"m" + index}  isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />
     })
     Markers = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
