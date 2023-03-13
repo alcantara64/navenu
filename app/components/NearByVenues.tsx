@@ -166,7 +166,7 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
           </View>
         )}
       </BottomSheet>
-      <View flex marginR-5 marginL-5>{Venuecards}</View>
+      <View flex marginR-5 marginL-5 marginT-15>{Venuecards}</View>
     </View>
   )
 })

@@ -16,6 +16,7 @@ import { typography } from "../theme"
 import { useNavigation } from "@react-navigation/native"
 import { isItemInUserList } from "../utils/transform"
 import { IUserList } from "../interface/user"
+import { verticalScale } from "../utils/metrics"
 
 export interface ArticleCardProps {
   style?: StyleProp<ViewStyle>
@@ -51,7 +52,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
       onPress={() => {
         onCardPressed(item)
       }}
-      style={$cardContainer}
+      
       activeOpacity={0.1}
     >
       <ImageBackground
@@ -64,7 +65,7 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
         <View paddingL-4>
           <View row marginH-6>
             <View flex-7>
-              <Text style={$topText}>{item.name}</Text>
+              <Text style={$belowText}>{item.name}</Text>
               <Text numberOfLines={1}  style={$belowText}>{item.intro}</Text>
               <Text bottom style={$bottomText}>
                 {item.owner}
@@ -94,7 +95,7 @@ const $backgroundImage: ImageStyle = {
   borderRadius: 6,
 }
 const $cardContainer: ViewStyle = {
-  minHeight: 100,
+ // minHeight: 100,
 }
 const $imageFilter: ViewStyle = {
   backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -127,6 +128,7 @@ const $image: ViewStyle = {
   marginBottom: 5,
   justifyContent: "center",
   borderRadius: 6,
+  minHeight: verticalScale(100),
 }
 const $bottomText: TextStyle = {
   marginTop: 0,

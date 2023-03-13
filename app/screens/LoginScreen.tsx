@@ -25,7 +25,7 @@ import {
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { Colors } from "../theme"
-import { View } from "react-native-ui-lib"
+import { KeyboardAwareScrollView, View } from "react-native-ui-lib"
 import { Formik } from "formik"
 import { loginValidationSchema } from "../utils/validations"
 import { useTogglePasswordVisibility } from "../hooks"
@@ -220,9 +220,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           onSubmit={(values) => onLogin(values)}
         >
           {({ values, touched, errors, handleChange, handleSubmit, handleBlur, isValid }) => (
+              <KeyboardAwareScrollView>
             <View style={$formContainer}>
               {/* Input fields */}
-              <View>
                 <TextInput
                   name="email"
                   placeholder="Enter email"
@@ -249,8 +249,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                   onBlur={handleBlur("password")}
                 />
                 <FormErrorMessage error={errors.password} visible={touched.password} />
-              </View>
-
+               
+            
               {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
               <View style={$buttonContainer}>
                 <AppButton style={$button} onPress={handleSubmit} disabled={!isValid}>
@@ -284,6 +284,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
                 /> */}
               </View>
             </View>
+            </KeyboardAwareScrollView>
           )}
         </Formik>
 

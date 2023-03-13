@@ -57,7 +57,8 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
 
-  // const [showWebview, setShowWebview] = useState(false)
+   const [showWebview, setShowWebview] = useState(false)
+   const [currentUrl, setCurrentUrl] = useState('');
   const goBack = () => {
     navigation.goBack()
   }
@@ -118,9 +119,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     }
     return null
   }
-  // if(showWebview){
-  // return <Web  url={venue.menu_url}></Web>
-  // }
+  if(showWebview && currentUrl){
+  return <Web  url={currentUrl} onClose={() => {
+    setShowWebview(false)
+  }}></Web>
+  }
 
   return (
     <>
@@ -220,9 +223,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             </TouchableOpacity>
             {venue.menu_url && (<TouchableOpacity
               onPress={() => {
-               // setShowWebview(true)
-                setBottomSheet(true)
-                setBottomSheetCurrentContent(BottomSheetType.menu)
+               
+                // setBottomSheet(true)
+                // setBottomSheetCurrentContent(BottomSheetType.menu)
+                setCurrentUrl(venue.menu_url)
+                setShowWebview(true)
               }}
             >
               <View padding-15 style={$boxContainer}>
@@ -233,9 +238,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 MENU
               </Text>
             </TouchableOpacity>)}
-            {/* <TouchableOpacity onPress={() => {
-              setBottomSheet(true)
-              setBottomSheetCurrentContent(BottomSheetType.book)
+            {venue.booking_url && <TouchableOpacity onPress={() => {
+             setCurrentUrl(venue.booking_url)
+             setShowWebview(true)
               }
             }>
               <View padding-15 style={$boxContainer}>
@@ -245,7 +250,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                 {" "}
                 BOOK
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>}
             <TouchableOpacity
               onPress={() =>{
                 const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
