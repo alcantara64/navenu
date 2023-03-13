@@ -20,13 +20,14 @@ export interface CuratorCardProps {
   userListData?: IUserList,
   onRemoveFromUserList?: (feed:any) => void
   isUserList?:boolean;
+  hideRemove?:boolean;
 }
 
 /**
  * Describe your component here
  */
 export const CuratorCard = observer(function CuratorCard(props: CuratorCardProps) {
-  const { style, curator, isFeed, onBookMark, userListData, isUserList, onRemoveFromUserList } = props
+  const { style, curator, isFeed, onBookMark, userListData, isUserList, onRemoveFromUserList,hideRemove } = props
   const $styles = [$container, style]
   const navigation = useNavigation()
 
@@ -68,7 +69,7 @@ export const CuratorCard = observer(function CuratorCard(props: CuratorCardProps
                 />
               </TouchableOpacity>
             </View>}
-            {isUserList && !isFeed && <View flex-1 right>
+            {isUserList && removeFromUserList && !isFeed && !hideRemove && <View flex-1 right>
               <TouchableOpacity onPress={removeFromUserList}>
                 <FontAwesome5
                   solid

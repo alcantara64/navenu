@@ -34,6 +34,7 @@ export interface VenueCardProps {
   isUserList?:boolean;
   currentUserLatitude: number;
   currentUserLongitude: number;
+  hideRemove?: boolean;
 
 }
 
@@ -41,7 +42,7 @@ export interface VenueCardProps {
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList, currentUserLatitude, currentUserLongitude } = props
+  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList, currentUserLatitude, currentUserLongitude, hideRemove } = props
   const navigation = useNavigation();
 
   const onPressVenue  = (venue) =>{
@@ -90,7 +91,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
                 />
               </TouchableOpacity>
             </View>}
-            {isUserList && !isFeed && <View flex-1 right>
+            {isUserList && !isFeed && !hideRemove && <View flex-1 right>
               <TouchableOpacity onPress={removeFromUserList}>
                 <FontAwesome5
                   solid

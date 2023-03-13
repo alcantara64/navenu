@@ -77,6 +77,7 @@ export interface ICurator {
     drops:Array<IDrop>
     venues:Array<IVenue>
     subscribed:boolean
+    userLists:Record<string, unknown>
 }
 export interface IUserList {
     userlist: Record<string,ListItem >

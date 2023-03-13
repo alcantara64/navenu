@@ -12,6 +12,8 @@ import { useSubscribeToNotification, useUserList } from "../hooks/useUser"
 import { useState } from "react"
 import { UserService } from "../services/userService"
 import { DropCard } from "./DropCard"
+import { UserListCard } from "./UserListCard"
+import LinearGradient from "react-native-linear-gradient"
 
 export interface CuratorCardProps {
   /**
@@ -19,28 +21,30 @@ export interface CuratorCardProps {
    */
   style?: StyleProp<ViewStyle>
   curator: ICurator
+  onSetSelectedList: any
 }
 
 /**
  * Describe your component here
  */
 export const CuratorDetail = observer(function CuratorCard(props: CuratorCardProps) {
-  const { style, curator } = props
+  const { style, curator, onSetSelectedList } = props
   const $styles = [$container, style]
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const userList = useUserList()
   const [showListModal, setShowListModal] = useState(false)
-  
-  
-  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification('curator')
-  const  goBack = () => {
+  const userListNames = Object.keys(curator.userLists || {})
+  const [userListCount, setUserListCount] = useState(3)
+
+  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification("curator")
+  const goBack = () => {
     navigation.goBack()
   }
   const onSubscribeToNotification = () => {
-    mutate({ type: 'curator', id: curator.ID })
+    mutate({ type: "curator", id: curator.ID })
   }
   const onLinkPress = () => {
-   // openLinkInBrowser(curator.)
+    // openLinkInBrowser(curator.)
   }
 
   const onBookMark = async () => {
@@ -51,16 +55,18 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
       const userListId = getUserListIdByItemId(curator.ID, userList.data)
       await userService.removeCardFromList({
         user_list_id: userListId,
-        type: 'curator',
+        type: "curator",
         id: curator.ID as any,
       })
     }
     userList.refetch()
   }
+  const onSelectedListItemPressed = (listName: string) => {
+    onSetSelectedList({ ...(curator.userLists[listName] as any), userListName: listName })
+  }
 
   return (
     <>
-  
       <ImageBackground source={{ uri: curator.avatar }} resizeMode="cover" style={$imagetop}>
         <View style={$imageFilter} />
         <View marginT-15 style={$closeBtn}>
@@ -123,14 +129,13 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
             <Text belowHeaderText marginT-5 style={$longDescription}>
               {curator.description}
             </Text>
-            <TouchableOpacity onPress={onLinkPress}>
+            {/* <TouchableOpacity onPress={onLinkPress}>
               <Text style={$linkUrl} marginT-15>
                 VISIT SITE
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-  
-          
+
           {curator.drops && curator.drops.length > 0 && (
             <View marginV-15>
               <Text sectionHeader>DROPS</Text>
@@ -142,8 +147,41 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
               </View>
             </View>
           )}
+          {userListNames.length > 0 && (
+            <View style={$dropsContainer}>
+              <Text header>Curator List</Text>
+              <View marginT-20>
+                {userListNames.slice(0, userListCount).map((name) => (
+                  <UserListCard
+                    onListPress={onSelectedListItemPressed}
+                    key={name}
+                    image={curator.userLists[name]?.cards[0]?.image}
+                    name={name}
+                  />
+                ))}
+              </View>
+              {userListNames.length > 3 && userListCount < userListNames.length && (
+                <View>
+                  <LinearGradient
+                    colors={["rgba(216, 216, 216, 0)", "#F2F2F2"]}
+                    style={$fadedContainer}
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setUserListCount(userListNames.length)
+                    }}
+                  >
+                    <Text center white black bottom underline belowHeaderText>
+                      LOAD MORE
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          )}
         </View>
       </View>
+
       <RemoveAndAddToUserList
         showListModal={showListModal}
         setShowListModal={setShowListModal}
@@ -235,4 +273,14 @@ const $linkUrl: TextStyle = {
   color: Colors.orange,
   textDecorationColor: Colors.orange,
   textDecorationLine: "underline",
+}
+const $dropsContainer: ViewStyle = {
+  position: "relative",
+}
+const $fadedContainer: ViewStyle = {
+  bottom: 25,
+  zIndex: 10,
+  position: "absolute",
+  width: "100%",
+  height: "100%",
 }

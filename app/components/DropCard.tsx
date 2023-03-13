@@ -32,13 +32,14 @@ export interface DropCardProps {
   userListData?: IUserList,
   onRemoveFromUserList?: (feed:any) => void
   isUserList?:boolean;
+  hideRemove?:boolean;
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { item, onBookMark, isFeed, userListData, isUserList, onRemoveFromUserList } = props
+  const { item, onBookMark, isFeed, userListData, isUserList, onRemoveFromUserList,hideRemove } = props
   const navigation = useNavigation();
 
 
@@ -81,7 +82,7 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
                 />
               </TouchableOpacity>
             </View>}
-            {isUserList && !isFeed && <View flex-1 right>
+            {isUserList && !isFeed && !hideRemove && <View flex-1 right>
               <TouchableOpacity onPress={removeFromUserList}>
                 <FontAwesome5
                   solid

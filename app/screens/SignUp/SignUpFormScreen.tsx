@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { ImageBackground, View, Dimensions, ViewStyle, TextStyle } from "react-native"
-import { Text } from "react-native-ui-lib"
+import { KeyboardAwareScrollView, Text } from "react-native-ui-lib"
 
 import { AppStackScreenProps } from "../../navigators"
 import { typography, Colors } from "../../theme"
@@ -72,7 +72,7 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
             onSubmit={(values) => handleSignUp(values)}
           >
             {({ values, touched, errors, isValid, handleChange, handleSubmit, handleBlur }) => (
-              <>
+              <KeyboardAwareScrollView>
                 <View style={$textContainer}>
                   <View style={$formContainer}>
                     {/* Input fields */}
@@ -117,7 +117,7 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
                     <Text style={$buttonText}>I have an account</Text>
                   </AppButton>
                 </View>
-              </>
+                </KeyboardAwareScrollView>
             )}
           </Formik>
         </ImageBackground>
