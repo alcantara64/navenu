@@ -13,6 +13,7 @@ import {
   NearByVenues,
   Screen,
   VenueCard,
+  Web,
 } from "../../components"
 import { BottomSheetType, VenueDetailCard } from "./components/VenueDetailCard"
 import { View, Text } from "react-native-ui-lib"
@@ -37,6 +38,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     const [bottomSheet, setBottomSheet] = useState(false)
     const [bottomSheetCurrentContent, setBottomSheetCurrentContent] =
       useState<BottomSheetType>(null)
+      const [showWebview, setShowWebview] = useState(false)
+      const [currentUrl, setCurrentUrl] = useState('');
 
     const createUberUrl = (
       pickupLatitude: number,
@@ -76,6 +79,13 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
       }
     }, [])
     const operatingHours = data?.operating_hours?.split(",")
+
+    const renderWebView = () => {
+      return (
+      <View style={{height: 600}}><Web  url={currentUrl} onClose={() => {
+        setShowWebview(false)
+      }}></Web></View>)
+    } 
     const renderOperatingHours = () => {
       return (
         <View padding-15>
@@ -110,6 +120,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           return renderOperatingHours()
         case BottomSheetType.menu:
           return renderMenu()
+        case BottomSheetType.webView:
+          return renderWebView()
         default:
           return null
       }
@@ -120,6 +132,10 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           <View style={$container}>
             <VenueDetailCard
               venue={data}
+              setCurrentUrl={setCurrentUrl}
+              currentUrl={currentUrl}
+              setShowWebview={setShowWebview}
+              showWebview={showWebview}
               setDestinationDirections={setDestinationDirections}
               createUberUrl={() =>
                 createUberUrl(
@@ -175,7 +191,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           }}
           category={data.category}
         >
-          <View padding-15>{renderBottomSheetContent()}</View>
+          <View >{renderBottomSheetContent()}</View>
         </BottomSheet>
         {currentVenue && showBottomSheet && (
           <AppBottomsheet>

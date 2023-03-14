@@ -180,7 +180,7 @@ export interface IAutoComplete {
   borough: Array<string>,
   tags: Array<string>,
   cats: Array<string>,
-  curators:Array<string>,
+  curator:Array<string>,
   drop: Array<string>,
   article: Array<string>,
 

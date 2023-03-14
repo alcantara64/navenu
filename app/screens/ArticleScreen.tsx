@@ -9,7 +9,7 @@ import { Colors } from "../theme"
 import { ViewStyle, ImageBackground } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"
-import { getStyleByCategory, getUserListIdByItemId, isItemInUserList } from "../utils/transform"
+import { getStyleByCategory, getUserListIdByItemId, isItemInUserList, shareLink } from "../utils/transform"
 import { useUserList } from "../hooks/useUser"
 import { UserService } from "../services/userService"
 import { useStores } from "../models"
@@ -33,7 +33,6 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
       } else {
         const userService = new UserService()
         const userListId = getUserListIdByItemId(data.id, userList.data);
-        console.log('here', userListId, data.type, data.id)
         await userService.removeCardFromList({
           user_list_id: userListId,
           type: 'Article',
@@ -55,7 +54,9 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
           </View>
           <View marginB-40 style={$functionBtns}>
             <View flex-1 center spread>
-              <TouchableOpacity marginV-10 onPress={() => console.log("Button 1")}>
+              <TouchableOpacity marginV-10 onPress={() => {
+                shareLink(data.name, 'Share this link with ')
+              }}>
                 <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
               </TouchableOpacity>
               <TouchableOpacity marginV-5 onPress={onBookMark}>
@@ -74,7 +75,7 @@ export const ArticleScreen: FC<StackScreenProps<AppStackScreenProps, "Article">>
             </View>
             <View marginT-10>
            {data.content.map((item, index) =>( <View key={index} marginT-5>
-              {item.type === 'subtitle' && (<Text subheader itemId>{data.description}</Text>)}
+              {item.type === 'subtitle' && (<Text subheader itemId text>{item.subtitle}</Text>)}
               {item.type === 'image' && (<Image source={{uri:item.image }}></Image>)}
               {item.type === 'text' && (<Text> {item.text}</Text>)}
               {item.type === 'venue_card' && (<VenueCard item={item.venue} key={"g" + item.venue.id} isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />)}

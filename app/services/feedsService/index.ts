@@ -1,5 +1,5 @@
 import { ApiResponse } from "apisauce"
-import { IAutoCompletePayload, ISearchPayLoad } from "../../interface/feed"
+import { FEED_TYPE, IAutoCompletePayload, ISearchPayLoad } from "../../interface/feed"
 import { makeTitleCase } from "../../utils/transform"
 import { Api, AutoCompleteResponse, FeedResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem"
@@ -23,8 +23,8 @@ export class FeedService {
   async getAutoCompleteSuggestions(payload: IAutoCompletePayload) {
     const formData = new FormData()
     formData.append("term", payload.term)
-    formData.append("type", payload.type === 'curator'? 'curators': payload.type)
-    if (payload.selected.length) {
+    formData.append("type",  payload.type)
+    if (payload.selected.length && [FEED_TYPE.drop,FEED_TYPE.location].includes(payload.type) ) {
       payload.selected.forEach((category) => {
         formData.append("selected[parentCategory][]", category)
       })
@@ -43,13 +43,14 @@ export class FeedService {
 
   async search(payload: ISearchPayLoad) {
     const formData = new FormData()
-    formData.append("type", payload.type === 'curator'? 'curators':payload.type)
+    formData.append("type", payload.type)
     if(payload.categories.length){
       payload.categories.forEach((category) => {
       formData.append(`selected[${category.type.toLowerCase()}][]`, category.display.split(':')[1].toLowerCase() )
       })
     }
-    if (payload.selected.length) {
+    if (payload.selected.length && [FEED_TYPE.drop,FEED_TYPE.location].includes(payload.type)) {
+      
       payload.selected.forEach((parentCategory) => {
         formData.append("selected[parentCategory][]", parentCategory)
       })

@@ -11,7 +11,6 @@ import {
 } from "@expo/vector-icons"
 import { IVenue } from "../../../interface/venues"
 import { useNavigation } from "@react-navigation/native"
-import { BottomSheet } from "../../../components/BottomSheet"
 import { useSubscribeToNotification, useUserList } from "../../../hooks/useUser"
 import { openLinkInBrowser } from "../../../utils/openLinkInBrowser"
 import { Colors, typography } from "../../../theme"
@@ -22,7 +21,7 @@ import {
   isItemInUserList,
   shareLink,
 } from "../../../utils/transform"
-import { DropCard, Gallery, RemoveAndAddToUserList, Web } from "../../../components"
+import { DropCard, Gallery, RemoveAndAddToUserList } from "../../../components"
 import { UserService } from "../../../services/userService"
 
 export interface VenueDetailCardProps {
@@ -36,6 +35,11 @@ export interface VenueDetailCardProps {
   setBottomSheetCurrentContent: (any) => any,
   setBottomSheet: (boolean) => void
   refetch: () => any
+  setShowWebview: (status:boolean) => void
+  showWebview: boolean
+  setCurrentUrl: (url:string) => void
+  currentUrl: string
+
   
 }
 
@@ -44,6 +48,7 @@ export enum BottomSheetType {
   operatingHours = "operatingHours",
   menu = "menu",
   book = "book",
+  webView = 'webView',
 }
 
 /**
@@ -53,12 +58,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const userList = useUserList()
 
   const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
-  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet, refetch } = props
+  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet, refetch, showWebview, setShowWebview, setCurrentUrl, currentUrl } = props
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
-
-   const [showWebview, setShowWebview] = useState(false)
-   const [currentUrl, setCurrentUrl] = useState('');
   const goBack = () => {
     navigation.goBack()
   }
@@ -92,7 +94,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     navigation.navigate('CuratorProfileScreen', {
    curator
     })
-  } 
+  }
 
   const renderPriceLevel = () => {
     const priceLevel = venue.price_level
@@ -118,11 +120,6 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
       )
     }
     return null
-  }
-  if(showWebview && currentUrl){
-  return <Web  url={currentUrl} onClose={() => {
-    setShowWebview(false)
-  }}></Web>
   }
 
   return (
@@ -224,10 +221,10 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             {venue.menu_url && (<TouchableOpacity
               onPress={() => {
                
-                // setBottomSheet(true)
-                // setBottomSheetCurrentContent(BottomSheetType.menu)
+                setBottomSheet(true)
+                setBottomSheetCurrentContent(BottomSheetType.webView)
                 setCurrentUrl(venue.menu_url)
-                setShowWebview(true)
+                // setShowWebview(true)
               }}
             >
               <View padding-15 style={$boxContainer}>
@@ -240,7 +237,8 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
             </TouchableOpacity>)}
             {venue.booking_url && <TouchableOpacity onPress={() => {
              setCurrentUrl(venue.booking_url)
-             setShowWebview(true)
+             setBottomSheet(true)
+             setBottomSheetCurrentContent(BottomSheetType.webView)
               }
             }>
               <View padding-15 style={$boxContainer}>
@@ -462,6 +460,7 @@ const $longDescription: TextStyle = {
   fontFamily: "inter",
   fontWeight: "400",
   fontSize: 12,
+  textTransform: 'none',
 }
 const $imageFilter: ViewStyle = {
   backgroundColor: "rgba(0, 0, 0, 0.5)",

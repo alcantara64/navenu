@@ -59,7 +59,7 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
     addItemToListMutation.mutate({
       user_list_id: selectedUserList,
       type: selectedFeedItem?.type,
-      id: selectedFeedItem?.id,
+      id: selectedFeedItem?.id || selectedFeedItem.ID,
     }, {onSuccess: async (data, variables, context) =>{
       if(onRefetch){
        await userList.refetch()

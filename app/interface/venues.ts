@@ -57,6 +57,7 @@ export interface IArticle  {
   title: string,
   subscribed:boolean
   mainimage:string
+  subtitle:string
   content:Array<{type:'image'| 'text'| 'subtitle'|'venue_card'|'insert_drop_card'|'insert_curator_card', image?: string, text?:string, subtitle:string,venue?:Array<IVenue>,drop?:Array<IDrop>,curators?:Array<ICurators>}>
 }
 export interface IGallery {

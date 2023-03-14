@@ -26,7 +26,7 @@ export const CuratorProfileScreen: FC<StackScreenProps<AppStackScreenProps, "Cur
   // Pull in navigation via hook
   // const navigation = useNavigation()
   const curatorId = route.params.curator.id;
- const {data, error, isLoading} = useCurator(curatorId);
+ const {data, error, isLoading, refetch} = useCurator(curatorId);
  const [showBottomSheet, setShowBottomSheet] = useState(false)
  const [selectedListItem, setSelectedListItem] = useState(null)
  const [showUserListModal, setShowUserListModal] = useState(false)
@@ -60,7 +60,7 @@ const onCloseUserListModal = () => {
   return (
     <>
     <Screen style={$root} preset="scroll">
-      <CuratorDetail onSetSelectedList={setCurrentListItem} curator={data}></CuratorDetail>
+      <CuratorDetail onSetSelectedList={setCurrentListItem} curator={data} refetch={refetch}></CuratorDetail>
     </Screen>
     <BottomSheet show={showUserListModal} onClose={onCloseUserListModal}>
           <View padding-8>

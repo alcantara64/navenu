@@ -22,13 +22,14 @@ export interface CuratorCardProps {
   style?: StyleProp<ViewStyle>
   curator: ICurator
   onSetSelectedList: any
+  refetch: () => void
 }
 
 /**
  * Describe your component here
  */
 export const CuratorDetail = observer(function CuratorCard(props: CuratorCardProps) {
-  const { style, curator, onSetSelectedList } = props
+  const { style, curator, onSetSelectedList, refetch } = props
   const $styles = [$container, style]
   const navigation = useNavigation()
   const userList = useUserList()
@@ -48,6 +49,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
   }
 
   const onBookMark = async () => {
+    console.log(curator.ID)
     if (!isItemInUserList(curator.ID, userList.data)) {
       setShowListModal(true)
     } else {
@@ -114,7 +116,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
             <TouchableOpacity marginV-5 onPress={onBookMark}>
               <FontAwesome5
                 name="bookmark"
-                solid={isItemInUserList(curator.id, userList.data)}
+                solid={isItemInUserList(curator.ID, userList.data)}
                 size={30}
                 color="#FFFFFF"
               />
@@ -186,6 +188,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
         showListModal={showListModal}
         setShowListModal={setShowListModal}
         selectedFeedItem={curator}
+        onRefetch={refetch}
       />
     </>
   )

@@ -73,7 +73,7 @@ export const CardList = observer(function CardList(props: CardListProps) {
     if (item.type === FEED_TYPE.drop) {
       return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
     }
-    if(item.type?.toLowerCase() ===  FEED_TYPE.curator || item.type?.toLowerCase() ===  FEED_TYPE.curator+'s' ){
+    if(item.type?.toLowerCase() ===  FEED_TYPE.curator || item.type?.toLowerCase() ===  FEED_TYPE.curator ){
       return <CuratorCard  isFeed={isFeed} onBookMark={onBookMark} curator={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
     }
   }

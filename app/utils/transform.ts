@@ -91,9 +91,9 @@ export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete)
       transFormedData.push({ type: "Tags", display: `Tag:${tag}` })
     })
   }
-  if (data.curators && data.curators.length) {
-    data.curators.forEach((curator) => {
-      transFormedData.push({ type: "Curators", display: `Curator:${curator}` })
+  if (data.curator && data.curator.length) {
+    data.curator.forEach((curator) => {
+      transFormedData.push({ type: "Curator", display: `Curator:${curator}` })
     })
   }
   if(data.drop && data.drop.length){

@@ -66,7 +66,6 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
           <View row marginH-6>
             <View flex-7>
               <Text style={$belowText}>{item.name}</Text>
-              <Text numberOfLines={1}  style={$belowText}>{item.intro}</Text>
               <Text bottom style={$bottomText}>
                 {item.owner}
               </Text>
