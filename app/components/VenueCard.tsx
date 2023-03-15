@@ -79,7 +79,7 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
           <Text style={$belowText}>{item.name}</Text>
           <Text style={$address}>{item.address}</Text>
           <Text bottom style={$bottomText}>@ {item.name}</Text>
-       { (item.lat && item.lng && currentUserLatitude && currentUserLongitude) && <Text white>{calculatePreciseDistance({firstCoordinateLatitude: item.lat, firstCoordinateLongitude: item.lng, secondCoordinateLatitude: currentUserLatitude,secondCoordinateLongitude: currentUserLongitude })} km away </Text>}
+          {  ( !!item.lat && !!item.lng && !!currentUserLatitude && !!currentUserLongitude) && <Text white>{calculatePreciseDistance({firstCoordinateLatitude: item.lat, firstCoordinateLongitude: item.lng, secondCoordinateLatitude: currentUserLatitude,secondCoordinateLongitude: currentUserLongitude })} km away </Text>}
         </View>
         {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
