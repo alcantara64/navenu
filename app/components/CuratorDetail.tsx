@@ -85,7 +85,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
           </Text>
           <View row style={$horizontalLine}></View>
           <Text text90 white marginB-5 style={$venueNameAddress}>
-            {curator.user_nicename}
+            {curator.display_name}
           </Text>
         </View>
         <View marginB-40 style={$functionBtns}>
