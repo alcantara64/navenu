@@ -53,7 +53,8 @@ export const BottomNavigationNavigator = () => {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => <BottomTabLogo />,
-          header: ({navigation}) => <TopBar navigation={navigation} />
+          header: () => <TopBarLogoOnly />,
+         
         }}
       />
       <BottomTab.Screen

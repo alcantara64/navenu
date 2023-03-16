@@ -4,6 +4,7 @@ import { Api } from "../services/api"
 import { ErrorModel } from "./Feed"
 import { UserService } from "../services/userService"
 import { DropModel } from "./DropStore"
+import { getRootStore } from "./helpers/getRootStore"
 
 /*  Below you will find 1 parent model and 3 children model
  *
@@ -167,7 +168,7 @@ export const UserStoreModel = types
     getUser: flow(function* () {
       self.isLoading = true
       self.error = { isError: false, message: "" }
-      const userService = new UserService()
+      const userService = new UserService();
       const response = yield userService.getUsers();
       if (response.kind === "ok") {
         // FIll UserModel with API Data
@@ -184,7 +185,12 @@ export const UserStoreModel = types
       }catch(err){
         self.error = { isError: true, message: "Error Fetching Your information" }
       }
-      } else {
+      }else if( response.kind === 'unauthorized'){
+        const rootStore = getRootStore(self);
+        rootStore.authenticationStore.logout()
+      }
+       else {
+        
         self.error = { isError: true, message: "Error Fetching Your information" }
       }
       self.isLoading = false

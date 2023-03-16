@@ -49,7 +49,6 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
   }
 
   const onBookMark = async () => {
-    console.log(curator.ID)
     if (!isItemInUserList(curator.ID, userList.data)) {
       setShowListModal(true)
     } else {
@@ -157,7 +156,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
                   <UserListCard
                     onListPress={onSelectedListItemPressed}
                     key={name}
-                    image={curator.userLists[name]?.cards[0]?.image}
+                    image={curator.userLists[name]?.cards?.[0]?.image}
                     name={name}
                   />
                 ))}
