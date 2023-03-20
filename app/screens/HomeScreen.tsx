@@ -23,9 +23,9 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
   
     <ChatWidget
             accountId="997f9a1e-90b7-4236-b2cf-8d2d09bf0f4c"
-            title="Navenu Concierge"
-            subtitle="BETA"
-            agentAvailableText="Concierge Online"
+            title="VIRTUAL CONCIERGE"
+            subtitle="BETA RELEASE"
+      agentAvailableText="Concierge Online"
             awayMessage="Our Concierge is in AI Training. Check back soon"
             agentUnavailableText  ="The Concierge is away in AI Training"
             primaryColor="#000000"
