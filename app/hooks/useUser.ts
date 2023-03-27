@@ -3,12 +3,13 @@ import { IDrop } from "../interface/drops"
 import { FEED_TYPE } from "../interface/feed"
 import { ICurator } from "../interface/user"
 import { IArticle, IVenue } from "../interface/venues"
+import { navigate } from "../navigators"
 import { AddListItemPayload, Api } from "../services/api"
 import { UserService } from "../services/userService"
 
 const getUser = async () => {
   const api = new Api()
-  const  data = await api.get(`/Users`)
+  const data = await api.get(`/Users`)
   return data
 }
 const getUserList = async () => {
@@ -56,7 +57,18 @@ const subscribeToNotification = async (payload: { type: FEED_TYPE; id: string })
     return response.results
   }
 }
-export const useSubscribeToNotification = (type:'curator'| 'venue'| 'drop-detail'| 'article' = 'venue') => {
+const deleteUserAccount = async () => {
+  const userService = new UserService()
+  const response = await userService.deleteAccount()
+  if (response.kind !== "ok") {
+    throw new Error(response.message || "an error occurred deleting user account")
+  } else {
+    return response.data
+  }
+}
+export const useSubscribeToNotification = (
+  type: "curator" | "venue" | "drop-detail" | "article" = "venue",
+) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: subscribeToNotification,
@@ -65,7 +77,10 @@ export const useSubscribeToNotification = (type:'curator'| 'venue'| 'drop-detail
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: [type, feedItem.id] })
-      const previousFeed:IVenue | ICurator | IArticle | IDrop = queryClient.getQueryData([type, feedItem.id])
+      const previousFeed: IVenue | ICurator | IArticle | IDrop = queryClient.getQueryData([
+        type,
+        feedItem.id,
+      ])
       // Optimistically update to the new value
       queryClient.setQueryData([type, feedItem.id], (old: IVenue | ICurator | IArticle | IDrop) => {
         return { ...old, subscribed: !old.subscribed }
@@ -73,12 +88,21 @@ export const useSubscribeToNotification = (type:'curator'| 'venue'| 'drop-detail
       return { previousFeed }
     },
     onError: (err: any, newTodo, context: any) => {
-      queryClient.setQueryData([type,context.previousFeed.id], context.previousFeed)
+      queryClient.setQueryData([type, context.previousFeed.id], context.previousFeed)
       throw new Error(err)
     },
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [type] })
+    },
+  })
+}
+export const useDeleteUserAccount = () => {
+  return useMutation({
+    mutationFn: deleteUserAccount,
+    mutationKey: "delete-user-account",
+    onSuccess: () => {
+      navigate("Logout")
     },
   })
 }

@@ -45,8 +45,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState("")
-  const [errorState, setErrorState] = useState("");
-  const [showLocationPopUp, setShowLocationPopUp] = useState(false);
+  const [errorState, setErrorState] = useState("")
+  const [showLocationPopUp, setShowLocationPopUp] = useState(false)
   const cloudMessagingRef = useRef<CloudMessaging>()
   // const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
@@ -78,16 +78,18 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     cloudMessagingRef.current = new CloudMessaging()
   }, [])
   useEffect(() => {
-    console.log(longitude, latitude);
-    if(!longitude || !latitude){
-     setShowLocationPopUp(true)
+    if (!longitude || !latitude) {
+      if (Platform.OS === "android") {
+        setShowLocationPopUp(true)
+      } else {
+        requestForPermission()
+      }
     }
- 
-   }, [])
- 
-   useEffect(() => {
-     setLoading(false)
-   }, [])
+  }, [])
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   React.useEffect(() => {
     if (response?.type === "success") {
@@ -307,20 +309,23 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         body={
           <View center flex style={$centeredView}>
             <View style={$modalView}>
-             <View marginT-20>
-              <Text>
-                Navenu collects and stores location data of your device in order to provide you with
-                more accurate venue recommendations based on your current location.
-              </Text>
-              </View> 
+              <View marginT-20>
+                <Text>
+                Navenu collects and stores location data of your device in order to provide you with more accurate venue recommendations based on your current location. you will still see venues if you decline tracking but they may not be the closest to you
+                </Text>
+              </View>
               <View row spread>
-                <TouchableOpacity onPress={() => {
-                  setShowLocationPopUp(false)
-                }}>
-                  <Text style={{color:Colors.red}} preset='bold'>DENY</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowLocationPopUp(false)
+                  }}
+                >
+                  <Text style={{ color: Colors.red }} preset="bold">
+                    DENY
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={requestForPermission}>
-                  <Text style={{color:Colors.fit}}>Accept</Text>
+                  <Text style={{ color: Colors.fit }}>Accept</Text>
                 </TouchableOpacity>
               </View>
             </View>

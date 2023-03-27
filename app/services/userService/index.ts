@@ -20,6 +20,7 @@ export class UserService {
 
   async getUsers() {
     const response: ApiResponse<UserResponse> = await this.httpClient.get("/users")
+    console.log(response);
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -272,5 +273,18 @@ export class UserService {
  
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
+  }
+
+  async deleteAccount() {
+ 
+    const response: ApiResponse<any> = await this.httpClient.delete('/Users'
+    );
+    console.log({response})
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data
+    return { kind: "ok", data: rawData }
   }
 }
