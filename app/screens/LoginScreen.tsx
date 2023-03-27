@@ -21,11 +21,12 @@ import {
   LoadingIndicator,
   Text,
   ToastLoader,
+  Modal,
 } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { Colors } from "../theme"
-import { KeyboardAwareScrollView, View } from "react-native-ui-lib"
+import { KeyboardAwareScrollView, TouchableOpacity, View } from "react-native-ui-lib"
 import { Formik } from "formik"
 import { loginValidationSchema } from "../utils/validations"
 import { useTogglePasswordVisibility } from "../hooks"
@@ -45,7 +46,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [errorMsg, setErrorMsg] = useState("")
   const [errorState, setErrorState] = useState("")
-  const cloudMessagingRef = useRef<CloudMessaging>();
+  const [showLocationPopUp, setShowLocationPopUp] = useState(false)
+  const cloudMessagingRef = useRef<CloudMessaging>()
   // const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const {
@@ -60,6 +62,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       errorMessage,
       setErrorMessage,
       socialRegister,
+      latitude,
+      longitude,
     },
   } = useStores()
   const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility()
@@ -71,7 +75,20 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   })
 
   useEffect(() => {
-  cloudMessagingRef.current = new CloudMessaging();
+    cloudMessagingRef.current = new CloudMessaging()
+  }, [])
+  useEffect(() => {
+    if (!longitude || !latitude) {
+      if (Platform.OS === "android") {
+        setShowLocationPopUp(true)
+      } else {
+        requestForPermission()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    setLoading(false)
   }, [])
 
   React.useEffect(() => {
@@ -89,7 +106,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
     if (useInfo) {
       try {
-        const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
+        const deviceToken = await cloudMessagingRef.current.getDeviceToken()
         await socialRegister({
           email: useInfo.email,
           firstName: useInfo.given_name,
@@ -106,27 +123,25 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   }
 
-
   const handleAppleSignin = async () => {
     try {
-      const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
+      const deviceToken = await cloudMessagingRef.current.getDeviceToken()
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       })
-      let decodeEmail = '';
-      if(credential.identityToken ){
-      const result  =   jwtDecode<{email:string}>(credential.identityToken);
-      decodeEmail = result.email;
-    
-      } 
+      let decodeEmail = ""
+      if (credential.identityToken) {
+        const result = jwtDecode<{ email: string }>(credential.identityToken)
+        decodeEmail = result.email
+      }
       if (credential && (credential.email || decodeEmail)) {
         socialRegister({
           email: credential.email || decodeEmail,
-          firstName: credential.fullName.givenName|| '',
-          lastName: credential.fullName.familyName || '',
+          firstName: credential.fullName.givenName || "",
+          lastName: credential.fullName.familyName || "",
           socialId: credential.user,
           authType: "apple",
           deviceToken,
@@ -141,25 +156,20 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   }
 
-  useEffect(() => {
-    ;(async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied")
-        return
-      }
-      const location = await Location.getCurrentPositionAsync({})
-      if (location) {
-        setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
-      } else {
-        setErrorMsg("We could not fetch your location data")
-      }
-    })()
-  }, [])
-
-  useEffect(() => {
-    setLoading(false)
-  }, [])
+  const requestForPermission = async () => {
+    setShowLocationPopUp(false)
+    const { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied")
+      return
+    }
+    const location = await Location.getCurrentPositionAsync({})
+    if (location) {
+      setLongitudeAndLatitude(location.coords.longitude, location.coords.latitude)
+    } else {
+      setErrorMsg("We could not fetch your location data")
+    }
+  }
 
   async function onLogin(values: { email: string; password: string }) {
     const { email, password } = values
@@ -168,11 +178,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setAuthEmail(email)
     setAuthPassword(password)
     setAttemptsCount(attemptsCount + 1)
-    
 
     try {
-    const token =  await cloudMessagingRef.current.getDeviceToken();
-      await login(email, password, token, Platform.OS )
+      const token = await cloudMessagingRef.current.getDeviceToken()
+      await login(email, password, token, Platform.OS)
     } catch (e) {
       console.error(e)
     }
@@ -197,100 +206,133 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setErrorMessage("")
   }
   return (
-    <KeyboardAvoidingView>
-      <ImageBackground
-        source={authImage}
-        style={{
-          height: Dimensions.get("window").height,
-        }}
-      >
-        <ToastLoader
-          isLoading={isLoading}
-          hasError={!!errorMsg || !!errorMessage}
-          errorMessage={errorMsg || errorMessage}
-          clearError={clearErrorMessage}
-        />
-
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
+    <>
+      <KeyboardAvoidingView>
+        <ImageBackground
+          source={authImage}
+          style={{
+            height: Dimensions.get("window").height,
           }}
-          validationSchema={loginValidationSchema}
-          onSubmit={(values) => onLogin(values)}
         >
-          {({ values, touched, errors, handleChange, handleSubmit, handleBlur, isValid }) => (
-              <KeyboardAwareScrollView>
-            <View style={$formContainer}>
-              {/* Input fields */}
-                <TextInput
-                  name="email"
-                  placeholder="Enter email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  textContentType="emailAddress"
-                  autoFocus={true}
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                />
-                <FormErrorMessage error={errors.email} visible={touched.email} />
-                <TextInput
-                  name="password"
-                  placeholder="Enter password"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={passwordVisibility}
-                  textContentType="password"
-                  rightIcon={rightIcon}
-                  handlePasswordVisibility={handlePasswordVisibility}
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                />
-                <FormErrorMessage error={errors.password} visible={touched.password} />
-               
-            
-              {errorState !== "" ? <FormErrorMessage error={errorState} visible={true} /> : null}
-              <View style={$buttonContainer}>
-                <AppButton style={$button} onPress={handleSubmit} disabled={!isValid}>
-                  <Text style={$buttonText}>Login</Text>
-                </AppButton>
-                <AppButton
-                  style={$button}
-                  onPress={() => {
-                    promptAsync()
-                  }}
-                >
-                  <FontAwesome5 name="google" size={24} color="#FFFFFF" />
-                  <Text style={$buttonText}>Continue with google</Text>
-                </AppButton>
-                {Platform.OS === 'ios' && <AppButton style={$button} onPress={handleAppleSignin}>
-                  <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
-                  <Text style={$buttonText}>Continue with Apple</Text>
-                </AppButton>}
+          <ToastLoader
+            isLoading={isLoading}
+            hasError={!!errorMsg || !!errorMessage}
+            errorMessage={errorMsg || errorMessage}
+            clearError={clearErrorMessage}
+          />
 
-                <AppButton
-                  style={$borderlessButtonContainer}
-                  borderless 
-                  title={"Create a new account?"}
-                  onPress={() => navigation.navigate("SignUpStart")}
-                />
-                {/* <AppButton
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={loginValidationSchema}
+            onSubmit={(values) => onLogin(values)}
+          >
+            {({ values, touched, errors, handleChange, handleSubmit, handleBlur, isValid }) => (
+              <KeyboardAwareScrollView>
+                <View style={$formContainer}>
+                  {/* Input fields */}
+                  <TextInput
+                    name="email"
+                    placeholder="Enter email"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    textContentType="emailAddress"
+                    autoFocus={true}
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                  />
+                  <FormErrorMessage error={errors.email} visible={touched.email} />
+                  <TextInput
+                    name="password"
+                    placeholder="Enter password"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    secureTextEntry={passwordVisibility}
+                    textContentType="password"
+                    rightIcon={rightIcon}
+                    handlePasswordVisibility={handlePasswordVisibility}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                  />
+                  <FormErrorMessage error={errors.password} visible={touched.password} />
+
+                  {errorState !== "" ? (
+                    <FormErrorMessage error={errorState} visible={true} />
+                  ) : null}
+                  <View style={$buttonContainer}>
+                    <AppButton style={$button} onPress={handleSubmit} disabled={!isValid}>
+                      <Text style={$buttonText}>Login</Text>
+                    </AppButton>
+                    <AppButton
+                      style={$button}
+                      onPress={() => {
+                        promptAsync()
+                      }}
+                    >
+                      <FontAwesome5 name="google" size={24} color="#FFFFFF" />
+                      <Text style={$buttonText}>Continue with google</Text>
+                    </AppButton>
+                    {Platform.OS === "ios" && (
+                      <AppButton style={$button} onPress={handleAppleSignin}>
+                        <FontAwesome5 name="apple" size={24} color="#FFFFFF" />
+                        <Text style={$buttonText}>Continue with Apple</Text>
+                      </AppButton>
+                    )}
+
+                    <AppButton
+                      style={$borderlessButtonContainer}
+                      borderless
+                      title={"Create a new account?"}
+                      onPress={() => navigation.navigate("SignUpStart")}
+                    />
+                    {/* <AppButton
                   style={$borderlessButtonContainer}
                   borderless
                   title={"Forgot Password"}
                   onPress={() => navigation.navigate("ForgotPassword")}
                 /> */}
+                  </View>
+                </View>
+              </KeyboardAwareScrollView>
+            )}
+          </Formik>
+
+          {isLoading && <LoadingIndicator />}
+        </ImageBackground>
+      </KeyboardAvoidingView>
+      <Modal
+        show={showLocationPopUp}
+        body={
+          <View center flex style={$centeredView}>
+            <View style={$modalView}>
+              <View marginT-20>
+                <Text>
+                Navenu collects and stores location data of your device in order to provide you with more accurate venue recommendations based on your current location. you will still see venues if you decline tracking but they may not be the closest to you
+                </Text>
+              </View>
+              <View row spread>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowLocationPopUp(false)
+                  }}
+                >
+                  <Text style={{ color: Colors.red }} preset="bold">
+                    DENY
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={requestForPermission}>
+                  <Text style={{ color: Colors.fit }}>Accept</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            </KeyboardAwareScrollView>
-          )}
-        </Formik>
-
-        {isLoading && <LoadingIndicator />}
-      </ImageBackground>
-    </KeyboardAvoidingView>
+          </View>
+        }
+      ></Modal>
+    </>
   )
 })
 
@@ -316,7 +358,6 @@ const $button: ViewStyle = {
   borderRadius: 8,
   flexDirection: "row",
   marginVertical: 8,
-
 }
 
 const $buttonText: TextStyle = {
@@ -332,4 +373,25 @@ const $borderlessButtonContainer: TextStyle = {
   color: Colors.white,
   alignItems: "center",
   justifyContent: "center",
+}
+const $centeredView: ViewStyle = {
+  flex: 1,
+  backgroundColor: "rgba(0, 0, 0, 0.9)",
+}
+const $modalView: ViewStyle = {
+  backgroundColor: "#F2F2F2",
+  borderTopLeftRadius: 8,
+  borderTopRightRadius: 8,
+  padding: 15,
+
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowRadius: 8,
+  elevation: 5,
+  // borderTopWidth: 10,
+
+  borderRadius: 8,
 }

@@ -49,9 +49,9 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use your location</string>
+	<string> $(PRODUCT_NAME) collects and stores location data of your device in order to provide you with more accurate venue recommendations based on your current location. you will still see venues if you decline tracking but they may not be the closest to you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use your location</string>
+	<string> $(PRODUCT_NAME) collects and stores location data of your device in order to provide you with more accurate venue recommendations based on your current location. you will still see venues if you decline tracking but they may not be the closest to you</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your camera</string>
 	<key>UIAppFonts</key>
@@ -126,6 +126,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+	<string>Light</string>
 </dict>
 </plist>

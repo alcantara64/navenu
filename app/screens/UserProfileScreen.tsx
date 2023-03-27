@@ -30,6 +30,7 @@ import DocumentPicker from "react-native-document-picker"
 import { launchImageLibrary } from "react-native-image-picker"
 import { UserService } from "../services/userService"
 import { useNavigation } from "@react-navigation/native"
+import { useDeleteUserAccount } from "../hooks/useUser"
 const { TextField } = Incubator
 
 const RadioButton = ({ color, selected, onPress }) => {
@@ -81,6 +82,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       contact: false,
       location: false,
       logout: false,
+      removeAccount:false
     })
     const [singleFile, setSingleFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
@@ -97,9 +99,14 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
 
     const [showUserListModal, setShowUserListModal] = useState(false)
     const [selectedListItem, setSelectedListItem] = useState(null)
-    navigation.addListener('focus', getUser);
+    const {mutate:removeUserAccount, isLoading: isDeleting} = useDeleteUserAccount()
+    // navigation.addListener('focus', getUser);
     useEffect(() => {
       getUser()
+      // return () => {
+      //   navigation.removeListener('focus', () => {
+      //   });
+      // }
     }, [])
 
     const logout = () => {
@@ -138,6 +145,8 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       }
       setLoading(false)
     }
+
+
     const selectFile = async () => {
       // Opening Document Picker to select one file
       try {
@@ -209,7 +218,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
     }
 
     if (error.isError) return <ErrorMessage message={"Error occurred"}></ErrorMessage>
-    if (isLoading) return <LoadingIndicator />
+    if (isLoading || isDeleting) return <LoadingIndicator />
     // Pull in navigation via hook
     // const navigation = useNavigation()
     const expandableHeaders = (title: string, targetChberon: boolean) => (
@@ -499,6 +508,42 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                             setProfileSectionExpandible({
                               ...profileSectionExpandable,
                               logout: !profileSectionExpandable.logout,
+                            })
+                          }
+                        >
+                          <Text style={$logoutButtonText}>NO</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </ExpandableSection>
+                </View>
+                <View marginT-10 style={$expandableContainer}>
+                  <ExpandableSection
+                    marginT-10
+                    onPress={() => {
+                      setProfileSectionExpandible({
+                        ...profileSectionExpandable,
+                        removeAccount: !profileSectionExpandable.removeAccount,
+                      })
+                    }}
+                    expanded={profileSectionExpandable.removeAccount}
+                    paddingB-10
+                    sectionHeader={expandableHeaders("Delete Account", profileSectionExpandable.removeAccount)}
+                  >
+                    <View row centerV spread>
+                      <View flex-2>
+                      <Text style={$logoutLabel}>ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?</Text>
+                      </View>
+                      <View row centerV>
+                        <TouchableOpacity style={$logoutButton} onPress={removeUserAccount}>
+                          <Text style={$logoutButtonText}>YES</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={$logoutButton}
+                          onPress={() =>
+                            setProfileSectionExpandible({
+                              ...profileSectionExpandable,
+                              removeAccount: !profileSectionExpandable.removeAccount,
                             })
                           }
                         >
