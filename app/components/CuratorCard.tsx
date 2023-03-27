@@ -58,6 +58,7 @@ export const CuratorCard = observer(function CuratorCard(props: CuratorCardProps
               <Text numberOfLines={2} style={$belowText}>
                 {curator.name}
               </Text>
+              <Text style={$bottomText}>{curator.profession}</Text>
             </View>
             {isFeed && <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
@@ -114,6 +115,11 @@ const $belowText: TextStyle = {
   letterSpacing: 1.76,
 }
 
+const $bottomText: TextStyle = {
+  marginTop: 0,
+  color: "#FFFFFF",
+  fontSize: 11,
+}
 const $image: ImageStyle = {
   flex: 1,
   width: "100%",
