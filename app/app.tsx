@@ -9,12 +9,13 @@
  * The app navigation resides in ./app/navigators, so head over there
  * if you're interested in adding screens and navigators.
  */
- import notifee, { EventType } from '@notifee/react-native';
+import notifee, { EventType } from "@notifee/react-native"
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
+import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
@@ -22,13 +23,13 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
-import { CloudMessaging } from './services/cloudMessagingService';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { configureDesignSystem } from './utils/designSystem';
-import {enableLatestRenderer} from 'react-native-maps';
-import messaging from '@react-native-firebase/messaging';
-
-enableLatestRenderer();
+import { CloudMessaging } from "./services/cloudMessagingService"
+import { QueryClient, QueryClientProvider } from "react-query"
+import { configureDesignSystem } from "./utils/designSystem"
+import { enableLatestRenderer } from "react-native-maps"
+import messaging from "@react-native-firebase/messaging"
+import { CopilotProvider } from "react-native-copilot"
+enableLatestRenderer()
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
 setupReactotron({
@@ -46,6 +47,27 @@ setupReactotron({
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
+// Web linking configuration
+const prefix = Linking.createURL("/")
+const config = {
+  screens: {
+    Login: {
+      path: "",
+    },
+    Welcome: "welcome",
+    Demo: {
+      screens: {
+        DemoShowroom: {
+          path: "showroom/:queryIndex?/:itemIndex?",
+        },
+        DemoDebug: "debug",
+        DemoPodcastList: "podcast",
+        DemoCommunity: "community",
+      },
+    },
+  },
+}
+
 interface AppProps {
   hideSplashScreen: () => Promise<void>
 }
@@ -53,37 +75,38 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
- notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification, pressAction } = detail;
-  if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
-       // what to do here 
 
-    // Remove the notification
-    await notifee.cancelNotification(notification.id);
-  }
-});
 const queryClient = new QueryClient()
 function App(props: AppProps) {
   const { hideSplashScreen } = props
 
-  useEffect(() => {
-    const cloudMessagingService = new CloudMessaging();
-    const unsubscribe = messaging().onMessage(cloudMessagingService.handlePushMessage);
+  notifee.onBackgroundEvent(async ({ type, detail }) => {
+    const { notification, pressAction } = detail
+    if (type === EventType.ACTION_PRESS && pressAction.id === "mark-as-read") {
+      // what to do here
 
-    return unsubscribe;
-  }, []);
+      // Remove the notification
+      await notifee.cancelNotification(notification.id)
+    }
+  })
 
   useEffect(() => {
-    return notifee.onForegroundEvent(({ type, detail }) => {
+    const cloudMessagingService = new CloudMessaging()
+    const unsubscribe = messaging().onMessage(cloudMessagingService.handlePushMessage)
+
+    return unsubscribe
+  }, [])
+
+  useEffect(() => {
+    return notifee.onForegroundEvent(({ type }) => {
       switch (type) {
         case EventType.DISMISSED:
-          break;
+          break
         case EventType.PRESS:
-          break;
+          break
       }
-    });
-  }, []);
-
+    })
+  }, [])
   const {
     initialNavigationState,
     onNavigationStateChange,
@@ -101,7 +124,7 @@ function App(props: AppProps) {
     // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500)
   })
-// load uiLib items
+  // load uiLib items
   configureDesignSystem()
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
@@ -111,17 +134,25 @@ function App(props: AppProps) {
   // You can replace with your own loading component if you wish.
   if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) return null
 
+  const linking = {
+    prefixes: [prefix],
+    config,
+  }
+
   // otherwise, we're ready to render the app
   return (
     <QueryClientProvider client={queryClient}>
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ErrorBoundary catchErrors={Config.catchErrors}>
-        <AppNavigator
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
-      </ErrorBoundary>
-    </SafeAreaProvider>
+      {/* <CopilotProvider> */}
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={Config.catchErrors}>
+            <AppNavigator
+              linking={linking}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      {/* </CopilotProvider> */}
     </QueryClientProvider>
   )
 }

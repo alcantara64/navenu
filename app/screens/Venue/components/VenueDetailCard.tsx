@@ -1,5 +1,13 @@
 import React, { useState } from "react"
-import { ImageBackground, StyleProp, TextStyle, ViewStyle, ImageStyle, Linking,Platform } from "react-native"
+import {
+  ImageBackground,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  ImageStyle,
+  Linking,
+  Platform,
+} from "react-native"
 import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Text, View, Avatar } from "react-native-ui-lib"
 import {
@@ -23,6 +31,8 @@ import {
 } from "../../../utils/transform"
 import { DropCard, Gallery, RemoveAndAddToUserList } from "../../../components"
 import { UserService } from "../../../services/userService"
+import { DynamicLinkServices } from "../../../services/firebase/dynamicLinkServices"
+import Config from "../../../config"
 
 export interface VenueDetailCardProps {
   /**
@@ -32,15 +42,13 @@ export interface VenueDetailCardProps {
   setDestinationDirections: (destination: any) => void
   createUberUrl: () => string
   style?: StyleProp<ViewStyle>
-  setBottomSheetCurrentContent: (any) => any,
+  setBottomSheetCurrentContent: (any) => any
   setBottomSheet: (boolean) => void
   refetch: () => any
-  setShowWebview: (status:boolean) => void
+  setShowWebview: (status: boolean) => void
   showWebview: boolean
-  setCurrentUrl: (url:string) => void
+  setCurrentUrl: (url: string) => void
   currentUrl: string
-
-  
 }
 
 // create a enum for the different types of bottom sheet
@@ -48,7 +56,7 @@ export enum BottomSheetType {
   operatingHours = "operatingHours",
   menu = "menu",
   book = "book",
-  webView = 'webView',
+  webView = "webView",
 }
 
 /**
@@ -57,8 +65,15 @@ export enum BottomSheetType {
 export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDetailCardProps) {
   const userList = useUserList()
 
-  const { mutate, isLoading: isSavingSubscription } = useSubscribeToNotification()
-  const { venue, setDestinationDirections, createUberUrl, setBottomSheetCurrentContent, setBottomSheet, refetch, showWebview, setShowWebview, setCurrentUrl, currentUrl } = props
+  const { mutate } = useSubscribeToNotification()
+  const {
+    venue,
+    createUberUrl,
+    setBottomSheetCurrentContent,
+    setBottomSheet,
+    refetch,
+    setCurrentUrl,
+  } = props
   const navigation = useNavigation()
   const [showListModal, setShowListModal] = useState(false)
   const goBack = () => {
@@ -74,7 +89,11 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
   const onSubscribeToNotification = () => {
     mutate({ type: "venue", id: venue.id })
   }
-
+  const shareVenueLink = async () => {
+    const deepLink = `${Config.DEEP_LINK_URL}/venue/${venue.id}`
+    const link = await DynamicLinkServices.buildLink(deepLink)
+    shareLink(venue.name, `Checkout ${venue.name} on Navenu`, link)
+  }
 
   const onBookMark = async () => {
     if (!isItemInUserList(venue.id, userList.data)) {
@@ -90,9 +109,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
     }
     userList.refetch()
   }
-  const onPressCurator  = (curator) =>{
-    navigation.navigate('CuratorProfileScreen', {
-   curator
+  const onPressCurator = (curator) => {
+    navigation.navigate("CuratorProfileScreen", {
+      curator,
     })
   }
 
@@ -146,16 +165,7 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity
-              marginV-10
-              onPress={() =>
-                shareLink(
-                  venue.name,
-                  `Checkout ${venue.name} on Navenu`,
-                  "https://navenuapp.page.link/venue",
-                )
-              }
-            >
+            <TouchableOpacity marginV-10 onPress={shareVenueLink}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>
@@ -195,72 +205,80 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
           </View>
           <View row style={$lineDivider}></View>
           <View style={$boxWrapper} row marginT-10 spread>
-            <TouchableOpacity onPress={onCallPhone}>
-              <View padding-15 style={$boxContainer}>
-                <Ionicons name="call-outline" size={24} color="white" />
-              </View>
-              <Text center marginT-8>
-                {" "}
-                CALL
-              </Text>
-            </TouchableOpacity>
+            {venue.phone && (
+              <TouchableOpacity onPress={onCallPhone}>
+                <View padding-15 style={$boxContainer}>
+                  <Ionicons name="call-outline" size={24} color="white" />
+                </View>
+                <Text center marginT-8>
+                  {" "}
+                  CALL
+                </Text>
+              </TouchableOpacity>
+            )}
+            {venue.operating_hours && venue.operating_hours.length > 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setBottomSheet(true)
+                  setBottomSheetCurrentContent(BottomSheetType.operatingHours)
+                }}
+              >
+                <View padding-15 style={$boxContainer}>
+                  <AntDesign name="clockcircleo" size={24} color="white" />
+                </View>
+                <Text center marginT-8>
+                  {" "}
+                  HOUR
+                </Text>
+              </TouchableOpacity>
+            )}
+            {venue.menu_url && (
+              <TouchableOpacity
+                onPress={() => {
+                  setBottomSheet(true)
+                  setBottomSheetCurrentContent(BottomSheetType.webView)
+                  setCurrentUrl(venue.menu_url)
+                  // setShowWebview(true)
+                }}
+              >
+                <View padding-15 style={$boxContainer}>
+                  <SimpleLineIcons name="book-open" size={24} color="white" />
+                </View>
+                <Text center marginT-8>
+                  {" "}
+                  MENU
+                </Text>
+              </TouchableOpacity>
+            )}
+            {venue.booking_url && (
+              <TouchableOpacity
+                onPress={() => {
+                  setCurrentUrl(venue.booking_url)
+                  setBottomSheet(true)
+                  setBottomSheetCurrentContent(BottomSheetType.webView)
+                }}
+              >
+                <View padding-15 style={$boxContainer}>
+                  <AntDesign name="calendar" size={24} color="white" />
+                </View>
+                <Text center marginT-8>
+                  {" "}
+                  BOOK
+                </Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={() => {
-                setBottomSheet(true)
-                setBottomSheetCurrentContent(BottomSheetType.operatingHours)
+                const scheme = Platform.select({ ios: "maps:0,0?q=", android: "geo:0,0?q=" })
+                const latLng = `${venue.lat},${venue.lng}`
+                const label = venue.name.split(" ").join("+")
+                const mapurl = Platform.select({
+                  ios: `${scheme}${label}@${latLng}`,
+                  android: `${scheme}${latLng}(${label})`,
+                })
+
+                Linking.openURL(mapurl).catch((error) => console.error(error))
               }}
-            >
-              <View padding-15 style={$boxContainer}>
-                <AntDesign name="clockcircleo" size={24} color="white" />
-              </View>
-              <Text center marginT-8>
-                {" "}
-                HOUR
-              </Text>
-            </TouchableOpacity>
-            {venue.menu_url && (<TouchableOpacity
-              onPress={() => {
-               
-                setBottomSheet(true)
-                setBottomSheetCurrentContent(BottomSheetType.webView)
-                setCurrentUrl(venue.menu_url)
-                // setShowWebview(true)
-              }}
-            >
-              <View padding-15 style={$boxContainer}>
-                <SimpleLineIcons name="book-open" size={24} color="white" />
-              </View>
-              <Text center marginT-8>
-                {" "}
-                MENU
-              </Text>
-            </TouchableOpacity>)}
-            {venue.booking_url && <TouchableOpacity onPress={() => {
-             setCurrentUrl(venue.booking_url)
-             setBottomSheet(true)
-             setBottomSheetCurrentContent(BottomSheetType.webView)
-              }
-            }>
-              <View padding-15 style={$boxContainer}>
-                <AntDesign name="calendar" size={24} color="white" />
-              </View>
-              <Text center marginT-8>
-                {" "}
-                BOOK
-              </Text>
-            </TouchableOpacity>}
-            <TouchableOpacity
-              onPress={() =>{
-                const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
-                const latLng = `${venue.lat},${venue.lng}`;
-              const label = venue.name;
-              const mapurl = Platform.select({
-                ios: `${scheme}${label}@${latLng}`,
-                android: `${scheme}${latLng}(${label})`
-              });
-                
-                Linking.openURL(mapurl).catch((error) => console.error(error))}
-              }
             >
               <View padding-15 style={$boxContainer}>
                 <FontAwesome5 name="map-marker-alt" size={26} color="white" />
@@ -303,7 +321,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
                   return (
                     <Avatar
                       size={60}
-                      onPress={() => {onPressCurator(curator)}}
+                      onPress={() => {
+                        onPressCurator(curator)
+                      }}
                       key={curator.id}
                       containerStyle={{ ...$imageContainer, ...$dynamicStyle }}
                       label={getInitials(curator.name)}
@@ -352,10 +372,9 @@ export const VenueDetailCard = observer(function VenueDetailCard(props: VenueDet
         showListModal={showListModal}
         setShowListModal={setShowListModal}
         selectedFeedItem={venue}
-        queryKey={{ queryKey: ["venue", venue.id], }}
+        queryKey={{ queryKey: ["venue", venue.id] }}
         onRefetch={refetch}
       />
-
     </>
   )
 })
@@ -460,7 +479,7 @@ const $longDescription: TextStyle = {
   fontFamily: "inter",
   fontWeight: "400",
   fontSize: 12,
-  textTransform: 'none',
+  textTransform: "none",
 }
 const $imageFilter: ViewStyle = {
   backgroundColor: "rgba(0, 0, 0, 0.5)",

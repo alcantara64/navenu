@@ -18,20 +18,19 @@ export interface IFeed {
   expiration: Date
 }
 
-export enum FEED_TYPE{
-  article =  "article",
-  location =  "location",
-   drop =  "drop",
-   curator = 'curator',
-
+export enum FEED_TYPE {
+  article = "article",
+  location = "location",
+  drop = "drop",
+  curator = "curator",
 }
-export interface IAutoCompletePayload{
-  term : string,
-  type: FEED_TYPE,
-  selected:Array<string>
+export interface IAutoCompletePayload {
+  term: string
+  type: FEED_TYPE
+  selected: Array<string>
 }
 export interface ISearchPayLoad {
-categories?: Array<{display: string, type:string}>
-selected:Array<string>
-type: FEED_TYPE,
+  categories?: Array<{ display: string; type: string }>
+  selected: Array<string>
+  type: FEED_TYPE
 }

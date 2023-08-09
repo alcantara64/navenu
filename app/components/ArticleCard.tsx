@@ -23,27 +23,26 @@ export interface ArticleCardProps {
   item: IArticle
   isFeed?: boolean
   onBookMark?: (feed: any) => void
-  userListData?: IUserList,
-  onRemoveFromUserList?: (feed:any) => void
-  isUserList?:boolean;
+  userListData?: IUserList
+  onRemoveFromUserList?: (feed: any) => void
+  isUserList?: boolean
   hideRemove?: boolean
 }
 
 export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps) {
-  const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList, hideRemove} = props
+  const { item, isFeed, onBookMark, userListData, onRemoveFromUserList, isUserList, hideRemove } =
+    props
   const navigation = useNavigation()
-  const onCardPressed = (article:any) => {
-  
+  const onCardPressed = (article: any) => {
     navigation.navigate("Article", {
       article,
     })
   }
-  const saveARticle= () => {
+  const saveARticle = () => {
     onBookMark(item)
   }
   const removeFromUserList = () => {
     onRemoveFromUserList(item)
-
   }
 
   return (
@@ -52,7 +51,6 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
       onPress={() => {
         onCardPressed(item)
       }}
-      
       activeOpacity={0.1}
     >
       <ImageBackground
@@ -62,18 +60,22 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
         style={$image}
       >
         <View style={$imageFilter} />
-        <View paddingL-4>
-          <View row marginH-6>
+        <View paddingL-4 flex marginT-8 marginR-4>
+          <View row marginH-6 top>
             <View flex-7>
-              <Text style={$belowText}>{item.name}</Text>
-              <Text bottom style={$bottomText}>
-                {item.owner}
+              <Text numberOfLines={2} style={$belowText}>
+                {item.name}
               </Text>
             </View>
             {isFeed && (
               <View flex-1 right>
                 <TouchableOpacity onPress={saveARticle}>
-                  <FontAwesome5 solid={isItemInUserList(item.id, userListData)} name="bookmark" size={20} color="#FFFFFF" />
+                  <FontAwesome5
+                    solid={isItemInUserList(item.id, userListData)}
+                    name="bookmark"
+                    size={20}
+                    color="#FFFFFF"
+                  />
                 </TouchableOpacity>
               </View>
             )}
@@ -86,15 +88,17 @@ export const ArticleCard = observer(function ArticleCard(props: ArticleCardProps
             )}
           </View>
         </View>
+        {/* <View paddingL-4 marginH-6 bottom marginB-8>
+            <Text  style={$bottomText}>
+              {item.owner}
+            </Text>
+          </View> */}
       </ImageBackground>
     </TouchableOpacity>
   )
 })
 const $backgroundImage: ImageStyle = {
   borderRadius: 6,
-}
-const $cardContainer: ViewStyle = {
- // minHeight: 100,
 }
 const $imageFilter: ViewStyle = {
   backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -103,20 +107,12 @@ const $imageFilter: ViewStyle = {
   left: 0,
   right: 0,
   bottom: 0,
-}
-const $topText: TextStyle = {
-  marginBottom: 4,
-  color: "#FFFFFF",
-  textTransform: "uppercase",
-  fontSize: 10,
-  lineHeight: 9,
-  fontFamily: typography.primary.normal,
+  borderRadius: 5,
 }
 
 const $belowText: TextStyle = {
   marginBottom: 4,
   color: "#FFFFFF",
-  textTransform: "uppercase",
   fontWeight: "bold",
 
   fontSize: 18,

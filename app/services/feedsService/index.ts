@@ -23,12 +23,12 @@ export class FeedService {
   async getAutoCompleteSuggestions(payload: IAutoCompletePayload) {
     const formData = new FormData()
     formData.append("term", payload.term)
-    formData.append("type",  payload.type)
-    if (payload.selected.length && [FEED_TYPE.drop,FEED_TYPE.location].includes(payload.type) ) {
+    formData.append("type", payload.type)
+    if (payload.selected.length && [FEED_TYPE.drop, FEED_TYPE.location].includes(payload.type)) {
       payload.selected.forEach((category) => {
         formData.append("selected[parentCategory][]", category)
       })
-    } 
+    }
     const response: ApiResponse<AutoCompleteResponse> = await this.httpClient.post(
       "/feed/autocomplete",
       formData,
@@ -44,13 +44,15 @@ export class FeedService {
   async search(payload: ISearchPayLoad) {
     const formData = new FormData()
     formData.append("type", payload.type)
-    if(payload.categories.length){
+    if (payload.categories.length) {
       payload.categories.forEach((category) => {
-      formData.append(`selected[${category.type.toLowerCase()}][]`, category.display.split(':')[1].toLowerCase() )
+        formData.append(
+          `selected[${category.type.toLowerCase()}][]`,
+          category.display.split(":")[1].toLowerCase(),
+        )
       })
     }
-    if (payload.selected.length && [FEED_TYPE.drop,FEED_TYPE.location].includes(payload.type)) {
-      
+    if (payload.selected.length && [FEED_TYPE.drop, FEED_TYPE.location].includes(payload.type)) {
       payload.selected.forEach((parentCategory) => {
         formData.append("selected[parentCategory][]", parentCategory)
       })
@@ -66,5 +68,4 @@ export class FeedService {
     const rawData = response.data.data
     return { kind: "ok", results: rawData }
   }
-  
 }

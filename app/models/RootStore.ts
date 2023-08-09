@@ -11,8 +11,8 @@ import { FeedStore } from "./Feed"
 export const RootStoreModel = types.model("RootStore").props({
   dropStore: types.optional(DropStoreModel, {} as any),
   authenticationStore: types.optional(AuthenticationStoreModel, {}),
-  feedsStore: types.optional(FeedStore, {}), 
-  userStore: types.optional(UserStoreModel, {}), 
+  feedsStore: types.optional(FeedStore, {}),
+  userStore: types.optional(UserStoreModel, {}),
   venueStore: types.optional(VenueStoreModel, {} as any),
 })
 

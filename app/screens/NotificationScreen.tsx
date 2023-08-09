@@ -17,7 +17,7 @@ export const NotificationScreen: FC<StackScreenProps<AppStackScreenProps, "Notif
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
-    if(error){
+    if (error) {
       return <ErrorMessage></ErrorMessage>
     }
 

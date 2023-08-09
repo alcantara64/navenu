@@ -1,7 +1,7 @@
 import * as React from "react"
 import { StyleProp, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import _ from 'lodash';
+import _ from "lodash"
 import { CategoryFilterBar } from "./CategoryFilterBar"
 import { useState } from "react"
 
@@ -16,26 +16,24 @@ export interface DropLocationSearchProps {
  * Describe your component here
  */
 export const DropLocationSearch = observer(function DropLocationSearch() {
-  
-
-  const [DoStateButton, setDoStateButton] = useState(false);
-  const [EatStateButton, setEatStateButton] = useState(false);
-  const [DrinkStateButton, setDrinkStateButton] = useState(false);
-  const [ShopStateButton, setShopStateButton] = useState(false);
-  const [StayStateButton, setStayStateButton] = useState(false);
-  const [FitStateButton, setFitStateButton] = useState(false);
-  const [searchFilter, setSearchFilter] = useState([]);
+  const [DoStateButton, setDoStateButton] = useState(false)
+  const [EatStateButton, setEatStateButton] = useState(false)
+  const [DrinkStateButton, setDrinkStateButton] = useState(false)
+  const [ShopStateButton, setShopStateButton] = useState(false)
+  const [StayStateButton, setStayStateButton] = useState(false)
+  const [FitStateButton, setFitStateButton] = useState(false)
+  const [searchFilter, setSearchFilter] = useState([])
   // const [tagSelected, setTagSelected] = useState([{ name: 'Stag night' }, { name: 'Afterhours' }]);
   const addCat = (cat) => {
-    setSearchFilter([...searchFilter, cat]);
-  };
+    setSearchFilter([...searchFilter, cat])
+  }
 
   const removeCat = (cat) => {
-    const newCatFilter = _.without(searchFilter, cat);
+    const newCatFilter = _.without(searchFilter, cat)
     // const newCatFilter = catFilters.filter((x) => x !== cat);
 
-    setSearchFilter(newCatFilter);
-  };
+    setSearchFilter(newCatFilter)
+  }
 
   return (
     <View>

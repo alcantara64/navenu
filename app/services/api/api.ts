@@ -5,17 +5,10 @@
  * See the [Backend API Integration](https://github.com/infinitered/ignite/blob/master/docs/Backend-API-Integration.md)
  * documentation for more details.
  */
-import {
-  ApiResponse,
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
-import type {
-  ApiConfig,
-  LoginResponse,
-} from "./api.types"
-import {_rootStore } from "../../models"
+import type { ApiConfig, LoginResponse } from "./api.types"
+import { _rootStore } from "../../models"
 import { getSnapshot } from "mobx-state-tree"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { AxiosRequestConfig } from "axios"
@@ -42,57 +35,63 @@ export class Api {
    */
 
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
-    this.config = config;
-   const rootStore = _rootStore && getSnapshot(_rootStore); 
+    this.config = config
+    const rootStore = _rootStore && getSnapshot(_rootStore)
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
-        Authorization: `${rootStore?.authenticationStore?.authToken}`
-        
+        Authorization: `${rootStore?.authenticationStore?.authToken}`,
       },
     })
 
-   this.apisauce.addRequestTransform( async (request) =>{
-   const token =  await renewToken(rootStore?.authenticationStore?.authToken, rootStore?.authenticationStore?.refreshToken);
-    request.headers.lat = rootStore?.authenticationStore?.latitude;
-    request.headers.lng = rootStore?.authenticationStore?.longitude;
-    request.headers.Authorization = token; 
-   })
+    this.apisauce.addRequestTransform(async (request) => {
+      const token = await renewToken(
+        rootStore?.authenticationStore?.authToken,
+        rootStore?.authenticationStore?.refreshToken,
+      )
+      request.headers.lat = rootStore?.authenticationStore?.latitude
+      request.headers.lng = rootStore?.authenticationStore?.longitude
+      request.headers.Authorization = token
+    })
   }
-  
 
-
-  async login(payload:{password:string, email:string}):Promise<({ kind: "ok"} & LoginResponse) | GeneralApiProblem>{
-    
+  async login(payload: {
+    password: string
+    email: string
+  }): Promise<({ kind: "ok" } & LoginResponse) | GeneralApiProblem> {
     const response: ApiResponse<LoginResponse> = await this.apisauce.post(
       `/Authentication/login`,
-      payload
-    );
+      payload,
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
-    const rawData = response.data.data;
-   return {kind: 'ok', ...rawData}
+    const rawData = response.data.data
+    return { kind: "ok", ...rawData }
   }
 
-  async get(url:string, params?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
-   return this.apisauce.get<any>(url, params, axiosConfig);
+  async get(url: string, params?: Record<string, unknown>, axiosConfig?: AxiosRequestConfig) {
+    return this.apisauce.get<any>(url, params, axiosConfig)
   }
 
-  async post(url:string, payload?:Record<string, unknown> | FormData, axiosConfig?:AxiosRequestConfig){
-    return this.apisauce.post(url, payload, axiosConfig);
-   }
-  
-   async put(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
-    return this.apisauce.put(url, payload, axiosConfig);
-   }
+  async post(
+    url: string,
+    payload?: Record<string, unknown> | FormData,
+    axiosConfig?: AxiosRequestConfig,
+  ) {
+    return this.apisauce.post<any>(url, payload, axiosConfig)
+  }
 
-   async delete(url:string, payload?:Record<string, unknown>, axiosConfig?:AxiosRequestConfig){
-    return this.apisauce.delete(url, payload, axiosConfig);
-   }
+  async put(url: string, payload?: Record<string, unknown>, axiosConfig?: AxiosRequestConfig) {
+    return this.apisauce.put(url, payload, axiosConfig)
+  }
+
+  async delete(url: string, payload?: Record<string, unknown>, axiosConfig?: AxiosRequestConfig) {
+    return this.apisauce.delete(url, payload, axiosConfig)
+  }
 }
 
 // Singleton instance of the API for convenience

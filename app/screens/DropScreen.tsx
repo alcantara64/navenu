@@ -10,7 +10,7 @@ import { Colors } from "../theme"
 import { getStyleByCategory } from "../utils/transform"
 import CategoryIcons from "../../assets/icons/drops/claim-icons.svg"
 import { useDrop } from "../hooks/useDrops"
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from "react-query"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../models"
 
@@ -26,18 +26,18 @@ import { useQueryClient } from 'react-query';
 export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = observer(
   function DropScreen({ route, navigation }) {
     const { dropStore } = useStores()
-    const currentDropId = route.params.venue.id
+    const currentDropId = route.params.drop.id
     const { isLoading, data, error, refetch } = useDrop(currentDropId)
-    const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore;
+    const { showClaimedModal, claimedCode, claimDropCode, setShowClaimModal } = dropStore
     const queryClient = useQueryClient()
-  
+
     const closeClaimModal = () => {
       setShowClaimModal(false)
     }
     useEffect(() => {
       setShowClaimModal(false)
       return closeClaimModal()
-    }, [route.params.venue.id])
+    }, [route.params.drop.id])
 
     if (error) {
       return <ErrorMessage message={error as string} />
@@ -46,12 +46,12 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
       return <LoadingIndicator></LoadingIndicator>
     }
     const claimCode = async () => {
-      await  claimDropCode(currentDropId);
-      queryClient.invalidateQueries({queryKey: ['drop-detail', currentDropId]})
+      await claimDropCode(currentDropId)
+      queryClient.invalidateQueries({ queryKey: ["drop-detail", currentDropId] })
     }
 
-    const gotoUserProfile = () =>{
-      navigation.navigate('Settings')
+    const gotoUserProfile = () => {
+      navigation.navigate("Settings")
       closeClaimModal()
     }
     return (
@@ -84,7 +84,7 @@ export const DropScreen: FC<StackScreenProps<AppStackScreenProps, "Drop">> = obs
                       <View row>
                         <Text text80>Codes are Automatically saved on your </Text>
                         <TouchableOpacity onPress={gotoUserProfile}>
-                        <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
+                          <Text style={getStyleByCategory(data.category, true, true)}>profile</Text>
                         </TouchableOpacity>
                       </View>
                     </>

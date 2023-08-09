@@ -4,13 +4,12 @@ import { observer } from "mobx-react-lite"
 import { Colors } from "../theme"
 import { View } from "react-native-ui-lib"
 
-
 export interface HorizontalLineProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  color?: 'white'| 'black'
+  color?: "white" | "black"
 }
 
 /**
@@ -18,11 +17,13 @@ export interface HorizontalLineProps {
  */
 export const HorizontalLine = observer(function HorizontalLine(props: HorizontalLineProps) {
   const { style, color } = props
-  const $styles = [$horizontalLine, style, {borderColor: color === 'black'? Colors.black: Colors.white  }]
+  const $styles = [
+    $horizontalLine,
+    style,
+    { borderColor: color === "black" ? Colors.black : Colors.white },
+  ]
 
-  return (
-    <View row style={$styles}></View>
-  )
+  return <View row style={$styles}></View>
 })
 
 const $horizontalLine: ViewStyle = {

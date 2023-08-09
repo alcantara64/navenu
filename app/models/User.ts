@@ -79,14 +79,14 @@ export const UsersListModel = types
     },
   }))
 
-  const UserPreferenceModel = types.model({
-    DO : types.optional(types.array(types.string), []),
-    EAT : types.optional(types.array(types.string), []),
-    DRINK : types.optional(types.array(types.string), []),
-    STAY : types.optional(types.array(types.string), []),
-    SHOP : types.optional(types.array(types.string), []),
-    FIT : types.optional(types.array(types.string), []),
-  })
+const UserPreferenceModel = types.model({
+  DO: types.optional(types.array(types.string), []),
+  EAT: types.optional(types.array(types.string), []),
+  DRINK: types.optional(types.array(types.string), []),
+  STAY: types.optional(types.array(types.string), []),
+  SHOP: types.optional(types.array(types.string), []),
+  FIT: types.optional(types.array(types.string), []),
+})
 
 // User Model stores User info
 const UserModel = types
@@ -144,14 +144,14 @@ export const UserStoreModel = types
     // Current UserModel
     currentUser: types.maybe(UserModel),
     // UserLists
-     usersList: types.frozen(),
+    usersList: types.frozen(),
     // State for toggling display of user preferences bottom sheet
     showPreferencesModal: types.maybe(types.boolean),
     //  user saved deals
     userDrops: types.optional(types.array(DropModel), []),
     error: types.optional(ErrorModel, { message: "", isError: false }),
     isLoading: types.maybe(types.boolean),
-    userPreference: types.maybe(UserPreferenceModel)
+    userPreference: types.maybe(UserPreferenceModel),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
@@ -161,36 +161,34 @@ export const UserStoreModel = types
     setIsLoading(status: boolean) {
       self.isLoading = status
     },
-    setUserPreferences(preferences: any){
-      self.userPreference = preferences;
+    setUserPreferences(preferences: any) {
+      self.userPreference = preferences
     },
     // Attempting to load User data from api into current user model
     getUser: flow(function* () {
       self.isLoading = true
       self.error = { isError: false, message: "" }
-      const userService = new UserService();
-      const response = yield userService.getUsers();
+      const userService = new UserService()
+      const response = yield userService.getUsers()
       if (response.kind === "ok") {
         // FIll UserModel with API Data
-        try{
-        if(response.data.user){
-        self.currentUser = response.data.user
+        try {
+          if (response.data.user) {
+            self.currentUser = response.data.user
+          }
+          // Fill UserListModel with API DATA
+          self.usersList = response.data.userLists || {}
+          self.userDrops = response.data.savedDeals || []
+          if (response.data.user_preferences) {
+            self.userPreference = response.data.user_preferences
+          }
+        } catch (err) {
+          self.error = { isError: true, message: "Error Fetching Your information" }
         }
-        // Fill UserListModel with API DATA
-        self.usersList = response.data.userLists || {};
-        self.userDrops = response.data.savedDeals || [];
-        if(response.data.user_preferences){
-        self.userPreference = response.data.user_preferences;
-        }
-      }catch(err){
-        self.error = { isError: true, message: "Error Fetching Your information" }
-      }
-      }else if( response.kind === 'unauthorized'){
-        const rootStore = getRootStore(self);
+      } else if (response.kind === "unauthorized") {
+        const rootStore = getRootStore(self)
         rootStore.authenticationStore.logout()
-      }
-       else {
-        
+      } else {
         self.error = { isError: true, message: "Error Fetching Your information" }
       }
       self.isLoading = false
@@ -199,7 +197,7 @@ export const UserStoreModel = types
       self.isLoading = true
       self.error = { isError: false, message: "" }
       const userService = new UserService()
-      const response = yield userService.updateDisplayName({display_name: name});
+      const response = yield userService.updateDisplayName({ display_name: name })
       if (response.kind === "ok") {
         self.currentUser.display_name = name
       } else {
@@ -211,7 +209,7 @@ export const UserStoreModel = types
       self.isLoading = true
       self.error = { isError: false, message: "" }
       const userService = new UserService()
-      const response = yield userService.updateAbout({about: description});
+      const response = yield userService.updateAbout({ about: description })
       if (response.kind === "ok") {
         self.currentUser.description = response.data
       } else {
@@ -223,7 +221,7 @@ export const UserStoreModel = types
     setCurrentUser(value) {
       self.currentUser = value
     },
-    
+
     // @TODO need help
     // Trying to save data from API to UserLists Model
     setUserLists(value) {
@@ -232,13 +230,13 @@ export const UserStoreModel = types
       //const lists = value.userLists
       // Setting List name
       // emmanuel - why this?
-     // const listnames = Object.keys(lists)
+      // const listnames = Object.keys(lists)
       // loop through array of listnames
       // for (const l in listnames) {
       // }
       // loop through each list
       // for (const x in lists) {
-        // self.userLists.listname=Object.keys(input.userLists)
+      // self.userLists.listname=Object.keys(input.userLists)
       // }
     },
     changeAvatar: flow(function* (avatar: string) {

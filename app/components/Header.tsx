@@ -266,7 +266,7 @@ const $centerTitle: TextStyle = {
   position: "absolute",
   width: "100%",
   textAlign: "center",
-  paddingHorizontal: spacing.huge,
+  paddingHorizontal: spacing.xxl,
   zIndex: 1,
 }
 
@@ -280,7 +280,7 @@ const $actionTextContainer: ViewStyle = {
   alignItems: "center",
   justifyContent: "center",
   height: "100%",
-  paddingHorizontal: spacing.medium,
+  paddingHorizontal: spacing.md,
   zIndex: 2,
 }
 
@@ -293,7 +293,7 @@ const $actionIconContainer: ViewStyle = {
   alignItems: "center",
   justifyContent: "center",
   height: "100%",
-  paddingHorizontal: spacing.medium,
+  paddingHorizontal: spacing.md,
   zIndex: 2,
 }
 

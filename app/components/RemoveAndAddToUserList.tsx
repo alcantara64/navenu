@@ -19,21 +19,23 @@ export interface RemoveAndAddToUserListProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  showListModal: boolean,
-  setShowListModal:(status:boolean) => void
-  selectedFeedItem: IVenue | IDrop | IArticle | null |ICurator
-  queryKey?:  any
+  showListModal: boolean
+  setShowListModal: (status: boolean) => void
+  selectedFeedItem: IVenue | IDrop | IArticle | null | ICurator
+  queryKey?: any
   onRefetch: () => void
 }
 
 /**
  * Describe your component here
  */
-export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(props: RemoveAndAddToUserListProps) {
+export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(
+  props: RemoveAndAddToUserListProps,
+) {
   const { style, selectedFeedItem, setShowListModal, showListModal, queryKey, onRefetch } = props
-  const $styles = [$container, style];
+  const $styles = [$container, style]
 
-  const userList = useUserList();
+  const userList = useUserList()
 
   const createListNameMutation = useMutation({
     mutationFn: createUserListName,
@@ -41,36 +43,38 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
       userList.refetch()
     },
   })
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
- 
   const [listName, setListName] = useState("")
   const addItemToListMutation = useMutation({
     mutationFn: addItemToUserList,
   })
   const [selectedUserList, setSelectedUserList] = useState()
 
-
   const addListName = () => {
     createListNameMutation.mutate(listName)
     setListName("")
   }
-  const onAddItemToUserList = async() => {
-    addItemToListMutation.mutate({
-      user_list_id: selectedUserList,
-      type: selectedFeedItem?.type,
-      id: selectedFeedItem?.id || selectedFeedItem.ID,
-    }, {onSuccess: async (data, variables, context) =>{
-      if(onRefetch){
-       await userList.refetch()
-       onRefetch()
-       
-      }
-    },})
-    setShowListModal(false);
-    setSelectedUserList(undefined);
+  const onAddItemToUserList = async () => {
+    addItemToListMutation.mutate(
+      {
+        user_list_id: selectedUserList,
+        type: selectedFeedItem?.type,
+        id: selectedFeedItem?.id || selectedFeedItem.ID,
+      },
+      {
+        onSuccess: async (data, variables, context) => {
+          if (onRefetch) {
+            await userList.refetch()
+            onRefetch()
+          }
+        },
+      },
+    )
+    setShowListModal(false)
+    setSelectedUserList(undefined)
     await queryClient.invalidateQueries({ queryKey: ["feed"] })
-    if(queryKey){
+    if (queryKey) {
       queryClient.invalidateQueries(queryKey)
     }
   }
@@ -85,84 +89,84 @@ export const RemoveAndAddToUserList = observer(function RemoveAndAddToUserList(p
   return (
     <View style={$styles}>
       {showListModal && (
-          <Modal
-            show={showListModal}
-            body={
-              <View bottom flex style={$centeredView}>
-                <View style={$modalView}>
-                  <View marginB-10 row spread width={"100%"}>
-                    <Text header center>
-                      SAVE TO LIST
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setShowListModal(false)
-                      }}
-                    >
-                      <Ionicons name="close-circle-sharp" size={24} color="black" />
-                    </TouchableOpacity>
-                  </View>
-                  <View width={"100%"} spread>
-                    <RadioGroup
-                      onValueChange={(userListId) => {
-                        setSelectedUserList(userListId)
-                      }}
-                      style={{ flexWrap: "wrap" }}
-                      row
-                    >
-                      {userList?.data?.userlist &&
-                        Object.entries(userList.data.userlist).map(
-                          (key, index) =>
-                            key[0] && (
-                              <RadioButton
-                                color={Colors.stay}
-                                labelStyle={$userListLabelStyle}
-                                key={index}
-                                marginB-10
-                                value={`${userList.data.userlist[key[0]]?.user_list_id}`}
-                                label={expandableHeaders(
-                                  `${key[0]} (${userList.data.userlist[key[0]]?.cards?.length})`,
-                                )}
-                              />
-                            ),
-                        )}
-                    </RadioGroup>
-                  </View>
+        <Modal
+          show={showListModal}
+          body={
+            <View bottom flex style={$centeredView}>
+              <View style={$modalView}>
+                <View marginB-10 row spread width={"100%"}>
+                  <Text header center>
+                    SAVE TO LIST
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowListModal(false)
+                    }}
+                  >
+                    <Ionicons name="close-circle-sharp" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <View width={"100%"} spread>
+                  <RadioGroup
+                    onValueChange={(userListId) => {
+                      setSelectedUserList(userListId)
+                    }}
+                    style={{ flexWrap: "wrap" }}
+                    row
+                  >
+                    {userList?.data?.userlist &&
+                      Object.entries(userList.data.userlist).map(
+                        (key, index) =>
+                          key[0] && (
+                            <RadioButton
+                              color={Colors.stay}
+                              labelStyle={$userListLabelStyle}
+                              key={index}
+                              marginB-10
+                              value={`${userList.data.userlist[key[0]]?.user_list_id}`}
+                              label={expandableHeaders(
+                                `${key[0]} (${userList.data.userlist[key[0]]?.cards?.length})`,
+                              )}
+                            />
+                          ),
+                      )}
+                  </RadioGroup>
+                </View>
 
-                  {userList.isLoading && <LoadingIndicator />}
-                  {userList.error && <Text>an error occurred fetching userList</Text>}
-                  <View marginB-15 style={{ width: "100%" }}>
+                {userList.isLoading && <LoadingIndicator />}
+                {userList.error && <Text>an error occurred fetching userList</Text>}
+                <View marginB-15 style={{ width: "100%" }}>
+                  <View marginT-10>
+                    <AppInput
+                      value={listName}
+                      onTextChange={(text) => {
+                        setListName(text)
+                      }}
+                      trailingAccessory={
+                        <TouchableOpacity onPress={addListName}>
+                          <Entypo name="add-to-list" size={24} color="black" />
+                        </TouchableOpacity>
+                      }
+                      placeholder="add to a new list"
+                    />
                     <View marginT-10>
-                      <AppInput
-                        value={listName}
-                        onTextChange={(text) => {
-                          setListName(text)
-                        }}
-                        trailingAccessory={
-                          <TouchableOpacity onPress={addListName}>
-                            <Entypo name="add-to-list" size={24} color="black" />
-                          </TouchableOpacity>
-                        }
-                        placeholder="add to a new list"
+                      <Button
+                        onPress={onAddItemToUserList}
+                        style={$buttonStyle}
+                        disabled={!selectedUserList}
+                        backgroundColor={Colors.stay}
+                        fullWidth
+                        label={"ADD TO LIST "}
+                        labelStyle={$userListLabelStyle}
                       />
-                      <View marginT-10>
-                        <Button
-                          onPress={onAddItemToUserList}
-                          style={$buttonStyle}
-                          disabled={!selectedUserList}
-                          backgroundColor={Colors.stay}
-                          fullWidth
-                          label={"ADD TO LIST "}
-                          labelStyle={$userListLabelStyle}
-                        />
-                      </View>
                     </View>
                   </View>
                 </View>
               </View>
-            }
-          ></Modal>
-        )}
+            </View>
+          }
+        ></Modal>
+      )}
     </View>
   )
 })

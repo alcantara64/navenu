@@ -30,7 +30,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
   observer(function CardviewScreen() {
     // Pull in one of our MST stores
     const { feedsStore, authenticationStore } = useStores()
-    const queryClient = useQueryClient()
     const {
       catFilters,
       selectedFilterTypes,
@@ -39,7 +38,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       showHeaderFilter,
       isMapMode,
       setIsSearchMode,
-      clearAllFilters,
     } = feedsStore
 
     const { data, fetchNextPage, isFetchingNextPage, error, isLoading, refetch, hasNextPage } =
@@ -115,17 +113,20 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
       setListName("")
     }
     const onAddItemToUserList = () => {
-      addItemToListMutation.mutate({
-        user_list_id: selectedUserList,
-        type: selectedFeedItem?.type,
-        id: selectedFeedItem?.id,
-      },{
-        onSuccess:(data, variables, context) => {
-        userList.refetch()
-      },})
-      setShowListModal(false);
-      setSelectedUserList(undefined);
-
+      addItemToListMutation.mutate(
+        {
+          user_list_id: selectedUserList,
+          type: selectedFeedItem?.type,
+          id: selectedFeedItem?.id,
+        },
+        {
+          onSuccess: (data, variables, context) => {
+            userList.refetch()
+          },
+        },
+      )
+      setShowListModal(false)
+      setSelectedUserList(undefined)
     }
 
     if (error) return <ErrorMessage message={"Error fetching data"}></ErrorMessage>
@@ -252,10 +253,6 @@ export const CardviewScreen: FC<StackScreenProps<AppStackScreenProps<"Cardview">
 const $centeredView: ViewStyle = {
   flex: 1,
   backgroundColor: "rgba(0, 0, 0, 0.9)",
-}
-const $listText: TextStyle = {
-  color: Colors.mediumGray,
-  fontFamily: typography.primary.medium,
 }
 const $modalView: ViewStyle = {
   backgroundColor: "#F2F2F2",

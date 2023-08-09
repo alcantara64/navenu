@@ -8,7 +8,7 @@ import { ErrorModel } from "./Feed"
  */
 const dropImages = types.model({
   image: types.maybe(types.string),
-  id: types.maybe(types.string)
+  id: types.maybe(types.string),
 })
 const DropDetailDropModel = types.model({
   id: types.identifier,
@@ -51,6 +51,7 @@ export const DropStoreModel = types
     isLoading: types.maybe(types.boolean),
     showClaimedModal: types.maybe(types.boolean),
     claimedCode: types.maybe(types.string),
+    searchText: types.maybe(types.string),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
@@ -76,26 +77,27 @@ export const DropStoreModel = types
     setCurrentDrop(value) {
       self.currentDrop = value
     },
-    async claimDropCode(dropId:string){
+    async claimDropCode(dropId: string) {
       this.setIsLoading(true)
       this.setError({ isError: false, message: "" })
-      const dropService = new DropService();
-      const claimedResult= await dropService.claimDrop(dropId);
-  console.log({claimedResult})
-      if(claimedResult.kind === 'ok'){
+      const dropService = new DropService()
+      const claimedResult = await dropService.claimDrop(dropId)
+      console.log({ claimedResult })
+      if (claimedResult.kind === "ok") {
         this.setClaimedCode(claimedResult.claimCode.user_code)
-      this.setShowClaimModal(!!claimedResult.claimCode.user_code)
-      
+        this.setShowClaimModal(!!claimedResult.claimCode.user_code)
       }
       this.setIsLoading(false)
     },
-    setShowClaimModal(value:boolean){
+    setShowClaimModal(value: boolean) {
       self.showClaimedModal = value
     },
-    setClaimedCode(value:string){
-      self.claimedCode = value;
-    }
-
+    setClaimedCode(value: string) {
+      self.claimedCode = value
+    },
+    onSearch(text: string) {
+      self.searchText = text
+    },
   }))
 
 export interface DropStore extends Instance<typeof DropStoreModel> {}

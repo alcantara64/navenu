@@ -29,15 +29,13 @@ export function MainStack() {
       initialRouteName="Home"
       screenOptions={{ cardStyle: $cardStyle, headerShown: true }}
     >
-    
-        <Stack.Screen
-          name="Home"
-          component={CardviewScreen}
-         
-          options={{ header: ({ navigation }) => <TopBar navigation={navigation} />, }}
-        />
-     
-      <Stack.Group screenOptions={{ presentation: 'card', }}>
+      <Stack.Screen
+        name="Home"
+        component={CardviewScreen}
+        options={{ header: ({ navigation }) => <TopBar navigation={navigation} /> }}
+      />
+
+      <Stack.Group screenOptions={{ presentation: "card" }}>
         <Stack.Screen name="DropScreen" component={DropScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="VenueDetailScreen"

@@ -9,71 +9,67 @@ const getFeeds = async ({ pageParam = 1, queryKey }: any) => {
     const catstr = queryKey[1].catFilters.join(",")
     queryParams = `cats=${catstr}`
   }
-  const feedsService = new FeedService();
-  
+  const feedsService = new FeedService()
+
   const response = await feedsService.getFeeds(queryParams)
-  if(response.kind !== 'ok'){
-    throw new Error('error in feeds');
+  if (response.kind !== "ok") {
+    throw new Error("error in feeds")
   }
-  return response.feeds;
+  return response.feeds
 }
 
 export const useFeeds = (catFilters: any) => {
   return useInfiniteQuery(["feed", catFilters], getFeeds, {
     getNextPageParam: (lastPage) => {
       // todo nick return next page params from the api
-      if(lastPage?.pageParam){
+      if (lastPage?.pageParam) {
         return lastPage?.pageParam + 1
-      }else{
-      return undefined
+      } else {
+        return undefined
       }
-
-   
     },
     onError: (error) => console.log(error),
     staleTime: 1000 * 60 * 60,
   })
 }
 
-const getAutoCompleteSuggestions = async ({queryKey}) => { 
- const payload = queryKey[1]
-  const feedsService = new FeedService();
-  const response = await feedsService.getAutoCompleteSuggestions(payload)
-  if(response.kind !== 'ok'){
-    throw new Error('error in feeds');
-  }
-  return response.results;
-}
-export const useAutoCompleteFeedsSuggestion = (payload:IAutoCompletePayload) =>{
-   return useQuery(['auto-complete', payload],getAutoCompleteSuggestions);
-}
-
-
-const getSearchItem = async ({queryKey}) => { 
+const getAutoCompleteSuggestions = async ({ queryKey }) => {
   const payload = queryKey[1]
-   const feedsService = new FeedService();
-   const response = await feedsService.search(payload)
-   if(response.kind !== 'ok'){
-     throw new Error( response.message || 'error in feeds');
-   }
-   return response.results;
- }
- export const useFeedsSearch = (payload:ISearchPayLoad) =>{
-    return useQuery(['feeds-search', payload],getSearchItem);
- }
-
- // notifications
- const getNotifications = async () => {
- 
-  const feedsService = new NotificationService();
-  
-  const response = await feedsService.getNotifications()
-  if(response.kind !== 'ok'){
-    throw new Error('error in feeds');
+  const feedsService = new FeedService()
+  const response = await feedsService.getAutoCompleteSuggestions(payload)
+  if (response.kind !== "ok") {
+    throw new Error("error in feeds")
   }
-  return response.notifications;
+  return response.results
+}
+export const useAutoCompleteFeedsSuggestion = (payload: IAutoCompletePayload) => {
+  return useQuery(["auto-complete", payload], getAutoCompleteSuggestions)
 }
 
-export const useNotifications = () =>{
-  return useQuery(['notifications'], getNotifications);
+const getSearchItem = async ({ queryKey }) => {
+  const payload = queryKey[1]
+  const feedsService = new FeedService()
+  const response = await feedsService.search(payload)
+  if (response.kind !== "ok") {
+    throw new Error(response.message || "error in feeds")
+  }
+  return response.results
+}
+export const useFeedsSearch = (payload: ISearchPayLoad) => {
+  return useQuery(["feeds-search", payload], getSearchItem)
+}
+
+// notifications
+const getNotifications = async () => {
+  const feedsService = new NotificationService()
+
+  const response = await feedsService.getNotifications()
+  if (response.kind !== "ok") {
+    throw new Error("error in feeds")
+  }
+  return response.notifications
+}
+
+export const useNotifications = () => {
+  return useQuery(["notifications"], getNotifications)
 }

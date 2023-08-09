@@ -68,7 +68,7 @@ const PREFERENCE_CARDS = [
 export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settings">> = observer(
   function PreferencesScreen() {
     const [activeStage, setActiveStage] = useState(0)
-    const { userStore, } = useStores()
+    const { userStore } = useStores()
     const [selectedPreference, setSelectedPreference] = useState({
       do: false,
       eat: false,
@@ -157,8 +157,8 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
     )
 
     useEffect(() => {
-      setLoading(false);
-      const selectedPreferenceintial= {
+      setLoading(false)
+      const selectedPreferenceintial = {
         do: false,
         eat: false,
         drink: false,
@@ -166,21 +166,25 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
         shop: false,
         fit: false,
       }
-      if(userStore?.userPreference){
-      for (const key of Object.keys(selectedPreference)){
-        if (userStore?.userPreference[key.toUpperCase()].length > 0) {
-          selectedPreferenceintial[key] = true;
-          userStore?.userPreference[key.toUpperCase()].forEach((preferenceId) => {
-            Pages.forEach((subCategory) => {  
-            const foundSelectedItem = subCategory.items.find((item) => item.id === preferenceId)
-              if (foundSelectedItem) {
-            selectedCategorySubItem.push( { type: key.toUpperCase(), id: foundSelectedItem.id, name: foundSelectedItem.name })
-              }
+      if (userStore?.userPreference) {
+        for (const key of Object.keys(selectedPreference)) {
+          if (userStore?.userPreference[key.toUpperCase()].length > 0) {
+            selectedPreferenceintial[key] = true
+            userStore?.userPreference[key.toUpperCase()].forEach((preferenceId) => {
+              Pages.forEach((subCategory) => {
+                const foundSelectedItem = subCategory.items.find((item) => item.id === preferenceId)
+                if (foundSelectedItem) {
+                  selectedCategorySubItem.push({
+                    type: key.toUpperCase(),
+                    id: foundSelectedItem.id,
+                    name: foundSelectedItem.name,
+                  })
+                }
+              })
             })
-          })
+          }
         }
       }
-    }
       setSelectedPreference(selectedPreferenceintial)
     }, [])
 
@@ -249,7 +253,7 @@ export const PreferencesScreen: FC<StackScreenProps<AppStackScreenProps, "Settin
       })
       const response = await userService.saveUserPreference(payload)
       if (response.kind === "ok") {
-        await userStore.getUser();
+        await userStore.getUser()
         gotoFeedScreen()
       } else {
         setErrMessage("Failed to save preference Data")
@@ -503,8 +507,8 @@ const $preferenceItemSubItem: ViewStyle = {
   padding: 10,
 }
 const $subItemText: TextStyle = {
-  fontSize: spacing.medium,
-  padding: spacing.extraSmall,
+  fontSize: spacing.md,
+  padding: spacing.xs,
 }
 const $subItem2Rows: ViewStyle = {
   flexBasis: "49%",

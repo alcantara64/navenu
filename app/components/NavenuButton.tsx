@@ -18,10 +18,8 @@ export const NavenuButton = observer(function NavenuButton(props: NavenuButtonPr
   const { style } = props
   const $styles = [$container, style]
 
-  return (
-    <Image source={require("../../assets/icon.png")} style={$styles} />
-  );
-});
+  return <Image source={require("../../assets/icon.png")} style={$styles} />
+})
 
 const $container: ImageStyle = {
   width: 50,

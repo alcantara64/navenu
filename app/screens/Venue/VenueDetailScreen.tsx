@@ -38,8 +38,8 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
     const [bottomSheet, setBottomSheet] = useState(false)
     const [bottomSheetCurrentContent, setBottomSheetCurrentContent] =
       useState<BottomSheetType>(null)
-      const [showWebview, setShowWebview] = useState(false)
-      const [currentUrl, setCurrentUrl] = useState('');
+    const [showWebview, setShowWebview] = useState(false)
+    const [currentUrl, setCurrentUrl] = useState("")
 
     const createUberUrl = (
       pickupLatitude: number,
@@ -82,10 +82,16 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
 
     const renderWebView = () => {
       return (
-      <View style={{height: 600}}><Web  url={currentUrl} onClose={() => {
-        setShowWebview(false)
-      }}></Web></View>)
-    } 
+        <View style={{ height: 600 }}>
+          <Web
+            url={currentUrl}
+            onClose={() => {
+              setShowWebview(false)
+            }}
+          ></Web>
+        </View>
+      )
+    }
     const renderOperatingHours = () => {
       return (
         <View padding-15>
@@ -170,16 +176,16 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
               />
             ) : null}
             {data.articles && data.articles.length > 0 && (
-              <View  marginR-5 marginL-5>
+              <View marginR-5 marginL-5>
                 <View marginB-10>
-                <Text sectionHeader>Editorial</Text>
+                  <Text sectionHeader>Editorial</Text>
                 </View>
 
-                {data.articles.filter((item) => !!item ).map((item) => {
-                  
+                {data.articles
+                  .filter((item) => !!item)
+                  .map((item) => {
                     return <ArticleCard key={item.id} item={item} />
-    
-                })}
+                  })}
               </View>
             )}
           </View>
@@ -191,7 +197,7 @@ export const VenueDetailScreen: FC<StackScreenProps<AppStackScreenProps, "VenueD
           }}
           category={data.category}
         >
-          <View >{renderBottomSheetContent()}</View>
+          <View>{renderBottomSheetContent()}</View>
         </BottomSheet>
         {currentVenue && showBottomSheet && (
           <AppBottomsheet>

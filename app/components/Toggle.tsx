@@ -593,7 +593,7 @@ const $switchDetail: ViewStyle = {
 }
 
 const $helper: TextStyle = {
-  marginTop: spacing.extraSmall,
+  marginTop: spacing.xs,
 }
 
 const $label: TextStyle = {
@@ -601,11 +601,11 @@ const $label: TextStyle = {
 }
 
 const $labelRight: TextStyle = {
-  marginLeft: spacing.medium,
+  marginLeft: spacing.md,
 }
 
 const $labelLeft: TextStyle = {
-  marginRight: spacing.medium,
+  marginRight: spacing.md,
 }
 
 const $switchAccessibility: TextStyle = {

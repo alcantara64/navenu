@@ -69,15 +69,17 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
       <TouchableOpacity
         style={[
           catFilters.includes("DO") ? $Dobutton : $button,
-          { borderColor: catFilters.includes("DO")  ? Colors.white : Colors.do },
+          { borderColor: catFilters.includes("DO") ? Colors.white : Colors.do },
         ]}
         onPress={() => {
           setDoStateButton(!DoStateButton)
           !DoStateButton ? addCat("DO") : removeCat("DO")
         }}
       >
-        {catFilters.includes("DO")  ? <DoOn /> : <Do />}
-        <Text style={[$label, { color: catFilters.includes("DO")  ? Colors.white : Colors.do }]}>DO</Text>
+        {catFilters.includes("DO") ? <DoOn /> : <Do />}
+        <Text style={[$label, { color: catFilters.includes("DO") ? Colors.white : Colors.do }]}>
+          DO
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
@@ -89,13 +91,15 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
           !EatStateButton ? addCat("EAT") : removeCat("EAT")
         }}
       >
-        { catFilters.includes("EAT") ? <EatOn /> : <Eat />}
-        <Text style={[$label, { color:  catFilters.includes("EAT") ? Colors.white : Colors.eat }]}>EAT</Text>
+        {catFilters.includes("EAT") ? <EatOn /> : <Eat />}
+        <Text style={[$label, { color: catFilters.includes("EAT") ? Colors.white : Colors.eat }]}>
+          EAT
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           catFilters.includes("DRINK") ? $Drinkbutton : $button,
-          { borderColor:  catFilters.includes("DRINK") ? Colors.white : Colors.drink },
+          { borderColor: catFilters.includes("DRINK") ? Colors.white : Colors.drink },
         ]}
         onPress={() => {
           setDrinkStateButton(!DrinkStateButton)
@@ -103,39 +107,56 @@ export const CategoryFilterBar = observer(function CategoryFilterBar(
         }}
       >
         {catFilters.includes("DRINK") ? <DrinkOn /> : <Drink />}
-        <Text style={[$label, { color: catFilters.includes("DRINK") ? Colors.white : Colors.drink }]}>
+        <Text
+          style={[$label, { color: catFilters.includes("DRINK") ? Colors.white : Colors.drink }]}
+        >
           DRINK
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[catFilters.includes("SHOP") ? $Shopbutton : $button, { borderColor: catFilters.includes("SHOP") ? Colors.white : Colors.shop }]}
+        style={[
+          catFilters.includes("SHOP") ? $Shopbutton : $button,
+          { borderColor: catFilters.includes("SHOP") ? Colors.white : Colors.shop },
+        ]}
         onPress={() => {
           setShopStateButton(!ShopStateButton)
           !ShopStateButton ? addCat("SHOP") : removeCat("SHOP")
         }}
       >
         {catFilters.includes("SHOP") ? <ShopOn /> : <Shop />}
-        <Text style={[$label, { color: catFilters.includes("SHOP") ? Colors.white : Colors.shop }]}>SHOP</Text>
+        <Text style={[$label, { color: catFilters.includes("SHOP") ? Colors.white : Colors.shop }]}>
+          SHOP
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[catFilters.includes("STAY") ? $Staybutton : $button, { borderColor: catFilters.includes("STAY") ? Colors.white : Colors.stay }]}
+        style={[
+          catFilters.includes("STAY") ? $Staybutton : $button,
+          { borderColor: catFilters.includes("STAY") ? Colors.white : Colors.stay },
+        ]}
         onPress={() => {
           setStayStateButton(!StayStateButton)
           !catFilters.includes("STAY") ? addCat("STAY") : removeCat("STAY")
         }}
       >
         {catFilters.includes("STAY") ? <StayOn /> : <Stay />}
-        <Text style={[$label, { color: catFilters.includes("STAY") ? Colors.white : Colors.stay }]}>STAY</Text>
+        <Text style={[$label, { color: catFilters.includes("STAY") ? Colors.white : Colors.stay }]}>
+          STAY
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[catFilters.includes("FIT") ? $Fitbutton : $button, { borderColor: catFilters.includes("FIT") ? Colors.white : Colors.fit }]}
+        style={[
+          catFilters.includes("FIT") ? $Fitbutton : $button,
+          { borderColor: catFilters.includes("FIT") ? Colors.white : Colors.fit },
+        ]}
         onPress={() => {
           setFitStateButton(!FitStateButton)
           !FitStateButton ? addCat("FIT") : removeCat("FIT")
         }}
       >
         {catFilters.includes("FIT") ? <FitOn /> : <Fit />}
-        <Text style={[$label,{ color: catFilters.includes("FIT") ? Colors.white : Colors.fit }]}>FIT</Text>
+        <Text style={[$label, { color: catFilters.includes("FIT") ? Colors.white : Colors.fit }]}>
+          FIT
+        </Text>
       </TouchableOpacity>
     </View>
     // </ScrollView>

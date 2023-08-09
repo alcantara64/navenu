@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react"
 
 interface IuseRefreshByUser {
-  refetch: () => any;
+  refetch: () => any
 }
-export const useRefreshByUser = ({refetch}: IuseRefreshByUser) => {
-  const [isRefetchingByUser, setIsRefetchingByUser] = React.useState(false);
+export const useRefreshByUser = ({ refetch }: IuseRefreshByUser) => {
+  const [isRefetchingByUser, setIsRefetchingByUser] = React.useState(false)
 
   async function refetchByUser() {
-    setIsRefetchingByUser(true);
+    setIsRefetchingByUser(true)
 
     try {
-      await refetch();
+      await refetch()
     } finally {
-      setIsRefetchingByUser(false);
+      setIsRefetchingByUser(false)
     }
   }
 
   return {
     isRefetchingByUser,
     refetchByUser,
-  };
-};
+  }
+}

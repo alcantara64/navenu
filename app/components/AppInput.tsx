@@ -1,11 +1,11 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Colors, } from "../theme"
+import { Colors } from "../theme"
 import { Text } from "./Text"
 import { Incubator, TouchableOpacity } from "react-native-ui-lib"
-import { Ionicons } from '@expo/vector-icons'; 
-const {TextField}  = Incubator;
+import { Ionicons } from "@expo/vector-icons"
+const { TextField } = Incubator
 
 export interface AppInputProps {
   /**
@@ -16,16 +16,24 @@ export interface AppInputProps {
   knowledgeItems?: Array<any>
   isLoading?: boolean
   hasAutoComplete?: boolean
-  onTextChange: (text:string) => void
+  onTextChange: (text: string) => void
   onBlur?: any
-  [x:string]: any
+  [x: string]: any
 }
 
 /**
  * Describe your component here
  */
 export const AppInput = observer(function AppInput(props: AppInputProps) {
-  const {onSelectItem, knowledgeItems, isLoading, hasAutoComplete, onTextChange, onBlur ,...textFieldProps } = props
+  const {
+    onSelectItem,
+    knowledgeItems,
+    isLoading,
+    hasAutoComplete,
+    onTextChange,
+    onBlur,
+    ...textFieldProps
+  } = props
   const $styles = [$container]
 
   return (
@@ -33,55 +41,52 @@ export const AppInput = observer(function AppInput(props: AppInputProps) {
       <TextField
         containerStyle={$textInputContainerStyle}
         placeholder="What are you looking for?"
-      
         onChangeText={onTextChange}
         onBlur={onBlur}
         {...textFieldProps}
       />
       <View style={$autoCompleteContainer}>
-      {hasAutoComplete && (
-        <View style={$listContainer}>
-          {isLoading && <Text>loading...</Text>}
-          {!isLoading &&
-            knowledgeItems?.length > 0 &&
-            knowledgeItems.map((item) => (
-              <TouchableOpacity  onPress={() => onSelectItem(item)} key={item.display}>
-                <Text style={$autoCompleteText}>{item.display}</Text>
-              </TouchableOpacity>
-            ))}
-        </View> 
-      )}
+        {hasAutoComplete && (
+          <View style={$listContainer}>
+            {isLoading && <Text>loading...</Text>}
+            {!isLoading &&
+              knowledgeItems?.length > 0 &&
+              knowledgeItems.map((item) => (
+                <TouchableOpacity onPress={() => onSelectItem(item)} key={item.display}>
+                  <Text style={$autoCompleteText}>{item.display}</Text>
+                </TouchableOpacity>
+              ))}
+          </View>
+        )}
       </View>
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  zIndex:1
-  }
-  const $autoCompleteContainer:ViewStyle ={
-    position: "relative",
-    zIndex:99
-  }
-  const $textInputContainerStyle: ViewStyle = {
-    borderRadius: 5,
-    backgroundColor: Colors.white,
-    padding: 15,
-    
-  }
-  const $listContainer: ViewStyle = {
-    position: "absolute",
-    top: 5,
-    zIndex:100,
-    backgroundColor:Colors.white,
-    width: '100%'
-  }
-  
-  const $autoCompleteText: TextStyle ={
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    fontWeight:"500",
-    color: '#333333',
-    padding: 4,
-  }
-  
+  zIndex: 1,
+}
+const $autoCompleteContainer: ViewStyle = {
+  position: "relative",
+  zIndex: 99,
+}
+const $textInputContainerStyle: ViewStyle = {
+  borderRadius: 5,
+  backgroundColor: Colors.white,
+  padding: 8,
+}
+const $listContainer: ViewStyle = {
+  position: "absolute",
+  top: 5,
+  zIndex: 100,
+  backgroundColor: Colors.white,
+  width: "100%",
+}
+
+const $autoCompleteText: TextStyle = {
+  fontFamily: "Inter-Regular",
+  fontSize: 12,
+  fontWeight: "500",
+  color: "#333333",
+  padding: 4,
+}

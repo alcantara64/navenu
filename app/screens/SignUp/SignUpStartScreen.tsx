@@ -21,7 +21,6 @@ import jwtDecode from "jwt-decode"
 import { ToastLoader } from "../../components"
 import { CloudMessaging } from "../../services/cloudMessagingService"
 
-
 const authImage = require("../../../assets/images/auth/auth-start-image.png")
 
 interface SignUpStartScreenProps extends AppStackScreenProps<"SignUpStart"> {}
@@ -35,7 +34,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
   const {
     authenticationStore: { socialRegister, setLoading, isLoading, errorMessage, setErrorMessage },
   } = useStores()
-  const cloudMessagingRef = useRef<CloudMessaging>();
+  const cloudMessagingRef = useRef<CloudMessaging>()
 
   useEffect(() => {
     setLoading(false)
@@ -59,16 +58,16 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
   }, [response, accessToken])
 
   useEffect(() => {
-    cloudMessagingRef.current = new CloudMessaging();
-    }, [])
+    cloudMessagingRef.current = new CloudMessaging()
+  }, [])
 
   async function fetchUserInfo() {
     const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
     const useInfo = await response.json()
-    const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
-    if (useInfo && useInfo.email ) {
+    const deviceToken = await cloudMessagingRef.current.getDeviceToken()
+    if (useInfo && useInfo.email) {
       socialRegister({
         email: useInfo.email,
         firstName: useInfo.given_name,
@@ -87,7 +86,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
 
   const handleAppleSignin = async () => {
     try {
-      const deviceToken =  await cloudMessagingRef.current.getDeviceToken()
+      const deviceToken = await cloudMessagingRef.current.getDeviceToken()
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -106,7 +105,7 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
           lastName: credential.fullName.familyName,
           socialId: credential.user,
           authType: "apple",
-          isSignUp:true,
+          isSignUp: true,
           deviceToken,
           deviceType: Platform.OS,
         })
@@ -129,12 +128,12 @@ export const SignUpStartScreen: FC<SignUpStartScreenProps> = observer(function S
             height: Dimensions.get("window").height,
           }}
         >
-        <ToastLoader
-        isLoading={isLoading}
-        hasError={!!errorMessage}
-        errorMessage={errorMessage}
-        clearError={() => setErrorMessage("")}
-      />
+          <ToastLoader
+            isLoading={isLoading}
+            hasError={!!errorMessage}
+            errorMessage={errorMessage}
+            clearError={() => setErrorMessage("")}
+          />
           <View style={$textContainer}>
             <Text style={$text}>GAIN ACCESS TO A</Text>
             <Text style={$text}>New World:</Text>

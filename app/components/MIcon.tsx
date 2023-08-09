@@ -2,7 +2,7 @@ import * as React from "react"
 import { OpaqueColorValue, StyleProp, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export interface MIconProps {
   /**
@@ -11,7 +11,7 @@ export interface MIconProps {
   style?: StyleProp<ViewStyle>
   name: any
   size: number
-  color?: string | OpaqueColorValue;
+  color?: string | OpaqueColorValue
 }
 
 /**
@@ -20,14 +20,5 @@ export interface MIconProps {
 export const MIcon = observer(function MIcon(props: MIconProps) {
   const { style, name, size, color } = props
 
-
-  return (
-    <MaterialCommunityIcons
-      name={name}
-      size={size}
-      color={color}
-      style={style}
-    />
-  );
+  return <MaterialCommunityIcons name={name} size={size} color={color} style={style} />
 })
-

@@ -31,6 +31,7 @@ import { launchImageLibrary } from "react-native-image-picker"
 import { UserService } from "../services/userService"
 import { useNavigation } from "@react-navigation/native"
 import { useDeleteUserAccount } from "../hooks/useUser"
+// import { useCopilot } from "react-native-copilot"
 const { TextField } = Incubator
 
 const RadioButton = ({ color, selected, onPress }) => {
@@ -82,11 +83,11 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       contact: false,
       location: false,
       logout: false,
-      removeAccount:false
+      removeAccount: false,
     })
     const [singleFile, setSingleFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState("")
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState({
       isTouched: false,
       value: currentUser?.display_name,
@@ -99,7 +100,8 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
 
     const [showUserListModal, setShowUserListModal] = useState(false)
     const [selectedListItem, setSelectedListItem] = useState(null)
-    const {mutate:removeUserAccount, isLoading: isDeleting} = useDeleteUserAccount()
+    const { mutate: removeUserAccount, isLoading: isDeleting } = useDeleteUserAccount()
+    // const { start } = useCopilot()
     // navigation.addListener('focus', getUser);
     useEffect(() => {
       getUser()
@@ -146,7 +148,6 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       setLoading(false)
     }
 
-
     const selectFile = async () => {
       // Opening Document Picker to select one file
       try {
@@ -190,19 +191,20 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
       setSelectedListItem(listItem)
       setShowUserListModal(true)
     }
-    const openPreferenceScreen = () => {
-      navigation.navigate("PreferencesScreen")
-    }
-    const gotoScreen = (screen:string) => {
-      navigation.navigate(screen);
+    const gotoScreen = (screen: string) => {
+      navigation.navigate(screen)
     }
 
-    const shareLink = (url:string, message:string, title= 'Navenu') => {
+    const shareLink = (url: string, message: string, title = "Navenu") => {
       Share.share({
         message,
         url,
         title,
       })
+    }
+    const takaTour = () => {
+      start()
+      gotoScreen("Feed")
     }
 
     const onDeleteList = async (id: string) => {
@@ -412,7 +414,7 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                       onChangeText={(text) =>
                         setUserDescription({ ...userDescription, value: text })
                       }
-                      numberOfLines={5}
+                      style={$textInputStyle}
                       multiline
                       trailingAccessory={
                         <TouchableOpacity>
@@ -433,25 +435,25 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                   </ExpandableSection>
                 </View>
                 <View marginT-10 marginB-10>
-                  <TouchableOpacity onPress={openPreferenceScreen}>
-                    <Text style={$labelStyle}>Preference</Text>
-                  </TouchableOpacity>
-                </View>
-                <View marginT-10 marginB-10>
-                  <TouchableOpacity onPress={() => {gotoScreen('DataPolicy')}}>
-                    <Text style={$labelStyle}>Data Policy</Text>
-                  </TouchableOpacity>
-                </View>
-                <View marginT-10 marginB-10>
-                  <TouchableOpacity onPress={() => {gotoScreen('PrivacyPolicy')}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowBottomSheet(false)
+                      gotoScreen("PrivacyPolicy")
+                    }}
+                  >
                     <Text style={$labelStyle}>Privacy Policy</Text>
                   </TouchableOpacity>
                 </View>
-                <View marginT-10 marginB-10>
-                  <TouchableOpacity onPress={() => {gotoScreen('TermsOfUse')}}>
-                    <Text style={$labelStyle}>Terms Of Service</Text>
+                {/* <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={() => {gotoScreen('PrivacyPolicy')}}>
+                    <Text style={$labelStyle}>Privacy Policy</Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
+                {/* <View marginT-10 marginB-10>
+                  <TouchableOpacity onPress={takaTour}>
+                    <Text style={$labelStyle}>Take a Tour</Text>
+                  </TouchableOpacity>
+                </View> */}
                 {/* 
                 SAME AS COLOR SECTION, COMMMENTING FOR NOW
                 <View marginT-10 style={$expandableContainer}>
@@ -528,11 +530,16 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                     }}
                     expanded={profileSectionExpandable.removeAccount}
                     paddingB-10
-                    sectionHeader={expandableHeaders("Delete Account", profileSectionExpandable.removeAccount)}
+                    sectionHeader={expandableHeaders(
+                      "Delete Account",
+                      profileSectionExpandable.removeAccount,
+                    )}
                   >
                     <View row centerV spread>
                       <View flex-2>
-                      <Text style={$logoutLabel}>ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?</Text>
+                        <Text style={$logoutLabel}>
+                          ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?
+                        </Text>
                       </View>
                       <View row centerV>
                         <TouchableOpacity style={$logoutButton} onPress={removeUserAccount}>
@@ -563,7 +570,10 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
                 bottom
                 label={"Share Navenu"}
                 onPress={() => {
-                  shareLink('https://navenuapp.page.link', `${currentUser.display_name} wants to share their Navenu profile with you`)
+                  shareLink(
+                    "https://navenuapp.page.link",
+                    `${currentUser.display_name} wants to share their Navenu profile with you`,
+                  )
                 }}
               />
             </View>
@@ -580,9 +590,14 @@ export const UserProfileScreen: FC<StackScreenProps<AppStackScreenProps, "UserPr
               >
                 <AntDesign name="delete" size={30} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {
-                  shareLink('https://navenuapp.page.link/userList', `${currentUser.display_name} wants to share their ${selectedListItem?.userListName} with you`)
-                }}>
+              <TouchableOpacity
+                onPress={() => {
+                  shareLink(
+                    "https://navenuapp.page.link/userList",
+                    `${currentUser.display_name} wants to share their ${selectedListItem?.userListName} with you`,
+                  )
+                }}
+              >
                 <MaterialIcons name="ios-share" size={30} color="#black" />
               </TouchableOpacity>
             </View>
@@ -682,4 +697,7 @@ const $locationButtonText: TextStyle = {
 }
 const $mapContainer: ViewStyle = {
   maxHeight: 400,
+}
+const $textInputStyle: ViewStyle = {
+  maxWidth: "95%",
 }

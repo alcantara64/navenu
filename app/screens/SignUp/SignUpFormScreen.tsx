@@ -38,11 +38,11 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
     const { email, password } = values
     setAuthEmail(email)
     setAuthPassword(password)
-      try {
-        await register(email, password)
-      } catch (e) {
-        setErrorMessage(e.message)
-      }
+    try {
+      await register(email, password)
+    } catch (e) {
+      setErrorMessage(e.message)
+    }
     setAuthPassword("")
     setAuthEmail("")
   }
@@ -117,7 +117,7 @@ export const SignUpFormScreen: FC<SignUpFormScreenProps> = observer(function Sig
                     <Text style={$buttonText}>I have an account</Text>
                   </AppButton>
                 </View>
-                </KeyboardAwareScrollView>
+              </KeyboardAwareScrollView>
             )}
           </Formik>
         </ImageBackground>

@@ -14,6 +14,8 @@ import { UserService } from "../services/userService"
 import { DropCard } from "./DropCard"
 import { UserListCard } from "./UserListCard"
 import LinearGradient from "react-native-linear-gradient"
+import Config from "../../app/config"
+import { DynamicLinkServices } from "../../app/services/firebase/dynamicLinkServices"
 
 export interface CuratorCardProps {
   /**
@@ -44,8 +46,10 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
   const onSubscribeToNotification = () => {
     mutate({ type: "curator", id: curator.ID })
   }
-  const onLinkPress = () => {
-    // openLinkInBrowser(curator.)
+  const shareCuratorLink = async () => {
+    const deepLink = `${Config.DEEP_LINK_URL}/curator/${curator.ID}`
+    const link = await DynamicLinkServices.buildLink(deepLink)
+    shareLink(curator.display_name, `Checkout ${curator.display_name} on Navenu`, link)
   }
 
   const onBookMark = async () => {
@@ -89,16 +93,7 @@ export const CuratorDetail = observer(function CuratorCard(props: CuratorCardPro
         </View>
         <View marginB-40 style={$functionBtns}>
           <View flex-1 center spread>
-            <TouchableOpacity
-              marginV-10
-              onPress={() =>
-                shareLink(
-                  curator.name,
-                  `Checkout ${curator.name} on Navenu`,
-                  "https://navenuapp.page.link/venue",
-                )
-              }
-            >
+            <TouchableOpacity marginV-10 onPress={shareCuratorLink}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity marginV-5 onPress={onSubscribeToNotification}>
@@ -270,6 +265,7 @@ const $longDescription: TextStyle = {
   fontFamily: "inter",
   fontWeight: "400",
   fontSize: 12,
+  textTransform: "none",
 }
 const $linkUrl: TextStyle = {
   color: Colors.orange,

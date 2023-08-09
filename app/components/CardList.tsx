@@ -1,9 +1,5 @@
 import * as React from "react"
-import {
-  FlatList,
-  GestureResponderEvent,
-  RefreshControlProps,
-} from "react-native"
+import { FlatList, GestureResponderEvent, RefreshControlProps } from "react-native"
 import { observer } from "mobx-react-lite"
 import { VenueCard } from "./VenueCard"
 import { ArticleCard } from "./ArticleCard"
@@ -30,8 +26,8 @@ export interface CardListProps {
   isFetchingNextPage?: boolean
   getMoreData?: () => void
   userList?: IUserList
-  isUserList?: boolean,
-  removeItemFromUserList?: (feed:any) => void 
+  isUserList?: boolean
+  removeItemFromUserList?: (feed: any) => void
   hideRemove?: boolean
 }
 
@@ -54,27 +50,72 @@ export const CardList = observer(function CardList(props: CardListProps) {
     userList,
     isUserList,
     removeItemFromUserList,
-    hideRemove
+    hideRemove,
   } = props
-  const {authenticationStore:{latitude, longitude}} = useStores() 
-
-
+  const {
+    authenticationStore: { latitude, longitude },
+  } = useStores()
 
   const renderItem = ({ item }) => {
     if (item.type === "location") {
       return (
-        <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList} isUserList={isUserList}  onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove} />
+        <VenueCard
+          currentUserLatitude={latitude}
+          currentUserLongitude={longitude}
+          savedFeeds={savedFeeds}
+          isFeed={isFeed}
+          onBookMark={onBookMark}
+          item={item}
+          userListData={userList}
+          isUserList={isUserList}
+          onRemoveFromUserList={removeItemFromUserList}
+          hideRemove={hideRemove}
+        />
       )
     }
 
     if (item.type === FEED_TYPE.article) {
-      return <ArticleCard item={item} isFeed={isFeed} onBookMark={onBookMark} userListData={userList} isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove} />
+      return (
+        <ArticleCard
+          item={item}
+          isFeed={isFeed}
+          onBookMark={onBookMark}
+          userListData={userList}
+          isUserList={isUserList}
+          onRemoveFromUserList={removeItemFromUserList}
+          hideRemove={hideRemove}
+        />
+      )
     }
     if (item.type === FEED_TYPE.drop) {
-      return <DropCard savedFeeds={savedFeeds} isFeed={isFeed} onBookMark={onBookMark} item={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
+      return (
+        <DropCard
+          savedFeeds={savedFeeds}
+          isFeed={isFeed}
+          onBookMark={onBookMark}
+          item={item}
+          userListData={userList}
+          isUserList={isUserList}
+          onRemoveFromUserList={removeItemFromUserList}
+          hideRemove={hideRemove}
+        />
+      )
     }
-    if(item.type?.toLowerCase() ===  FEED_TYPE.curator || item.type?.toLowerCase() ===  FEED_TYPE.curator ){
-      return <CuratorCard  isFeed={isFeed} onBookMark={onBookMark} curator={item} userListData={userList}  isUserList={isUserList} onRemoveFromUserList={removeItemFromUserList} hideRemove={hideRemove}/>
+    if (
+      item.type?.toLowerCase() === FEED_TYPE.curator ||
+      item.type?.toLowerCase() === FEED_TYPE.curator
+    ) {
+      return (
+        <CuratorCard
+          isFeed={isFeed}
+          onBookMark={onBookMark}
+          curator={item}
+          userListData={userList}
+          isUserList={isUserList}
+          onRemoveFromUserList={removeItemFromUserList}
+          hideRemove={hideRemove}
+        />
+      )
     }
   }
   return (

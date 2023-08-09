@@ -3,10 +3,7 @@ import { ImageBackground, StyleProp, TextStyle, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { View, Text, TouchableOpacity } from "react-native-ui-lib"
 import { HorizontalLine } from "./HorizontalLine"
-import {
-  FontAwesome5,
-  MaterialIcons,
-} from "@expo/vector-icons"
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"
 import { Colors, typography } from "../theme"
 import { useNavigation } from "@react-navigation/native"
 import { getStyleByCategory } from "../utils/transform"
@@ -144,9 +141,9 @@ const $screenContent: ViewStyle = {
   borderTopLeftRadius: 15,
   padding: 8,
 }
-const $address: TextStyle ={
-  fontFamily: 'inter',
-  fontWeight: '400',
-  fontStyle: 'normal',
+const $address: TextStyle = {
+  fontFamily: "inter",
+  fontWeight: "400",
+  fontStyle: "normal",
   marginBottom: 15,
 }

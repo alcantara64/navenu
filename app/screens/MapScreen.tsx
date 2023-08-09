@@ -27,7 +27,7 @@ export const MapScreen: FC<StackScreenProps<AppStackScreenProps, "Map">> = obser
     const [lon, setLon] = useState(0)
 
     useEffect(() => {
-      (async () => {
+      ;(async () => {
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== "granted") {
           setErrorMsg(errorMsg)
@@ -40,35 +40,35 @@ export const MapScreen: FC<StackScreenProps<AppStackScreenProps, "Map">> = obser
     }, [])
     // Pull in navigation via hook
     // const navigation = useNavigation()
-    if(isLoading)  return <LoaderScreen />
+    if (isLoading) return <LoaderScreen />
     if (error || errorMsg) return <ErrorMessage message={" an error occurred"}></ErrorMessage>
-      return (
-        <MapView
-          style={$map}
-          //  initialRegion={mapRegion}
-          initialRegion={{
-            latitude: lat,
-            longitude: lon,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.01,
+    return (
+      <MapView
+        style={$map}
+        //  initialRegion={mapRegion}
+        initialRegion={{
+          latitude: lat,
+          longitude: lon,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.01,
+        }}
+        customMapStyle={mapStyle}
+      >
+        <Marker
+          coordinate={{
+            longitude: parseFloat(lon as any),
+            latitude: parseFloat(lat as any),
           }}
-          customMapStyle={mapStyle}
-        >
-          <Marker
-            coordinate={{
-              longitude: parseFloat(lon as any),
-              latitude: parseFloat(lat as any),
-            }}
-            image={Images.NU}
-            title="Navenu Member"
-            description="This is where you are"
-            key="user1"
-          ></Marker>
-          {data.pages.flat().map((venue, index) => (
-            <ISuckMapMarker key={index} venue={venue} />
-          ))}
-        </MapView>
-      )
+          image={Images.NU}
+          title="Navenu Member"
+          description="This is where you are"
+          key="user1"
+        ></Marker>
+        {data.pages.flat().map((venue, index) => (
+          <ISuckMapMarker key={index} venue={venue} />
+        ))}
+      </MapView>
+    )
   },
 )
 

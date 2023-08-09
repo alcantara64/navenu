@@ -4,8 +4,8 @@ import { observer } from "mobx-react-lite"
 
 import { useAnimatedBottom } from "../hooks/useAnimatedBottom"
 import { Colors } from "../theme"
-import { TouchableOpacity } from "react-native-gesture-handler"
 import { getStyleByCategory } from "../utils/transform"
+import { TouchableOpacity } from "react-native-ui-lib"
 
 export interface BottomSheetProps {
   /**
@@ -38,7 +38,13 @@ export const BottomSheet = observer(function BottomSheet(props: BottomSheetProps
             <View />
           </Pressable>
         )}
-        <Animated.View style={[$bottomSheet, { height, bottom }, category && getStyleByCategory(category, false, true)]}>
+        <Animated.View
+          style={[
+            $bottomSheet,
+            { height, bottom },
+            category && getStyleByCategory(category, false, true),
+          ]}
+        >
           <TouchableOpacity onPress={onClose}>
             <View style={$closeButton} />
           </TouchableOpacity>

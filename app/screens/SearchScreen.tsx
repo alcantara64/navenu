@@ -11,12 +11,13 @@ import { useAutoCompleteFeedsSuggestion, useFeedsSearch } from "../hooks/useFeed
 import { transformAutoCompleteResponseToASingleArray } from "../utils/transform"
 import { Ionicons } from "@expo/vector-icons"
 
-
 interface SearchScreenProps extends AppStackScreenProps<"Search"> {}
 export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScreen() {
   const { feedsStore } = useStores()
-  const { catFilters, toggleSaveFeed, searchFilterType,clearAllFilters } = feedsStore
-  const [selectedSearchItems, setSelectedSearchItems] = useState<Array<{display:string, type:string}>>([])
+  const { catFilters, toggleSaveFeed, searchFilterType, clearAllFilters } = feedsStore
+  const [selectedSearchItems, setSelectedSearchItems] = useState<
+    Array<{ display: string; type: string }>
+  >([])
   const [searchText, setSearchText] = useState("")
   const [isInputTouched, setIsInputTouched] = useState(false)
   // const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useFeeds(catFilters)
@@ -34,14 +35,18 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
     isLoading,
     isError,
     refetch,
-  } = useFeedsSearch({ type:searchFilterType as any, selected: catFilters as any, categories:selectedSearchItems  });
+  } = useFeedsSearch({
+    type: searchFilterType as any,
+    selected: catFilters as any,
+    categories: selectedSearchItems,
+  })
 
   // useEffect(() => {
   //   clearAllFilters()
   // })
 
   const onItemSelected = (item: any) => {
-    setSearchText('');
+    setSearchText("")
     if (!selectedSearchItems.includes(item)) {
       setSelectedSearchItems([...selectedSearchItems, item])
       setIsInputTouched(false)
@@ -49,7 +54,9 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
   }
   const onRemoveSelectedSearchItem = (selectedItem: any) => {
     if (selectedItem) {
-      setSelectedSearchItems(selectedSearchItems.filter((item) => item.display !== selectedItem.display))
+      setSelectedSearchItems(
+        selectedSearchItems.filter((item) => item.display !== selectedItem.display),
+      )
     }
   }
   const { onTouchStart, onTouchEnd } = useSwipe(undefined, undefined, onSwipeUp, onSwipeDown, 6)
@@ -68,65 +75,68 @@ export const SearchScreen: FC<SearchScreenProps> = observer(function SearchScree
     setIsInputTouched(true)
   }
 
-
   return (
     <View style={$root}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View margin-8>
-        <View marginB-10>
-          {selectedSearchItems.length > 0 && (
-            <View row style={$chipItemContainer}>
-              {selectedSearchItems.map((item, i) => (
-                <View marginL-5 marginT-5 style={$tagContainer} key={item.display} row spread>
-                  <Text  center red>{item.display}</Text>
-                  <TouchableOpacity onPress={() => {
-                    onRemoveSelectedSearchItem(item);
-                  }} center>
-                    <Ionicons name="close" size={18} color="black" />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
+        <View margin-8>
+          <View marginB-10>
+            {selectedSearchItems.length > 0 && (
+              <View row style={$chipItemContainer}>
+                {selectedSearchItems.map((item, i) => (
+                  <View marginL-5 marginT-5 style={$tagContainer} key={item.display} row spread>
+                    <Text center red>
+                      {item.display}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        onRemoveSelectedSearchItem(item)
+                      }}
+                      center
+                    >
+                      <Ionicons name="close" size={18} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
 
-        <AppInput
-          hasAutoComplete={isInputTouched}
-          knowledgeItems={transformAutoCompleteResponseToASingleArray(
-            autoCompleteError || isLoadingAutocomplete ? [] : autoCompleteData,
-          )}
-          value={searchText}
-          trailingAccessory={<Ionicons name="search" size={24} color="grey" />}
-          onTextChange={handleTextChange}
-          onSelectItem={onItemSelected}
-          isLoading={isLoadingAutocomplete}
-          onBlur={() => {
-            setIsInputTouched(false)
-          }}
-        />
-
-        <View marginT-40>
-        <SkeletonView 
-          height={110}
-          width={Dimensions.get("window").width - 16}
-          style={$skeletonViewStyle}
-          times={6}
-          borderRadius={8}
-          renderContent={() => 
-          <CardList
-            onTouchEnd={onTouchEnd}
-            onTouchStart={onTouchStart}
-            data={searchResults || []}
-            toggleSaveFeed={toggleSaveFeed}
-          />}
-          showContent={!isLoading}
+          <AppInput
+            hasAutoComplete={isInputTouched}
+            knowledgeItems={transformAutoCompleteResponseToASingleArray(
+              autoCompleteError || isLoadingAutocomplete ? [] : autoCompleteData,
+            )}
+            value={searchText}
+            trailingAccessory={<Ionicons name="search" size={24} color="grey" />}
+            onTextChange={handleTextChange}
+            onSelectItem={onItemSelected}
+            isLoading={isLoadingAutocomplete}
+            onBlur={() => {
+              setIsInputTouched(false)
+            }}
           />
-   
+
+          <View marginT-40>
+            <SkeletonView
+              height={110}
+              width={Dimensions.get("window").width - 16}
+              style={$skeletonViewStyle}
+              times={6}
+              borderRadius={8}
+              renderContent={() => (
+                <CardList
+                  onTouchEnd={onTouchEnd}
+                  onTouchStart={onTouchStart}
+                  data={searchResults || []}
+                  toggleSaveFeed={toggleSaveFeed}
+                />
+              )}
+              showContent={!isLoading}
+            />
+          </View>
         </View>
-      </View>
       </TouchableWithoutFeedback>
     </View>
-   
   )
 })
 
@@ -136,11 +146,11 @@ const $root: ViewStyle = {
 const $chipItemContainer: ViewStyle = {
   flexWrap: "wrap",
 }
-const $tagContainer: ViewStyle ={
+const $tagContainer: ViewStyle = {
   borderWidth: 1,
   borderRadius: 5,
   padding: 3,
 }
 const $skeletonViewStyle: ViewStyle = {
-  marginVertical: 3
+  marginVertical: 3,
 }

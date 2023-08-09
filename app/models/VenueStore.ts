@@ -17,22 +17,21 @@ const venue = types.model({
   distance: types.maybe(types.string),
   lat: types.maybe(types.number),
   lng: types.maybe(types.number),
-  drops:types.frozen()
+  drops: types.frozen(),
 })
 export const VenueStoreModel = types
   .model("VenueStore")
   .props({
     showBottomSheet: types.maybe(types.boolean),
-    currentVenue: types.frozen()
-  },
-  )
+    currentVenue: types.frozen(),
+  })
   .actions((self) => ({
-    setCurrentVenue(currentVenue:IVenue){
-    self.currentVenue = currentVenue
+    setCurrentVenue(currentVenue: IVenue) {
+      self.currentVenue = currentVenue
     },
 
-    setBottomSheetStatus(status:boolean){
-     self.showBottomSheet = status
+    setBottomSheetStatus(status: boolean) {
+      self.showBottomSheet = status
     },
   }))
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

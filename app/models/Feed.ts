@@ -41,17 +41,24 @@ export const FeedStore = types
     savedFeeds: types.optional(types.array(Feed), []),
     isMapMode: types.maybe(types.boolean),
     isSearchMode: types.maybe(types.boolean),
-    searchFilterType: types.maybe(
-     types.string
-    ),
+    searchFilterType: types.maybe(types.string),
+    dropsCategoryFilters: types.optional(types.array(types.string), []),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
-    addCartFilter(value) {
-      self.catFilters.push(value)
+    addCartFilter(value: string, type: FEED_TYPE) {
+      if (type === FEED_TYPE.drop) {
+        self.dropsCategoryFilters.push(value)
+      } else {
+        self.catFilters.push(value)
+      }
     },
-    removeCartFilter(filter) {
-      self.catFilters = _.without(self.catFilters, filter)
+    removeCartFilter(filter: string, type: FEED_TYPE) {
+      if (type === FEED_TYPE.drop) {
+        self.dropsCategoryFilters = _.without(self.dropsCategoryFilters, filter)
+      } else {
+        self.catFilters = _.without(self.catFilters, filter)
+      }
     },
     setFeeds(feeds) {
       self.feeds = feeds
@@ -62,8 +69,8 @@ export const FeedStore = types
     setIsLoading(status: boolean) {
       self.isLoading = status
     },
-    clearAllFilters (){
-      self.catFilters = [];
+    clearAllFilters() {
+      self.catFilters = []
     },
 
     async setMapMode(status: boolean) {

@@ -1,4 +1,4 @@
-import { Locale, format, parseISO, parse, isValid } from "date-fns"
+import { Locale, format, parseISO } from "date-fns"
 import I18n from "i18n-js"
 
 import ar from "date-fns/locale/ar-SA"
@@ -18,10 +18,5 @@ export const formatDate = (date: string, dateFormat?: string, options?: Options)
     ...options,
     locale,
   }
-  return format(new Date(date), dateFormat ?? "MM-dd-yyyy", dateOptions)
-}
-
-export const  isValidDate = (date:string) =>{
-  const parsedDate = parse(date, 'P', new Date(), { locale: getLocale() });
-  return isValid(parsedDate);
+  return format(parseISO(date), dateFormat ?? "MMM dd, yyyy", dateOptions)
 }

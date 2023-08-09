@@ -311,7 +311,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             <View style={$modalView}>
               <View marginT-20>
                 <Text>
-                Navenu collects and stores location data of your device in order to provide you with more accurate venue recommendations based on your current location. you will still see venues if you decline tracking but they may not be the closest to you
+                  Navenu collects and stores location data of your device in order to provide you
+                  with more accurate venue recommendations based on your current location. you will
+                  still see venues if you decline tracking but they may not be the closest to you
                 </Text>
               </View>
               <View row spread>

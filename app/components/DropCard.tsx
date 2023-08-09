@@ -16,7 +16,7 @@ import { Colors } from "../theme"
 import { FontAwesome5 } from "@expo/vector-icons"
 import { IFeed } from "../interface/feed"
 import { useNavigation } from "@react-navigation/native"
-import { getStyleByCategory, isItemInUserList } from '../utils/transform'
+import { getStyleByCategory, isItemInUserList } from "../utils/transform"
 import { IUserList } from "../interface/user"
 import { IDrop } from "../interface/drops"
 
@@ -28,36 +28,40 @@ export interface DropCardProps {
   item: IDrop
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
-  isFeed?: boolean,
-  userListData?: IUserList,
-  onRemoveFromUserList?: (feed:any) => void
-  isUserList?:boolean;
-  hideRemove?:boolean;
+  isFeed?: boolean
+  userListData?: IUserList
+  onRemoveFromUserList?: (feed: any) => void
+  isUserList?: boolean
+  hideRemove?: boolean
 }
 
 /**
  * Describe your component here
  */
 export const DropCard = observer(function DropCard(props: DropCardProps) {
-  const { item, onBookMark, isFeed, userListData, isUserList, onRemoveFromUserList,hideRemove } = props
-  const navigation = useNavigation();
-
+  const { item, onBookMark, isFeed, userListData, isUserList, onRemoveFromUserList, hideRemove } =
+    props
+  const navigation = useNavigation()
 
   const saveDrop = () => {
     onBookMark(item)
   }
-  const onDropPress = (venue) => {
+  const onDropPress = (drop) => {
     navigation.navigate("DropScreen", {
-      venue,
+      drop,
     })
   }
   const removeFromUserList = () => {
     onRemoveFromUserList(item)
-
   }
 
   return (
-    <TouchableOpacity style={$dropCardContainer} key={item.id} onPress={() => onDropPress(item)} activeOpacity={0.1}>
+    <TouchableOpacity
+      style={$dropCardContainer}
+      key={item.id}
+      onPress={() => onDropPress(item)}
+      activeOpacity={0.1}
+    >
       <ImageBackground
         source={{ uri: item.image }}
         imageStyle={$imageBackground}
@@ -72,26 +76,25 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
                 {item.name}
               </Text>
             </View>
-            {isFeed && <View flex-1 right>
-              <TouchableOpacity onPress={saveDrop}>
-                <FontAwesome5
-                  solid={isItemInUserList(item.id, userListData)}
-                  name="bookmark"
-                  size={20}
-                  color="#FFFFFF"
-                />
-              </TouchableOpacity>
-            </View>}
-            {isUserList && !isFeed && !hideRemove && <View flex-1 right>
-              <TouchableOpacity onPress={removeFromUserList}>
-                <FontAwesome5
-                  solid
-                  name="times-circle"
-                  size={20}
-                  color="#FFFFFF"
-                />
-              </TouchableOpacity>
-            </View>}
+            {isFeed && (
+              <View flex-1 right>
+                <TouchableOpacity onPress={saveDrop}>
+                  <FontAwesome5
+                    solid={isItemInUserList(item.id, userListData)}
+                    name="bookmark"
+                    size={20}
+                    color="#FFFFFF"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+            {isUserList && !isFeed && !hideRemove && (
+              <View flex-1 right>
+                <TouchableOpacity onPress={removeFromUserList}>
+                  <FontAwesome5 solid name="times-circle" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           {item.expiration && !item.expired && !item.user_claimed && (
             <View
@@ -106,15 +109,23 @@ export const DropCard = observer(function DropCard(props: DropCardProps) {
               <CountdownTimer time={item.expiration} />
             </View>
           )}
-         {item.expired && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText}> EXPIRED</Text></View>)}
-         {item.user_claimed && !item.expired && item.user_code && (<View marginB-8 style={$expiredDroContainer}><Text style={$expiredText} > {item.user_code}</Text></View>)}
+          {item.expired && (
+            <View marginB-8 style={$expiredDroContainer}>
+              <Text style={$expiredText}> EXPIRED</Text>
+            </View>
+          )}
+          {item.user_claimed && !item.expired && item.user_code && (
+            <View marginB-8 style={$expiredDroContainer}>
+              <Text style={$expiredText}> {item.user_code}</Text>
+            </View>
+          )}
         </View>
       </ImageBackground>
     </TouchableOpacity>
   )
 })
 
-const $dropCardContainer:ViewStyle = {
+const $dropCardContainer: ViewStyle = {
   minHeight: 100,
 }
 const $cardTextContainer: TextStyle = {
@@ -127,6 +138,7 @@ const $imageFilter: ViewStyle = {
   left: 0,
   right: 0,
   bottom: 0,
+  borderRadius: 8,
 }
 const $countdownText: TextStyle = {
   color: "#FFFFFF",
@@ -156,8 +168,8 @@ const $countDownContainer: ViewStyle = {
   padding: 2,
   display: "flex",
   alignSelf: "flex-start",
-  alignItems: 'center',
-  justifyContent: 'center'
+  alignItems: "center",
+  justifyContent: "center",
 }
 const $expiredDroContainer: ViewStyle = {
   backgroundColor: Colors.ash,

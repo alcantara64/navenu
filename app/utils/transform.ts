@@ -96,12 +96,12 @@ export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete)
       transFormedData.push({ type: "Curator", display: `Curator:${curator}` })
     })
   }
-  if(data.drop && data.drop.length){
+  if (data.drop && data.drop.length) {
     data.drop.forEach((drop) => {
       transFormedData.push({ type: "Drop", display: `Drop:${drop}` })
     })
   }
-  if(data.article && data.article.length){
+  if (data.article && data.article.length) {
     data.article.forEach((singleArticle) => {
       transFormedData.push({ type: "Article", display: `Article:${singleArticle}` })
     })
@@ -112,43 +112,46 @@ export const transformAutoCompleteResponseToASingleArray = (data: IAutoComplete)
  * Takes a sentence and covert it to a title case for  john to John
  @param sentence
  **/
-export const makeTitleCase = (sentence: string) =>{
-  if(!sentence)return '';
- 
- return sentence
+export const makeTitleCase = (sentence: string) => {
+  if (!sentence) return ""
+
+  return sentence
     .split(" ")
     .map(([firstChar, ...rest]) => firstChar.toUpperCase() + rest.join("").toLowerCase())
     .join(" ")
 }
 
 export const isItemInUserList = (id: any, DataListData: IUserList) => {
-  if(!DataListData) return false
+  if (!DataListData) return false
   return Object.keys(DataListData.userlist).some((key) => {
     return DataListData.userlist[key].cards.some((card) => {
-      if(card.id && id){
-      return card.id?.toString() === id?.toString()
-      }else{
+      if (card.id && id) {
+        return card.id?.toString() === id?.toString()
+      } else {
         return false
       }
     })
   })
 }
 export const getUserListIdByItemId = (id: any, DataListData: IUserList) => {
-  let userListId;
-  if(DataListData){
+  let userListId
+  if (DataListData) {
     Object.keys(DataListData.userlist).some((key) => {
       return DataListData.userlist[key].cards.some((card) => {
-
-        if( card.id?.toString() === id?.toString()){
+        if (card.id?.toString() === id?.toString()) {
           userListId = DataListData.userlist[key].user_list_id
           return true
         }
       })
     })
   }
-  return userListId;
+  return userListId
 }
-export const shareLink = (title:string, message="Check out Navenu", url="https://www.navenu.com") => {
+export const shareLink = (
+  title: string,
+  message = "Check out Navenu",
+  url = "https://www.navenu.com",
+) => {
   Share.share({
     message,
     url,

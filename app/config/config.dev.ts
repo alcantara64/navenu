@@ -6,5 +6,6 @@
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
 export default {
-  API_URL: process.env.API_URL || 'https://api.navenu.com/api',
+  API_URL: process.env.API_URL || "https://api.navenu.com/api",
+  DEEP_LINK_URL: "https://navenuapp.page.link",
 }

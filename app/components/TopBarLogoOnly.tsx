@@ -3,12 +3,7 @@ import { ViewStyle, Image, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { View } from "react-native-ui-lib"
 
-
-
-
 export const TopBarLogoOnly = observer(function TopBarLogoOnly() {
-
-
   return (
     <View style={$container}>
       <View flex center>

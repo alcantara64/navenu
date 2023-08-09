@@ -33,10 +33,9 @@ export const LoadingIndicator = observer(function LoadingIndicator(props: Loadin
 })
 
 const $container: ViewStyle = {
-  position: 'absolute',
+  position: "absolute",
   top: 20,
-  left:20,
+  left: 20,
   right: 20,
   bottom: 20,
-
 }

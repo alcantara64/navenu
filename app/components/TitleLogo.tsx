@@ -15,9 +15,9 @@ export interface TitleLogoProps {
 export const TitleLogo = observer(function TitleLogo(props: TitleLogoProps) {
   const { style } = props
   const $styles = [$container, style]
-  console.log($styles);
+  console.log($styles)
 
-  return <Image source={require('../../assets/navenu-logo.png')} style={$container} />;
+  return <Image source={require("../../assets/navenu-logo.png")} style={$container} />
 })
 
 const $container: ImageStyle = {

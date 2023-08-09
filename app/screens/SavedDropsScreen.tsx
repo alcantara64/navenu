@@ -16,18 +16,20 @@ import { Screen, Text } from "../components"
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
-export const SavedDropsScreen: FC<StackScreenProps<AppStackScreenProps, "SavedDrops">> = observer(function SavedDropsScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+export const SavedDropsScreen: FC<StackScreenProps<AppStackScreenProps, "SavedDrops">> = observer(
+  function SavedDropsScreen() {
+    // Pull in one of our MST stores
+    // const { someStore, anotherStore } = useStores()
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
-  return (
-    <Screen style={$root} preset="scroll">
-      <Text text="savedDrops" />
-    </Screen>
-  )
-})
+    // Pull in navigation via hook
+    // const navigation = useNavigation()
+    return (
+      <Screen style={$root} preset="scroll">
+        <Text text="savedDrops" />
+      </Screen>
+    )
+  },
+)
 
 const $root: ViewStyle = {
   flex: 1,

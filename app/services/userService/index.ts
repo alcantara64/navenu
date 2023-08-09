@@ -20,7 +20,7 @@ export class UserService {
 
   async getUsers() {
     const response: ApiResponse<UserResponse> = await this.httpClient.get("/users")
-    console.log(response);
+    console.log(response)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -142,15 +142,15 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
-  async removeCardFromList(payload:DeleUserListPayload) {
-    const formData = new FormData();
-    formData.append('user_list_id', payload.user_list_id);
-    formData.append('id', payload.id);
-    formData.append('type', payload.type);
+  async removeCardFromList(payload: DeleUserListPayload) {
+    const formData = new FormData()
+    formData.append("user_list_id", payload.user_list_id)
+    formData.append("id", payload.id)
+    formData.append("type", payload.type)
     const response: ApiResponse<IDeleteUserListResponse> = await this.httpClient.post(
       "/UserLists/remove",
       formData,
-    );
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -174,7 +174,7 @@ export class UserService {
   async saveUserPreference(payload: IUserPreference) {
     const formData = new FormData()
     formData.append(`user_preferences`, JSON.stringify(payload))
-    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData);
+    const response: ApiResponse<any> = await this.httpClient.post(`/Users/preferences`, formData)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -183,11 +183,12 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
-  async refreshToken(payload: {refresh_token:string}) {
+  async refreshToken(payload: { refresh_token: string }) {
     const formData = new FormData()
     formData.append(`refresh_token`, payload.refresh_token)
 
-    const response: ApiResponse<{data:{refresh_token:string, token:string}}> = await this.httpClient.post(`/Authentication/refresh`, formData);
+    const response: ApiResponse<{ data: { refresh_token: string; token: string } }> =
+      await this.httpClient.post(`/Authentication/refresh`, formData)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -196,15 +197,12 @@ export class UserService {
     return { kind: "ok", data: rawData.data }
   }
 
-  async subScribeToNotification(payload: {type: FEED_TYPE, id: string}) {
+  async subScribeToNotification(payload: { type: FEED_TYPE; id: string }) {
     const formData = new FormData()
     formData.append("type", payload.type)
-    formData.append('id',payload.id);
-    
-    const response: ApiResponse<any> = await this.httpClient.post(
-      "/users/subscribe",
-      formData,
-    )
+    formData.append("id", payload.id)
+
+    const response: ApiResponse<any> = await this.httpClient.post("/users/subscribe", formData)
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
@@ -213,29 +211,32 @@ export class UserService {
     return { kind: "ok", results: rawData }
   }
 
-  async register(payload: {email:string, password:string}) {
+  async register(payload: { email: string; password: string }) {
     const formData = new FormData()
     formData.append(`email`, payload.email)
     formData.append(`password`, payload.password)
-    
-    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/register`, formData)
+
+    const response: ApiResponse<any> = await this.httpClient.post(
+      `/Authentication/register`,
+      formData,
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
- 
+
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
   }
 
   async socialRegister(payload: {
-    email: string,
-    authType: string,
-    socialId: string,
-    firstName?: string,
-    lastName?: string,
-    avatar?: string,
-  }){
+    email: string
+    authType: string
+    socialId: string
+    firstName?: string
+    lastName?: string
+    avatar?: string
+  }) {
     const formData = new FormData()
     formData.append(`email`, payload.email)
     formData.append(`authType`, payload.authType)
@@ -244,42 +245,51 @@ export class UserService {
     formData.append(`lastName`, payload.lastName)
     formData.append(`avatar`, payload.avatar)
 
-    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/social`, formData)
+    const response: ApiResponse<any> = await this.httpClient.post(
+      `/Authentication/social`,
+      formData,
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
- 
+
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
   }
 
-  async savePushNotificationToken(payload: {
-    deviceType: string
-    deviceToken: string
-  }, apiToken: string){
+  async savePushNotificationToken(
+    payload: {
+      deviceType: string
+      deviceToken: string
+    },
+    apiToken: string,
+  ) {
     const formData = new FormData()
     formData.append(`device_token`, payload.deviceToken)
     formData.append(`device_type`, payload.deviceType)
- 
 
-    const response: ApiResponse<any> = await this.httpClient.post(`/Authentication/token`, formData, {headers:{
-      Authorization: apiToken
-    }})
+    const response: ApiResponse<any> = await this.httpClient.post(
+      `/Authentication/token`,
+      formData,
+      {
+        headers: {
+          Authorization: apiToken,
+        },
+      },
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
- 
+
     const rawData = response.data
     return { kind: "ok", data: rawData.data }
   }
 
   async deleteAccount() {
- 
-    const response: ApiResponse<any> = await this.httpClient.delete('/Users'
-    );
-    console.log({response})
+    const response: ApiResponse<any> = await this.httpClient.delete("/Users")
+    console.log({ response })
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem

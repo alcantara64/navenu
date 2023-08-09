@@ -33,13 +33,12 @@ export const NotificationCard = observer(function NotificationCard(props: Notifi
         <Text>{subTitle}</Text>
       </View>
       <View spread flex-1>
-      <TouchableOpacity marginB-8>
+        <TouchableOpacity marginB-8>
           <MaterialIcons name="ios-share" size={24} color="#black" />
         </TouchableOpacity>
-        <TouchableOpacity >
+        <TouchableOpacity>
           <AntDesign name="delete" size={24} color="black" />
         </TouchableOpacity>
-  
       </View>
     </View>
   )

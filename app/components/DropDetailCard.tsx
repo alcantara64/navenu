@@ -8,9 +8,17 @@ import { DropCard } from "./DropCard"
 import { useState } from "react"
 import { IDrop } from "../interface/drops"
 import { CountdownTimer, Gallery, RemoveAndAddToUserList, VenueCard } from "."
-import { getStyleByCategory, getUserListIdByItemId, isItemInUserList, shareLink } from "../utils/transform"
+import {
+  getStyleByCategory,
+  getUserListIdByItemId,
+  isItemInUserList,
+  shareLink,
+} from "../utils/transform"
 import { useUserList } from "../hooks/useUser"
 import { UserService } from "../services/userService"
+
+import { DynamicLinkServices } from "../../app/services/firebase/dynamicLinkServices"
+import Config from "../config"
 
 export interface DropDropDetailCardProps {
   /**
@@ -32,20 +40,22 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
   const { style, drop, navigation, onClaimCode, refetchDrop } = props
   const $styles = [$container, style]
   const userList = useUserList()
-  const [bookmark, setBookmark] = useState(false)
   const [showListModal, setShowListModal] = useState(false)
 
   const goBack = () => {
     navigation.goBack()
   }
-  const saveDrop = () => {
-    setBookmark(!bookmark)
+
+  const shareDropLink = async () => {
+    const deepLink = `${Config.DEEP_LINK_URL}/drop/${drop.id}`
+    const link = await DynamicLinkServices.buildLink(deepLink)
+    shareLink(drop.name, `Checkout ${drop.name} on Navenu`, link)
   }
   const onVenuePress = (venue) => {
-    navigation.navigate('VenueDetailScreen', {
-      venue
+    navigation.navigate("VenueDetailScreen", {
+      venue,
     })
-  } 
+  }
   const onBookMark = async () => {
     if (!isItemInUserList(drop.id, userList.data)) {
       setShowListModal(true)
@@ -77,27 +87,29 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             <View></View>
           </View>
 
-          <View flex-1 center paddingB-20 spread >
-            <TouchableOpacity
-              style={{ marginVertical: 15 }}
-              onPress={() => shareLink(drop.name, `Checkout ${drop.name} on Navenu`, 'https://navenuapp.page.link/drop')}
-            >
+          <View flex-1 center paddingB-20 spread>
+            <TouchableOpacity style={{ marginVertical: 15 }} onPress={shareDropLink}>
               <MaterialIcons name="ios-share" size={30} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onBookMark} style={{ marginVertical: 5 }}>
-              <FontAwesome5 solid={isItemInUserList(drop.id, userList.data)} name="bookmark" size={30} color="#FFFFFF" />
+              <FontAwesome5
+                solid={isItemInUserList(drop.id, userList.data)}
+                name="bookmark"
+                size={30}
+                color="#FFFFFF"
+              />
             </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
-      <View style={{...$contentContainer, ...getStyleByCategory(drop.category)}}>
+      <View style={{ ...$contentContainer, ...getStyleByCategory(drop.category) }}>
         <View flex style={$dropContent} padding-20>
           {drop.description && (
             <View>
               <Text belowHeaderText>{drop.description}</Text>
             </View>
           )}
-          <View flex row marginB-10 marginT-10 spread >
+          <View flex row marginB-10 marginT-10 spread>
             {drop.user_claimed && (
               <>
                 <Button
@@ -106,7 +118,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
                   color="white"
                   borderRadius={10}
                   backgroundColor={getStyleByCategory(drop.category).backgroundColor}
-                  labelStyle ={$buttonLabel}
+                  labelStyle={$buttonLabel}
                 />
                 <Button
                   size="large"
@@ -114,21 +126,30 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
                   color="white"
                   borderRadius={10}
                   backgroundColor={Colors.ash}
-                  labelStyle ={$buttonLabel}
+                  labelStyle={$buttonLabel}
                 />
               </>
             )}
             {!drop.user_claimed && (
               <>
-                <View marginL-4 row style={{...$countDownContainer, ...getStyleByCategory(drop.category), borderColor:getStyleByCategory(drop.category).backgroundColor, opacity: drop.expired? 0.4: 1}}>
-                  <Text style={$countdownText}>{!drop.expired ?'ENDS IN': 'Expired'}</Text>
+                <View
+                  marginL-4
+                  row
+                  style={{
+                    ...$countDownContainer,
+                    ...getStyleByCategory(drop.category),
+                    borderColor: getStyleByCategory(drop.category).backgroundColor,
+                    opacity: drop.expired ? 0.4 : 1,
+                  }}
+                >
+                  <Text style={$countdownText}>{!drop.expired ? "ENDS IN" : "Expired"}</Text>
                   {!drop.expired && <CountdownTimer time={drop.expiration} />}
                 </View>
                 <Button
                   size="large"
                   fullWidth
                   disabled={drop.expired}
-                  label={ "CLAIM CODE!"}
+                  label={"CLAIM CODE!"}
                   color="white"
                   onPress={onClaimCode}
                   style={$claimButton}
@@ -138,7 +159,7 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
             )}
           </View>
           <View row marginT-10 marginB-10>
-           {drop.images?.length > 0 && <Gallery items={drop.images}></Gallery>}
+            {drop.images?.length > 0 && <Gallery items={drop.images}></Gallery>}
           </View>
           <View row style={$horizontalLine}></View>
           <View row marginT-20 marginB-10>
@@ -146,20 +167,33 @@ export const DropDropDetailCard = observer(function DropDropDetailCard(
           </View>
 
           <View>
-           <VenueCard isFeed={false} item={{name:drop.venue, category:drop.category, image:drop.venue_image, distance: drop.distance || 0, id:drop.venue_id}} onPress={onVenuePress}/>
+            <VenueCard
+              isFeed={false}
+              item={{
+                name: drop.venue,
+                category: drop.category,
+                image: drop.venue_image,
+                distance: drop.distance || 0,
+                id: drop.venue_id,
+              }}
+              onPress={onVenuePress}
+            />
           </View>
 
           <View row marginT-20 marginB-10>
             <Text sectionHeader>ALL DROPS</Text>
           </View>
-          <View>
-            {drop &&
-              drop.drops.map((item) => <DropCard key={item.id} item={item} />)}
-          </View>
+          <View>{drop && drop.drops.map((item) => <DropCard key={item.id} item={item} />)}</View>
           <View row style={$horizontalLine}></View>
         </View>
       </View>
-      <RemoveAndAddToUserList  showListModal={showListModal} setShowListModal={setShowListModal} selectedFeedItem={drop} queryKey={{ queryKey: ["drop-detail", drop.id], }} onRefetch={refetchDrop}/>
+      <RemoveAndAddToUserList
+        showListModal={showListModal}
+        setShowListModal={setShowListModal}
+        selectedFeedItem={drop}
+        queryKey={{ queryKey: ["drop-detail", drop.id] }}
+        onRefetch={refetchDrop}
+      />
     </View>
   )
 })
@@ -234,7 +268,7 @@ const $countDownContainer: ViewStyle = {
   backgroundColor: Colors.orange,
   borderRadius: 5,
   padding: 5,
-  alignItems: 'center',
+  alignItems: "center",
 }
 const $countdownText: TextStyle = {
   marginBottom: 0,
@@ -245,11 +279,11 @@ const $countdownText: TextStyle = {
   fontSize: 15,
 }
 const $claimButton: ViewStyle = {
-  borderRadius: 5
+  borderRadius: 5,
 }
-const $buttonLabel: TextStyle ={
-  fontFamily: 'Inter-Regular',
-  textTransform: 'uppercase',
+const $buttonLabel: TextStyle = {
+  fontFamily: "Inter-Regular",
+  textTransform: "uppercase",
   color: Colors.white,
   fontSize: 18,
 }

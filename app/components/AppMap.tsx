@@ -31,9 +31,9 @@ export interface AppMapProps {
   onSetLatitude: (value: number) => void
   onSetLongitude: (value: number) => void
   latitude: number
-  longitude: number,
-  initialLatitude?: number,
-  initialLongitude?: number,
+  longitude: number
+  initialLatitude?: number
+  initialLongitude?: number
   directions?: {
     origin: {
       latitude: number
@@ -48,7 +48,7 @@ export interface AppMapProps {
   showBottomSheet?: boolean
   ExternalMakers?: React.ReactNode
   useExternalMarkers?: boolean
-  isfromNearBy?:boolean,
+  isfromNearBy?: boolean
 }
 
 /**
@@ -68,19 +68,17 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
     directions,
     initialLatitude,
     initialLongitude,
-    isfromNearBy
-
+    isfromNearBy,
   } = props
   const $styles = [$container, style]
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [currentFeed, setCurrentFeed] = useState<IDrop | IVenue | null>(null)
   const mapRef = React.useRef<MapView>(null)
-  const {venueStore} = useStores();
-  
+  const { venueStore } = useStores()
 
   useEffect(() => {
-    venueStore.setBottomSheetStatus(false);
-  },[])
+    venueStore.setBottomSheetStatus(false)
+  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -102,21 +100,23 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
   const handleMarkerPressed = (feed: IDrop | IVenue) => {
     setCurrentFeed(feed)
     setShowBottomSheet(true)
-    if(isfromNearBy){
-    
-    if(feed.type === 'location'){
-    venueStore.setCurrentVenue(feed);
-    venueStore.setBottomSheetStatus(true)
+    if (isfromNearBy) {
+      if (feed.type === "location") {
+        venueStore.setCurrentVenue(feed)
+        venueStore.setBottomSheetStatus(true)
+      }
     }
-  }
   }
 
   React.useEffect(() => {
-    if(directions){
+    if (directions) {
       mapRef.current?.fitToCoordinates(
         [
           { latitude: directions.origin.latitude, longitude: directions.origin.longitude },
-          { latitude: directions.destination.latitude, longitude: directions.destination.longitude },
+          {
+            latitude: directions.destination.latitude,
+            longitude: directions.destination.longitude,
+          },
         ],
         {
           edgePadding: { top: 300, right: 300, bottom: 300, left: 300 },
@@ -133,10 +133,11 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         style={$styles}
         initialRegion={{
           latitude: initialLatitude || latitude,
-          longitude:initialLongitude || longitude,
+          longitude: initialLongitude || longitude,
           // todo work on longitude delta, important for zooming
           latitudeDelta: 0.0091,
-          longitudeDelta: 0.0091 * (Dimensions.get("window").width / Dimensions.get("window").height),
+          longitudeDelta:
+            0.0091 * (Dimensions.get("window").width / Dimensions.get("window").height),
         }}
         zoomTapEnabled
         zoomEnabled
@@ -158,9 +159,15 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
           ))}
         {!useExternalMarkers && ExternalMakers}
         {directions && directions.origin && directions.destination ? (
-          <MapViewDirections 
-            origin={{ latitude: directions.origin.latitude, longitude: directions.origin.longitude }} 
-            destination={{ latitude: directions.destination.latitude, longitude: directions.destination.longitude }} 
+          <MapViewDirections
+            origin={{
+              latitude: directions.origin.latitude,
+              longitude: directions.origin.longitude,
+            }}
+            destination={{
+              latitude: directions.destination.latitude,
+              longitude: directions.destination.longitude,
+            }}
             strokeWidth={5}
             strokeColor="hotpink"
             apikey={GOOGLE_MAPS_API_KEY}
@@ -168,9 +175,16 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
         ) : null}
       </MapView>
       {showBottomSheet && (venueStore.showBottomSheet !== true || !isfromNearBy) && (
-        <AppBottomsheet  onClose={handleBottomSheetClose}>
-          {currentFeed?.type === FEED_TYPE.location && <VenueCard currentUserLatitude={latitude} currentUserLongitude={longitude} item={currentFeed} />}
-          {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed />}
+        <AppBottomsheet onClose={handleBottomSheetClose}>
+          {currentFeed?.type === FEED_TYPE.location && (
+            <VenueCard
+              currentUserLatitude={latitude}
+              currentUserLongitude={longitude}
+              item={currentFeed}
+              isFeed={false}
+            />
+          )}
+          {currentFeed?.type === FEED_TYPE.drop && <DropCard item={currentFeed} isFeed={false} />}
           {getDropsByID(currentFeed.drops as any, item).length > 0 && (
             <View>
               <View>
@@ -178,7 +192,7 @@ export const AppMap = observer(function AppMap(props: AppMapProps) {
               </View>
               <FlatList
                 data={getDropsByID(currentFeed.drops as any, item)}
-                renderItem={(item) => <DropCard item={item} isFeed />}
+                renderItem={(item) => <DropCard item={item} isFeed={false} />}
               />
             </View>
           )}

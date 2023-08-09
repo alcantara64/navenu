@@ -22,7 +22,7 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
   const $styles = [$container, style]
 
   // ref
-   const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetRef = useRef<BottomSheet>(null)
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], [])
@@ -31,30 +31,24 @@ export const AppBottomsheet = observer(function AppBottomsheet(props: AppBottoms
     console.log("handleSheetChanges", index)
   }, [])
   return (
-  
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        enablePanDownToClose
-        onClose={onClose}
-        
-  
-      >
-        <View style={$contentContainer}>{children}</View>
-      </BottomSheet>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}
+      enablePanDownToClose
+      onClose={onClose}
+    >
+      <View style={$contentContainer}>{children}</View>
+    </BottomSheet>
   )
 })
 
 const $container: ViewStyle = {
-  backgroundColor: 'transparent'
-
+  backgroundColor: "transparent",
 }
 
 const $contentContainer: ViewStyle = {
-  flex:1,
-  padding:15,
-  
-
+  flex: 1,
+  padding: 15,
 }

@@ -35,9 +35,9 @@ export interface NearByVenuesProps {
       longitude: number
     }
   }
-  defaultLocation:{
+  defaultLocation: {
     latitude: number
-      longitude: number
+    longitude: number
   }
   setLatitude: React.Dispatch<React.SetStateAction<number>>
   setLongitude: React.Dispatch<React.SetStateAction<number>>
@@ -48,9 +48,8 @@ export interface NearByVenuesProps {
  * Describe your component here
  */
 export const NearByVenues = observer(function NearByVenues(props: NearByVenuesProps) {
-  const { style, venues, setLatitude, setLongitude, destinationDirections, defaultLocation } = props;
+  const { style, venues, setLatitude, setLongitude, destinationDirections, defaultLocation } = props
 
-  
   const $styles = [$container, style]
   const [DoStateButton, setDoStateButton] = useState(false)
   const [EatStateButton, setEatStateButton] = useState(false)
@@ -60,16 +59,18 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   const [FitStateButton, setFitStateButton] = useState(false)
   const [miniFilter, setMiniFilter] = useState([])
   const [selectedVenue, setSelectedVenue] = useState<IVenue>(null)
-  const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const {venueStore} = useStores()
-  const {authenticationStore:{latitude, longitude}} = useStores() 
+  const [showBottomSheet, setShowBottomSheet] = useState(false)
+  const { venueStore } = useStores()
+  const {
+    authenticationStore: { latitude, longitude },
+  } = useStores()
   const addCat = (cat) => {
     setMiniFilter([...miniFilter, cat])
   }
   const onMarkerPress = (venue) => {
     setSelectedVenue(venue)
     setShowBottomSheet(true)
-    venueStore.setCurrentVenue(venue);
+    venueStore.setCurrentVenue(venue)
     venueStore.setBottomSheetStatus(true)
   }
   const removeCat = (cat) => {
@@ -81,7 +82,15 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   let Venuecards
 
   if (miniFilter.length === 0) {
-    Venuecards = venues.map((venue, index) =>  <VenueCard item={venue} key={"g" + index} isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />)
+    Venuecards = venues.map((venue, index) => (
+      <VenueCard
+        item={venue}
+        key={"g" + index}
+        isFeed={false}
+        currentUserLatitude={latitude}
+        currentUserLongitude={longitude}
+      />
+    ))
 
     Markers = venues.map((venue, index) => (
       <ISuckMapMarker onMarkerPressed={onMarkerPress} venue={venue} key={"f" + index} />
@@ -89,7 +98,15 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
   } else {
     Venuecards = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
-        return <VenueCard item={venue} key={"m" + index}  isFeed={false} currentUserLatitude={latitude} currentUserLongitude={longitude} />
+        return (
+          <VenueCard
+            item={venue}
+            key={"m" + index}
+            isFeed={false}
+            currentUserLatitude={latitude}
+            currentUserLongitude={longitude}
+          />
+        )
     })
     Markers = venues.map((venue, index) => {
       if (miniFilter.includes(venue.category))
@@ -100,13 +117,13 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
     setShowBottomSheet(false)
   }
   return (
-    <View flex-1 >
-      <View marginB-10 marginL-10 >
+    <View flex-1>
+      <View marginB-10 marginL-10>
         <Text left sectionHeader>
           Venues Near By
         </Text>
       </View>
-      <View centerH flex  marginB-10>
+      <View centerH flex marginB-10>
         <CategoryFilterBar
           addCat={addCat}
           removeCat={removeCat}
@@ -130,7 +147,11 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         longitude={destinationDirections.origin.longitude}
         onSetLatitude={setLatitude}
         onSetLongitude={setLongitude}
-        item={miniFilter.length > 0? venues.filter((venue) => miniFilter.includes(venue.category)): venues}
+        item={
+          miniFilter.length > 0
+            ? venues.filter((venue) => miniFilter.includes(venue.category))
+            : venues
+        }
         useExternalMarkers
         ExternalMakers={Markers}
         style={$mapHeight}
@@ -153,7 +174,13 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
         isfromNearBy
       />
       <BottomSheet show={showBottomSheet} onClose={handleBottomSheetClose} height={600}>
-        {selectedVenue && <VenueCard currentUserLatitude={destinationDirections.destination.latitude} currentUserLongitude={destinationDirections.destination.longitude} item={selectedVenue} />}
+        {selectedVenue && (
+          <VenueCard
+            currentUserLatitude={destinationDirections.destination.latitude}
+            currentUserLongitude={destinationDirections.destination.longitude}
+            item={selectedVenue}
+          />
+        )}
         {getDropsByID(selectedVenue?.drops as any, venues).length > 0 && (
           <View>
             <View>
@@ -166,7 +193,9 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
           </View>
         )}
       </BottomSheet>
-      <View flex marginR-5 marginL-5 marginT-15>{Venuecards}</View>
+      <View flex marginR-5 marginL-5 marginT-15>
+        {Venuecards}
+      </View>
     </View>
   )
 })
@@ -174,8 +203,6 @@ export const NearByVenues = observer(function NearByVenues(props: NearByVenuesPr
 const $container: ViewStyle = {
   justifyContent: "center",
 }
-const $mapHeight: ViewStyle ={
-  height: 300
+const $mapHeight: ViewStyle = {
+  height: 300,
 }
-
-

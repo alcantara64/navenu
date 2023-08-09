@@ -1,81 +1,137 @@
-import React from "react"
-import { CardviewScreen, HomeScreen,NotificationScreen, SavedDropsScreen, UserProfileScreen } from "../screens"
-import { FontAwesome5, Foundation, Ionicons } from "@expo/vector-icons"
+import React, { useEffect, useLayoutEffect } from "react"
+import { CuratorsScreen, DropsScreen, EditorialsScreen, HomeScreen, VenuesScreen } from "../screens"
+import { Foundation, MaterialIcons } from "@expo/vector-icons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { TopBarLogoOnly } from "../components/TopBarLogoOnly"
-import { MainStack, SearchStack } from "./MainNavigationNavigator"
-import { ProfileButton } from "../components/ProfileButton"
 import { TopBar } from "../components/TopBar"
-import { BottomTabLogo } from "../components"
 import { Colors } from "../theme"
+import { BottomTabLogo } from "../components/BottomTabLogo"
+// import { CopilotStep, useCopilot, walkthroughable } from "react-native-copilot"
+import DropIcon from "../../assets/icons/bottom-tab/drop.svg"
+import ArticleIcon from "../../assets/icons/bottom-tab/article.svg"
+import { View } from "react-native"
+import { useStores } from "../../app/models"
+
 
 export type BottomNavigationNavigatorParamList = {
   Demo: undefined
   Feed: undefined
   Search: undefined
   Location: undefined
-  SavedDrops: undefined
+  Drops: undefined
   Settings: undefined
   Notification: undefined
+  Curators: undefined
 }
 
 const BottomTab = createBottomTabNavigator<BottomNavigationNavigatorParamList>()
-export const BottomNavigationNavigator = () => {
+export const BottomNavigationNavigator: React.FC<any> = () => {
+  // const { copilotEvents } = useCopilot()
+  const {
+    authenticationStore: { setOnboardingStatus },
+  } = useStores()
+  // useEffect(() => {
+  //   const startCopilot = () => {
+  //     const listener = () => {
+  //       setOnboardingStatus(true)
+  //     }
+
+  //     copilotEvents.on("stop", listener)
+
+  //     return () => {
+  //       copilotEvents.off("stop", listener)
+  //     }
+  //   }
+  //   startCopilot()
+  // }, [copilotEvents])
+  const WalkthroughableView = View
+
   return (
     <BottomTab.Navigator
       initialRouteName="Feed"
-      screenOptions={{ tabBarActiveTintColor: Colors.black,  }}
+      screenOptions={{ tabBarActiveTintColor: Colors.black }}
     >
       <BottomTab.Screen
         name="Feed"
-        component={MainStack}
+        component={VenuesScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <Foundation name="home" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <View name="homeIcon" order={3} text="Venues, by category and neighborhood ">
+              <WalkthroughableView>
+                <Foundation name="home" size={size} color={color} />
+              </WalkthroughableView>
+            </View>
+          ),
+          headerShown: true,
+          header: ({ navigation }) => <TopBar isShowMap navigation={navigation} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Curators"
+        component={CuratorsScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size }) => (
+            <View name="search" order={4} text="Meet  Navenu’s curators">
+              <WalkthroughableView>
+                <MaterialIcons name="groups" color={color} size={35} />
+              </WalkthroughableView>
+            </View>
+          ),
           headerShown: false,
           header: ({ navigation }) => <TopBar navigation={navigation} />,
         }}
       />
       <BottomTab.Screen
-        name="Search"
-        component={SearchStack}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <FontAwesome5 name="search" color={color} size={size} />,
-          headerShown: false,
-          tabBarHideOnKeyboard:false
-          
-        }}
-      />
-      <BottomTab.Screen
-        name="SavedDrops"
+        name="Demo"
         component={HomeScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <BottomTabLogo />,
-          header: () => <TopBarLogoOnly />,
-         
+          headerShadowVisible: true,
+          tabBarIcon: ({ focused }) => (
+            <View
+              name="recEngine"
+              order={5}
+              text="Filter your search with our curated recommendations"
+            >
+              <WalkthroughableView>
+                <BottomTabLogo isFocused={focused} />
+              </WalkthroughableView>
+            </View>
+          ),
+          header: ({ navigation }) => <TopBar navigation={navigation} />,
         }}
       />
       <BottomTab.Screen
-        name="Notification"
-        component={NotificationScreen}
+        name="Drops"
+        component={DropsScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, route }) => {
-            return(
-            <Ionicons name="notifications-outline"  size={size} color={color} />
-          )},
-          header: () => <TopBarLogoOnly />,
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View name="drop" order={6} text="The latest's drops all in one place">
+                <WalkthroughableView>
+                  <DropIcon opacity={focused ? 1 : 0.5} />
+                </WalkthroughableView>
+              </View>
+            )
+          },
+          header: (navigation) => <TopBar navigation={navigation} showSearch={false} />,
         }}
       />
       <BottomTab.Screen
         name="Settings"
-        component={UserProfileScreen}
+        component={EditorialsScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size }) => <ProfileButton />,
-          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <View name="article" order={7} text="Our best articles all in one place">
+              <WalkthroughableView>
+                <ArticleIcon color={color} opacity={focused ? 1 : 0.5} />
+              </WalkthroughableView>
+            </View>
+          ),
+          header: (navigation) => <TopBar navigation={navigation} showSearch={false} />,
         }}
       />
     </BottomTab.Navigator>

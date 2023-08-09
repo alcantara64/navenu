@@ -7,7 +7,7 @@ import { View } from "react-native-ui-lib"
 import { Avatar } from "react-native-ui-lib/src/components/avatar"
 import { useStores } from "../models"
 import { getInitials } from "react-native-ui-lib/src/helpers/AvatarHelper"
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons"
 
 export interface ProfileButtonProps {
   /**
@@ -23,15 +23,19 @@ export const ProfileButton = observer(function ProfileButton(props: ProfileButto
   const { style } = props
   const $styles = [$container, style]
 
-  const {userStore} = useStores();
-  
+  const { userStore } = useStores()
+
   return (
     <View style={$styles}>
-    { userStore.currentUser?.display_name &&  (<Avatar label={getInitials(userStore.currentUser?.display_name)}  size={40}  labelColor={Colors.white} backgroundColor={Colors.orange}/>)
-    }
-    {
-        !userStore.currentUser?.display_name && (<AntDesign name="user" size={30} color="black" />)
-    }
+      {userStore.currentUser?.display_name && (
+        <Avatar
+          label={getInitials(userStore.currentUser?.display_name)}
+          size={40}
+          labelColor={Colors.white}
+          backgroundColor={Colors.orange}
+        />
+      )}
+      {!userStore.currentUser?.display_name && <AntDesign name="user" size={30} color="black" />}
     </View>
   )
 })
@@ -39,4 +43,3 @@ export const ProfileButton = observer(function ProfileButton(props: ProfileButto
 const $container: ViewStyle = {
   justifyContent: "center",
 }
-

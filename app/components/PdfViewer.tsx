@@ -1,14 +1,13 @@
 import * as React from "react"
 import { Dimensions, StyleProp, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import Pdf, { Source } from "react-native-pdf"
 
 export interface PdfViewerProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  source: Source
+  source: string
 }
 
 /**
@@ -20,7 +19,7 @@ export const PdfViewer = observer(function PdfViewer(props: PdfViewerProps) {
 
   return (
     <View style={$styles}>
-      <Pdf
+      {/* <Pdf
         source={source}
         onLoadComplete={(numberOfPages, filePath) => {
           console.log(`Number of pages: ${numberOfPages}`)
@@ -35,7 +34,7 @@ export const PdfViewer = observer(function PdfViewer(props: PdfViewerProps) {
           console.log(`Link pressed: ${uri}`)
         }}
         style={$pdf}
-      />
+      /> */}
     </View>
   )
 })

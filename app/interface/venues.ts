@@ -1,4 +1,5 @@
 import { IDrop } from "./drops"
+import { ICurator } from "./user"
 
 export interface IVenue {
   id: number
@@ -36,8 +37,8 @@ export interface IVenue {
   articles?: Array<IArticle>
   drops?: Array<IDrop>
   subscribed: boolean
-  menu_url:string
-  booking_url:string
+  menu_url: string
+  booking_url: string
 }
 
 interface ICurators {
@@ -45,7 +46,7 @@ interface ICurators {
   name: string
   image: string
 }
-export interface IArticle  {
+export interface IArticle {
   type: "Article"
   id: number
   name: string
@@ -54,18 +55,26 @@ export interface IArticle  {
   description: string
   category: any
   image: string
-  title: string,
-  subscribed:boolean
-  mainimage:string
-  subtitle:string
-  content:Array<{type:'image'| 'text'| 'subtitle'|'venue_card'|'insert_drop_card'|'insert_curator_card', image?: string, text?:string, subtitle:string,venue?:Array<IVenue>,drop?:Array<IDrop>,curators?:Array<ICurators>}>
+  title: string
+  subscribed: boolean
+  mainimage: string
+  subtitle: string
+  content: Array<{
+    type: "image" | "text" | "subtitle" | "venue_card" | "insert_drop_card" | "insert_curator_card"
+    image?: string
+    text?: string
+    subtitle: string
+    venue?: IVenue
+    drop?: IDrop
+    curators?: ICurator
+  }>
 }
 export interface IGallery {
   id: number
   image: string
 }
 
-interface IMenu  {
+interface IMenu {
   id: number
   categories: Array<IMenuCategories>
 }
@@ -76,7 +85,7 @@ interface IMenuCategories {
   items: Array<IItems>
 }
 
-interface IItems{
+interface IItems {
   id: number
   name: string
   description: string

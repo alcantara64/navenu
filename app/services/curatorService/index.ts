@@ -1,5 +1,5 @@
 import { ApiResponse } from "apisauce"
-import { Api, ICuratorResponse, } from "../api"
+import { Api, ICuratorResponse } from "../api"
 import { getGeneralApiProblem } from "../api/apiProblem"
 
 export class CuratorService {
@@ -8,11 +8,20 @@ export class CuratorService {
     this.httpClient = new Api()
   }
 
+  async getCuratorDetail(id: string) {
+    const response: ApiResponse<ICuratorResponse> = await this.httpClient.get(`/Curator/${id}`)
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+    const rawData = response.data
+    return { kind: "ok", data: rawData }
+  }
 
-
-  async getCuratorDetail(id:string) {
-    const response: ApiResponse<ICuratorResponse> =
-      await this.httpClient.get(`/Curator/${id}`)
+  async getCurators(page = 1, query?: string) {
+    const response: ApiResponse<ICuratorResponse> = await this.httpClient.get(
+      `/Curator/list/${page}?${query}`,
+    )
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem

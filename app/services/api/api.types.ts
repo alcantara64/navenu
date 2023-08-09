@@ -50,9 +50,9 @@ export interface ApiConfig {
 
 export interface LoginResponse {
   token: string
-  refresh_token: string,
-  savedDeals: Array<any>,
-  user:IUser,
+  refresh_token: string
+  savedDeals: Array<any>
+  user: IUser
   userLists: Record<string, unknown>
   user_preferences: IUserPreference
 }
@@ -139,8 +139,32 @@ export interface IVenueResponse {
   status: boolean
   message: string
 }
+export interface ISubCategoryResponse {
+  data: {
+    SHOP: Record<string, string>
+    STAY: Record<string, string>
+    FIT: Record<string, string>
+    DO: Record<string, string>
+    EAT: Record<string, string>
+    DRINK: Record<string, string>
+  }
+  status: boolean
+  message: string
+}
+export interface IVenuesResponse {
+  data: Array<IVenue>
+  status: boolean
+  message: string
+  page_count: number
+  tot_pages: number
+}
 export interface IArticleResponse {
   data: IArticle
+  status: boolean
+  message: string
+}
+export interface IArticlesResponse {
+  data: Array<IArticle>
   status: boolean
   message: string
 }
@@ -176,16 +200,15 @@ export interface AutoCompleteResponse {
 }
 
 export interface IAutoComplete {
-  location : Array<string>,
-  borough: Array<string>,
-  tags: Array<string>,
-  cats: Array<string>,
-  curator:Array<string>,
-  drop: Array<string>,
-  article: Array<string>,
-
+  location: Array<string>
+  borough: Array<string>
+  tags: Array<string>
+  cats: Array<string>
+  curator: Array<string>
+  drop: Array<string>
+  article: Array<string>
 }
 export interface ICuratorResponse {
-  curator:ICurator
+  data: Array<ICurator>
   status: number
 }

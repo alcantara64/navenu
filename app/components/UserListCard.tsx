@@ -9,35 +9,38 @@ export interface UserListCardProps {
    */
   style?: StyleProp<ViewStyle>
   image: string
-  name: string,
-  onListPress: (value:any) => void
+  name: string
+  onListPress: (value: any) => void
 }
 
 /**
  * Describe your component here
  */
 export const UserListCard = observer(function UserListCard(props: UserListCardProps) {
-  const { image, name, onListPress } = props;
+  const { image, name, onListPress } = props
 
   const listPressed = () => {
     onListPress(name)
   }
 
   return (
-    <TouchableOpacity style={$dropCardContainer}  onPress={listPressed}  activeOpacity={0.1}>
-    <ImageBackground
-      source={{ uri: image || 'https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg' }}
-      imageStyle={$imageBackground}
-      resizeMode="cover"
-      style={$backgroundImage}
-    >       
-     <View style={$imageFilter} />
-          <View flex-7 padding-10>
-              <Text numberOfLines={2} style={$belowText}>
-                {name}
-              </Text>
-            </View>
-    </ImageBackground>
+    <TouchableOpacity style={$dropCardContainer} onPress={listPressed} activeOpacity={0.1}>
+      <ImageBackground
+        source={{
+          uri:
+            image || "https://media.navenu.com/media/venues/790ef2b15452bf457da536559a205877.jpg",
+        }}
+        imageStyle={$imageBackground}
+        resizeMode="cover"
+        style={$backgroundImage}
+      >
+        <View style={$imageFilter} />
+        <View flex-7 padding-10>
+          <Text numberOfLines={2} style={$belowText}>
+            {name}
+          </Text>
+        </View>
+      </ImageBackground>
     </TouchableOpacity>
   )
 })
@@ -51,7 +54,7 @@ const $backgroundImage: ImageStyle = {
 const $imageBackground: ImageStyle = {
   borderRadius: 6,
 }
-const $dropCardContainer:ViewStyle = {
+const $dropCardContainer: ViewStyle = {
   minHeight: 100,
 }
 const $belowText: TextStyle = {

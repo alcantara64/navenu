@@ -16,6 +16,7 @@ export const AuthenticationStoreModel = types
     latitude: types.optional(types.number, 0),
     errorMessage: types.optional(types.string, ""),
     refreshToken: types.optional(types.string, ""),
+    onBoarded: types.optional(types.boolean, false),
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -60,7 +61,12 @@ export const AuthenticationStoreModel = types
       store.authPassword = ""
       store.refreshToken = ""
     },
-    login: flow(function* (email: string, password: string,  deviceToken: string, deviceType: string ) {
+    login: flow(function* (
+      email: string,
+      password: string,
+      deviceToken: string,
+      deviceType: string,
+    ) {
       store.errorMessage = ""
       store.isLoading = true
       const formData = new FormData()
@@ -70,27 +76,29 @@ export const AuthenticationStoreModel = types
       // @ts-ignore
       const result = yield api.login(formData)
       if (result.kind === "ok") {
-        const userService = new UserService();
-    
-        store.refreshToken = result.refresh_token;
+        const userService = new UserService()
+
+        store.refreshToken = result.refresh_token
         rootStore.userStore.setCurrentUser(result.user)
 
         if (result.userLists && !Array.isArray(result.userLists)) {
           rootStore.userStore.setUserLists(result.userLists)
         }
 
-        
-        if (result.user_preferences) {
-          rootStore.userStore.setUserPreferences(result.user_preferences)
-        } else {
-          setTimeout(() => {
-            navigate("PreferencesScreen")
-          }, 50)
-        }
-        setTimeout( async ()=> {
-          await userService.savePushNotificationToken({deviceType, deviceToken }, result.token).then().catch(err => {console.log(err)})
+        setTimeout(async () => {
+          await userService
+            .savePushNotificationToken({ deviceType, deviceToken }, result.token)
+            .then()
+            .catch((err) => {
+              console.log(err)
+            })
         }, 50)
         store.authToken = result.token
+        if (!store.onBoarded) {
+          setTimeout(() => {
+            navigate("City")
+          }, 50)
+        }
       } else {
         store.errorMessage = "incorrect username or password"
       }
@@ -107,16 +115,12 @@ export const AuthenticationStoreModel = types
       const result = await api.register({ email, password })
       if (result.kind === "ok") {
         this.setRefreshToken(result.data.refresh_token)
-        const rootStore = getRootStore(store)
-        if (result.data.user_preferences) {
-          rootStore.userStore.setUserPreferences(result.data.user_preferences)
-        }else{
-          setTimeout(() => {
-            navigate("PreferencesScreen")
-          }, 50)
-        }
 
         this.setAuthToken(result.data.token)
+
+        setTimeout(() => {
+          navigate("City")
+        }, 50)
       } else {
         this.setErrorMessage(result?.message || "Something went wrong")
       }
@@ -129,10 +133,9 @@ export const AuthenticationStoreModel = types
       firstName = "",
       lastName = "",
       avatar = "",
-      isSignUp= false,
+      isSignUp = false,
       deviceType,
-      deviceToken
-
+      deviceToken,
     }) {
       this.setErrorMessage("")
       this.setAuthEmail(email)
@@ -142,21 +145,35 @@ export const AuthenticationStoreModel = types
       formData.append("email", email)
       formData.append("sid", socialId)
       formData.append("authtype", authType)
-      formData.append("firstname", firstName || '')
-      formData.append("lastname", lastName || '')
-      formData.append("avatar", avatar || '')
+      formData.append("firstname", firstName || "")
+      formData.append("lastname", lastName || "")
+      formData.append("avatar", avatar || "")
 
       // @ts-ignore
       const api = new UserService()
       const result = await api.socialRegister({ email, socialId, authType })
       if (result.kind === "ok") {
-        setTimeout( async ()=> {
-          await api.savePushNotificationToken({deviceType, deviceToken }, result.data.token).then().catch(err => {console.log(err)})
+        setTimeout(async () => {
+          await api
+            .savePushNotificationToken({ deviceType, deviceToken }, result.data.token)
+            .then()
+            .catch((err) => {
+              console.log(err)
+            })
         }, 50)
         this.setAuthToken(result.data.token)
         this.setRefreshToken(result.data.refresh_token)
+        if (!store.onBoarded || isSignUp) {
+          setTimeout(() => {
+            navigate("City")
+          }, 50)
+        }
       } else {
-        this.setErrorMessage(isSignUp ? result.message || 'Could not signup at the moment' : 'Invalid username or password')
+        this.setErrorMessage(
+          isSignUp
+            ? result.message || "Could not signup at the moment"
+            : "Invalid username or password",
+        )
       }
       this.setLoading(false)
     },
@@ -166,6 +183,10 @@ export const AuthenticationStoreModel = types
     setLongitudeAndLatitude(longitude, latitude) {
       store.longitude = longitude
       store.latitude = latitude
+    },
+    setOnboardingStatus(value: boolean) {
+      console.log("setOnboardingStatus ==>", value)
+      store.onBoarded = value
     },
   }))
 

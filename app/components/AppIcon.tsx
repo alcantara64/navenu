@@ -9,10 +9,9 @@ export interface AppIconProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  name, 
-  size,
-  color,
-
+  name
+  size
+  color
 }
 
 /**

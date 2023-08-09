@@ -25,46 +25,50 @@ export interface VenueCardProps {
    */
   style?: StyleProp<ViewStyle>
   onPress?: (item: any) => void
-  item: IVenue,
+  item: IVenue
   isFeed?: boolean
   onBookMark?: (feed: any) => void
   savedFeeds?: Array<IFeed>
-  userListData?:IUserList
-  onRemoveFromUserList?: (feed:any) => void
-  isUserList?:boolean;
-  currentUserLatitude: number;
-  currentUserLongitude: number;
-  hideRemove?: boolean;
-
+  userListData?: IUserList
+  onRemoveFromUserList?: (feed: any) => void
+  isUserList?: boolean
+  currentUserLatitude: number
+  currentUserLongitude: number
+  hideRemove?: boolean
 }
 
 /**
  * Describe your component here
  */
 export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
-  const { item, isFeed =true, onBookMark, userListData, onRemoveFromUserList, isUserList, currentUserLatitude, currentUserLongitude, hideRemove } = props
-  const navigation = useNavigation();
+  const {
+    item,
+    isFeed = true,
+    onBookMark,
+    userListData,
+    onRemoveFromUserList,
+    isUserList,
+    currentUserLatitude,
+    currentUserLongitude,
+    hideRemove,
+  } = props
+  const navigation = useNavigation()
 
-  const onPressVenue  = (venue) =>{
-    navigation.navigate('VenueDetailScreen', {
-      venue
+  const onPressVenue = (venue) => {
+    navigation.navigate("VenueDetailScreen", {
+      venue,
     })
-  } 
+  }
 
   const saveDrop = () => {
     onBookMark(item)
   }
   const removeFromUserList = () => {
     onRemoveFromUserList(item)
-
   }
 
   return (
-    <TouchableOpacity
-      key={item.id}
-      onPress={() => onPressVenue(item)}
-      activeOpacity={0.1}
-    >
+    <TouchableOpacity key={item.id} onPress={() => onPressVenue(item)} activeOpacity={0.1}>
       <FastImage
         source={{ uri: item.image, priority: FastImage.priority.high }}
         imageStyle={$imageBackground}
@@ -74,14 +78,28 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
         <View style={$imageFilter} />
 
         <View row style={$itemContainer}>
-        <View flex-7 marginT-5 style={$cardtext}>
-          <Text style={$topText}>{item.category}</Text>
-          <Text style={$belowText}>{item.name}</Text>
-          <Text style={$address}>{item.address}</Text>
-          <Text bottom style={$bottomText}></Text>
-          {  ( !!item.lat && !!item.lng && !!currentUserLatitude && !!currentUserLongitude) && <Text white>{calculatePreciseDistance({firstCoordinateLatitude: item.lat, firstCoordinateLongitude: item.lng, secondCoordinateLatitude: currentUserLatitude,secondCoordinateLongitude: currentUserLongitude })} km away </Text>}
-        </View>
-        {isFeed && <View flex-1 right>
+          <View flex-7 marginT-5 style={$cardtext}>
+            <Text style={$topText}>{item.category}</Text>
+            <Text numberOfLines={1} style={$belowText}>
+              {item.name}
+            </Text>
+            <Text numberOfLines={1} style={$address}>
+              {item.address}
+            </Text>
+            {!!item.lat && !!item.lng && !!currentUserLatitude && !!currentUserLongitude && (
+              <Text white>
+                {calculatePreciseDistance({
+                  firstCoordinateLatitude: item.lat,
+                  firstCoordinateLongitude: item.lng,
+                  secondCoordinateLatitude: currentUserLatitude,
+                  secondCoordinateLongitude: currentUserLongitude,
+                })}{" "}
+                km away{" "}
+              </Text>
+            )}
+          </View>
+          {isFeed && (
+            <View flex-1 right>
               <TouchableOpacity onPress={saveDrop}>
                 <FontAwesome5
                   solid={isItemInUserList(item.id, userListData)}
@@ -90,17 +108,15 @@ export const VenueCard = observer(function VenueCard(props: VenueCardProps) {
                   color="#FFFFFF"
                 />
               </TouchableOpacity>
-            </View>}
-            {isUserList && !isFeed && !hideRemove && <View flex-1 right>
+            </View>
+          )}
+          {isUserList && !isFeed && !hideRemove && (
+            <View flex-1 right>
               <TouchableOpacity onPress={removeFromUserList}>
-                <FontAwesome5
-                  solid
-                  name="times-circle"
-                  size={20}
-                  color="#FFFFFF"
-                />
+                <FontAwesome5 solid name="times-circle" size={20} color="#FFFFFF" />
               </TouchableOpacity>
-            </View>}
+            </View>
+          )}
         </View>
       </FastImage>
     </TouchableOpacity>
@@ -119,14 +135,14 @@ const $imageFilter: ViewStyle = {
   bottom: 0,
 }
 const $address: TextStyle = {
-  fontFamily: 'Inter-Regular',
+  fontFamily: "Inter-Regular",
   color: Colors.white,
   fontSize: 10,
-  textTransform: 'capitalize',
+  textTransform: "capitalize",
   marginBottom: 10,
-  fontStyle: 'normal'
+  fontStyle: "normal",
 }
-const $itemContainer:ViewStyle ={ 
+const $itemContainer: ViewStyle = {
   marginHorizontal: 6,
 }
 const $topText: TextStyle = {
@@ -136,7 +152,6 @@ const $topText: TextStyle = {
   fontSize: 10,
   lineHeight: 9,
   fontFamily: typography.primary.normal,
-
 }
 
 const $bottomText: TextStyle = {
@@ -151,7 +166,7 @@ const $image: ImageStyle = {
   minHeight: verticalScale(110),
   marginBottom: 5,
   justifyContent: "center",
-  borderRadius:6,
+  borderRadius: 6,
 }
 const $belowText: TextStyle = {
   marginBottom: 0,
